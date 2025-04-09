@@ -1,0 +1,260 @@
+---
+title: "Kenya's Rangelands Protected Areas"
+author: "Isaac Mureithi"
+date: "2025-04-01"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r}
+# Load libraries
+
+library(sf)
+library(terra)
+library(tidyverse)
+library(tidyterra)
+library(colorspace)
+library(scales)
+library(farver)
+library(pavo)
+library(ggrepel)
+```
+
+```{r}
+# World Map Import
+
+Global.Country.Boundaries <- st_read("additional_data_layers_wgs84/global_country_boundaries_simplified_wgs84.shp")
+```
+
+```{r}
+# World Map Information
+
+head(Global.Country.Boundaries)
+```
+
+```{r}
+# Plot of World Map
+
+ggplot() +
+  geom_sf(data = Global.Country.Boundaries)+
+  labs(title = "World Country Map")
+```
+
+```{r}
+# Africa Country Boundary import
+
+Africa.Country.Boundaries <- st_read("additional_data_layers_wgs84/africa_country_boundaries_simplified_wgs84.shp")
+```
+
+```{r}
+# Information on African Countries Boundaries
+
+head(Africa.Country.Boundaries)
+```
+
+```{r}
+# Focusing on Eastern Africa
+
+Eastern.Africa.Country.ISOCodes <- c("BI", "DJ", "ER", "ET", "KE", "RW", "SO", "TZ", "UG")
+Eastern.Africa.Data <- Africa.Country.Boundaries %>% 
+  filter(ISO_Code %in% Eastern.Africa.Country.ISOCodes)
+```
+
+```{r}
+# Plotting with a focus on Eastern Africa
+
+ggplot() +
+  geom_sf(data = Global.Country.Boundaries, fill = "white", colour = "grey") +
+  geom_sf(data = Africa.Country.Boundaries, aes(fill = "Africa"), colour = "grey", alpha = 0.5) +
+  geom_sf(data = Eastern.Africa.Data, aes(fill = "Eastern Africa"), colour = "black") +
+  scale_fill_manual(values = c("Africa" = "lightgreen", "Eastern Africa" = "darkgreen"),
+                    name = "Region",labels = c("Africa", "Eastern Africa")) +
+  labs(title = "Eastern Africa in World Map")
+```
+
+```{r}
+#Focusing on Kenya
+
+Kenya.Admin.Boundary <- st_read("additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
+```
+
+```{r}
+# Information about Kenya
+
+head(Kenya.Admin.Boundary)
+```
+
+```{r}
+# Plotting Kenya
+
+ggplot() +
+  geom_sf(data = Eastern.Africa.Data, aes(fill = "Eastern Africa"), alpha = 0.5, colour = NA) +
+  geom_sf(data = Kenya.Admin.Boundary, aes(fill = "Kenya"), colour = "black") +
+  scale_fill_manual(name = "Region",values = c("Eastern Africa" = "darkgreen", "Kenya" = "lightgreen"))+
+  labs(title = "Kenya Administrative Boundary")
+```
+
+```{r}
+#Focusing on Boundaries within Kenya
+
+Kenya.Subregional.Admin.Boundary <- st_read("additional_data_layers_wgs84/kenya_subregional_admin2_boundary_wgs84.shp")
+```
+
+```{r}
+#Information about Kenya's counties
+
+head(Kenya.Subregional.Admin.Boundary)
+```
+
+```{r}
+# Plotting Kenya's counties
+
+ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, colour = "black")+
+  geom_sf(data = Kenya.Subregional.Admin.Boundary, colour = "grey50")+
+  labs(title = "Kenya's Subregional Administrative Boundaries")
+```
+
+```{r}
+# Focusing on Kenya's Terrestrial Protected Areas
+
+Kenya.Terrestrial.PAs <- st_read("additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
+```
+
+```{r}
+# Information about Kenya's Terrestrial PAs
+
+head(Kenya.Terrestrial.PAs)
+```
+
+```{r}
+# Plotting Kenya's Terrestrial PAs
+
+ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, colour = "black")+
+  geom_sf(data = Kenya.Subregional.Admin.Boundary, colour = "grey50")+
+  geom_sf(data = Kenya.Terrestrial.PAs, aes(fill = "Protected Areas"), alpha = 0.5)+
+  scale_fill_manual(values = c("Protected Areas" = "brown"),name = "Legend",labels = c("Protected Areas")) +
+  labs(title = "Kenya's Terrestrial Protected Areas")
+```
+
+```{r}
+# Focusing on Kenya's Rangelands (80& of Kenya's LandMass)
+
+Rangeland.Counties <- c("Marsabit", "Isiolo", "Meru", "Tharaka-Nithi", "Embu", 
+                        "Kitui", "Makueni", "Tana River", "Lamu", "Taita Taveta",
+                        "Garissa", "Wajir", "Mandera", "Turkana", "West Pokot",
+                        "Samburu", "Baringo", "Laikipia", "Narok", "Kajiado")
+
+Kenya.Rangeland.Counties <- Kenya.Subregional.Admin.Boundary %>% 
+  filter(ADM1_EN %in% Rangeland.Counties)
+```
+
+```{r}
+# Plotting the Rangeland Counties
+
+ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, colour = "black") +
+  geom_sf(data = Kenya.Subregional.Admin.Boundary, colour = "grey50") +
+  geom_sf(data = Kenya.Rangeland.Counties, aes(fill = "Rangeland Counties")) +
+  scale_fill_manual(values = c("Rangeland Counties" = "grey"),name = "Legend",labels = c("Rangeland Counties")) +
+  labs(title = "Kenya's Rangeland Counties")
+```
+
+```{r}
+# Works to Join different Layers in Kenya's datasets
+
+Kenya.Terrestrial.PAs <- st_transform(Kenya.Terrestrial.PAs, crs = st_crs(Kenya.Subregional.Admin.Boundary))
+
+# Identify invalid geometries
+invalid_PAs <- Kenya.Terrestrial.PAs[!st_is_valid(Kenya.Terrestrial.PAs), ]
+invalid_Counties <- Kenya.Subregional.Admin.Boundary[!st_is_valid(Kenya.Subregional.Admin.Boundary), ]
+
+# Fix invalid geometries (if any exist)
+Kenya.Terrestrial.PAs <- st_make_valid(Kenya.Terrestrial.PAs)
+Kenya.Subregional.Admin.Boundary <- st_make_valid(Kenya.Subregional.Admin.Boundary)
+
+
+Kenya.Terrestrial.PAs.Counties <- st_join(Kenya.Terrestrial.PAs, Kenya.Subregional.Admin.Boundary[, c("ADM1_EN")])
+
+# Filter protected areas in rangeland counties
+Rangeland.PAs <- Kenya.Terrestrial.PAs.Counties %>%
+  filter(ADM1_EN %in% Rangeland.Counties)
+```
+
+```{r}
+# Plotting the Joined Layers of Kenya's PAs - Rangelands
+
+ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, colour = "grey") +
+  geom_sf(data = Kenya.Rangeland.Counties, colour = "black", fill = "grey") +
+  geom_sf(data = Rangeland.PAs, aes(fill = "Rangeland Protected Areas"), alpha = 0.5) +
+  scale_fill_manual(values = c("Rangeland Protected Areas" = "brown"),name = "Legend",labels = c("Rangeland Protected Areas")) +
+  labs(title = "Rangeland Protected Areas")
+```
+
+```{r}
+# Focusing on Amboseli, Tsavo East & West National Parks
+
+PAs.Interest <- Kenya.Terrestrial.PAs.Counties %>%
+  filter((NAME == "Amboseli" & DESIG == "National Park") |
+           (NAME == "Chyulu Hills" & DESIG == "National Park") |
+           (NAME == "Tsavo East" & DESIG == "National Park") |
+           (NAME == "Tsavo West" & DESIG == "National Park"))
+```
+
+```{r}
+# Plotting Amboseli, Tsavo E&W NPs as PAs Interest
+
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, colour = "grey") +
+  geom_sf(data = Kenya.Rangeland.Counties, colour = "black", fill = "grey", alpha = 0.5) +
+  geom_sf(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Amboseli")),
+          aes(fill = NAME), color = "black", size = 1.5, linetype = "solid") +
+  scale_fill_manual(values = c("Tsavo West" = "mediumseagreen", 
+                               "Tsavo East" = "seagreen",
+                               "Amboseli" = "forestgreen")) +
+  # Optional addition text labels to highlight the names of the parks
+  geom_sf_text(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Amboseli")),
+               aes(label = NAME), color = "black", size = 4, fontface = "bold") +
+  labs(title = "Amboseli & Tsavo Locations", fill = "National Parks") +
+  theme(legend.position = "bottom",legend.title = element_text(size = 12, face = "bold"),legend.text = element_text(size = 10),
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+```
+
+```{r}
+PAs.Interest <- PAs.Interest %>%
+  mutate(nudge_x = case_when(
+    NAME == "Tsavo East" ~ 0,
+    NAME == "Tsavo West" ~ 0,
+    NAME == "Chyulu Hills" ~ -0.2,  # Move Chyulu Hills slightly left
+    NAME == "Amboseli" ~ 0.2        # Move Amboseli slightly right
+  ),
+  nudge_y = case_when(
+    NAME == "Tsavo East" ~ 0,
+    NAME == "Tsavo West" ~ 0,
+    NAME == "Chyulu Hills" ~ 0.1,   # Move Chyulu Hills slightly up
+    NAME == "Amboseli" ~ -0.1       # Move Amboseli slightly down
+  ))
+
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, colour = "grey") +
+  geom_sf(data = Kenya.Rangeland.Counties, colour = "black", fill = "grey", alpha = 0.5) +
+  geom_sf(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Chyulu Hills", "Amboseli")),
+          aes(fill = NAME), color = "black", size = 1.5, linetype = "solid") +
+  scale_fill_manual(values = c("Tsavo West" = "mediumseagreen",
+                               "Tsavo East" = "seagreen",
+                               "Chyulu Hills" = "lightgreen",
+                               "Amboseli" = "forestgreen")) +
+  geom_sf_text(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Chyulu Hills", "Amboseli")),
+               aes(label = NAME, geometry = geometry), 
+               color = "black", size = 4, fontface = "bold",
+               nudge_x = PAs.Interest$nudge_x,
+               nudge_y = PAs.Interest$nudge_y) +
+  labs(title = "Greater Amboseli Ecosystem", fill = "Protected Area Name - National Parks") +
+  theme(legend.position = "bottom", legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 10),
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+
+```
