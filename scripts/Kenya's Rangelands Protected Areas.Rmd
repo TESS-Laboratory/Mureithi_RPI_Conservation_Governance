@@ -20,6 +20,10 @@ library(scales)
 library(farver)
 library(pavo)
 library(ggrepel)
+library(patchwork)
+library(dplyr)
+library(tidyr)
+library(viridis)
 ```
 
 ```{r}
@@ -258,3 +262,428 @@ ggplot() +
         plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
 
 ```
+
+```{r}
+# Importing RPI Datasets - Rasters (TIFs)
+
+Actual.GPP <- rast("RPI Datasets (GuyLomax)/actual_gpp_ea_v2.tif")
+
+Potential.GPP <- rast("RPI Datasets (GuyLomax)/potential_gpp_ea_v2.tif")
+
+RPI <- rast("RPI Datasets (GuyLomax)/rpi_ea_v2.tif")
+```
+
+```{r}
+# First of all, I shall create the "theme_beautiful" as discussed in last session
+
+theme_beautiful <- function() {
+  theme_bw() +
+    theme(
+      text = element_text(family = "Helvetica"),
+      axis.text = element_text(size = 8, color = "black"),
+      axis.title = element_text(size = 8, color = "black"),
+      axis.line.x = element_line(size = 0.3, color = "black"),
+      axis.line.y = element_line(size = 0.3, color = "black"),
+      axis.ticks = element_line(size = 0.3, color = "black"),
+      panel.border = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
+      plot.title = element_text(
+        size = 8,
+        vjust = 1,
+        hjust = 0.5,
+        color = "black"
+      ),
+      legend.text = element_text(size = 8, color = "black"),
+      legend.title = element_text(size = 8, color = "black"),
+      legend.position = c(0.9, 0.9),
+      legend.key.size = unit(0.9, "line"),
+      legend.background = element_rect(
+        color = "black",
+        fill = "transparent",
+        size = 2,
+        linetype = "blank"
+      )
+    )
+}
+windowsFonts("Helvetica" = windowsFont("Helvetica"))
+```
+
+```{r}
+# I shall visualise RPI for the year 2000, as it is the 1st layer
+
+RPI.Yr.2000 <- RPI[["rpi.2000"]]
+
+#then plot
+
+ggplot() +
+  geom_spatraster(data = RPI.Yr.2000) +
+#  scale_fill_viridis_c(option = "plasma", name = "RPI Value") +
+  labs(title = "Relative Primary Productivity Index (RPI) - Year 2000",x = "Longitude",y = "Latitude") +
+  coord_sf(crs = st_crs(RPI.Yr.2000)) +  # just to confirm the CRS
+  theme_beautiful()
+```
+
+```{r}
+# Now to check for RPI.Yr.2022
+
+RPI.Yr.2022 <- RPI[["rpi.2022"]]
+
+#then plot
+
+ggplot() +
+  geom_spatraster(data = RPI.Yr.2022) +
+#  scale_fill_viridis_c(option = "plasma", name = "RPI Value") +
+  labs(title = "Relative Primary Productivity Index (RPI) - Year 2000",x = "Longitude",y = "Latitude") +
+  coord_sf(crs = st_crs(RPI.Yr.2022)) +  # just to confirm the CRS
+  theme_beautiful()
+```
+
+```{r}
+# Now to check RPI within Kenya.Admin.Boundary for the year 2000
+
+# I shall crop and mask RPI using the Kenya.Admin.Boundary
+
+RPI.Kenya.Yr.2000 <- mask(crop(RPI, Kenya.Admin.Boundary), Kenya.Admin.Boundary)[[1]]
+```
+
+```{r}
+ggplot() +
+  geom_spatraster(data = RPI.Kenya.Yr.2000) +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA, color = "black", size = 0.5) +
+  labs(title = "RPI in Kenya Administrative Boundary - 2000") +
+  theme_beautiful()
+```
+
+```{r}
+# Now to check RPI within Kenya.Admin.Boundary for the year 2022
+
+# I shall crop and mask RPI using the Kenya.Admin.Boundary
+
+RPI.Kenya.Yr.2022 <- mask(crop(RPI, Kenya.Admin.Boundary), Kenya.Admin.Boundary)[[23]]
+```
+
+```{r}
+ggplot() +
+  geom_spatraster(data = RPI.Kenya.Yr.2022) +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA, color = "black", size = 0.5) +
+  labs(title = "RPI in Kenya Administrative Boundary - 2022") +
+  theme_beautiful()
+```
+
+
+```{r}
+# I shall now check RPI within Kenya's Rangeland Counties for Year 2000
+
+RPI.Rangeland.Counties.Yr.2000 <- mask(crop(RPI, Kenya.Rangeland.Counties), Kenya.Rangeland.Counties)[[1]]
+```
+
+```{r}
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA) +
+  geom_spatraster(data = RPI.Rangeland.Counties.Yr.2000) +
+  geom_sf(data = Kenya.Rangeland.Counties, fill = NA, color = "black", size = 0.5) +
+  labs(title = "RPI in Kenya Rangeland Counties - 2000") +
+  theme_beautiful()
+```
+
+```{r}
+# I shall now check RPI within Kenya's Rangeland Counties for Year 2022
+
+RPI.Rangeland.Counties.Yr.2022 <- mask(crop(RPI, Kenya.Rangeland.Counties), Kenya.Rangeland.Counties)[[23]]
+```
+
+```{r}
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA) +
+  geom_spatraster(data = RPI.Rangeland.Counties.Yr.2022) +
+  geom_sf(data = Kenya.Rangeland.Counties, fill = NA, color = "black", size = 0.5) +
+  labs(title = "RPI in Kenya Rangeland Counties - 2022") +
+  theme_beautiful()
+```
+
+```{r}
+# I shall now check for RPI within Rangeland Protected Areas for Year 2000
+
+RPI.Rangeland.PAs.Yr.2000 <- mask(crop(RPI, Rangeland.PAs), Rangeland.PAs)[[1]]
+```
+
+```{r}
+ggplot() +
+  geom_spatraster(data = RPI.Rangeland.PAs.Yr.2000) +
+  geom_sf(data = Rangeland.PAs, fill = NA, color = "black", size = 0.5) +
+  geom_sf(data = Kenya.Admin.Boundary, alpha = 0) +
+  labs(title = "RPI in Rangeland Protected Areas - 2000") +
+  theme_beautiful()
+```
+
+```{r}
+# I shall now check for RPI within Rangeland Protected Areas for Year 2022
+
+RPI.Rangeland.PAs.Yr.2022 <- mask(crop(RPI, Rangeland.PAs), Rangeland.PAs)[[23]]
+```
+
+```{r}
+ggplot() +
+  geom_spatraster(data = RPI.Rangeland.PAs.Yr.2022) +
+  geom_sf(data = Rangeland.PAs, fill = NA, color = "black", size = 0.5) +
+  geom_sf(data = Kenya.Admin.Boundary, alpha = 0) +
+  labs(title = "RPI in Rangeland Protected Areas - 2022") +
+  theme_beautiful()
+```
+
+```{r}
+# Next is checking RPI for NPs of Interest for Year 2000
+
+RPI.PAs.Interest.Yr.2000 <- mask(crop(RPI, PAs.Interest), PAs.Interest)[[1]]
+```
+
+```{r}
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA) +
+  geom_spatraster(data = RPI.PAs.Interest.Yr.2000) +
+  geom_sf(data = PAs.Interest, fill = NA, color = "black", size = 0.5) +
+  labs(title = "RPI in Protected Areas of Interest - 2000") +
+  theme_beautiful()
+```
+
+```{r}
+# Next is checking RPI for NPs of Interest for Year 2022
+
+RPI.PAs.Interest.Yr.2022 <- mask(crop(RPI, PAs.Interest), PAs.Interest)[[23]]
+```
+
+```{r}
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA) +
+  geom_spatraster(data = RPI.PAs.Interest.Yr.2022) +
+  geom_sf(data = PAs.Interest, fill = NA, color = "black", size = 0.5) +
+  labs(title = "RPI in Protected Areas of Interest - 2022") +
+  theme_beautiful()
+```
+
+```{r}
+# Trying to see the change from 2000 to 2022 in the Area of Interest (Greater Amboseli Ecosystem)
+
+# Create the first plot for the year 2000
+plot.RPI.PAs.Interest.Yr.2000 <- ggplot() +
+  geom_spatraster(data = RPI.PAs.Interest.Yr.2000) +
+  geom_sf(data = PAs.Interest, fill = NA, color = "black", linewidth = 0.5) +
+#  scale_fill_viridis_c(option = "plasma", name = "RPI") + # Adds a color scale
+  labs(title = "RPI in Protected Areas of Interest - 2000") +
+  theme_beautiful()
+
+# Create the second plot for the year 2022
+plot.RPI.PAs.Interest.Yr.2022 <- ggplot() +
+  geom_spatraster(data = RPI.PAs.Interest.Yr.2022) +
+  geom_sf(data = PAs.Interest, fill = NA, color = "black", linewidth = 0.5) +
+#  scale_fill_viridis_c(option = "plasma", name = "RPI") + # Adds a color scale
+  labs(title = "RPI in Protected Areas of Interest - 2022") +
+  theme_beautiful()
+
+# Combine the two plots into a single output
+comparison.plot.RPI.PAs.Interest <- plot.RPI.PAs.Interest.Yr.2000 + plot.RPI.PAs.Interest.Yr.2022
+
+```
+
+```{r}
+# Display the combined plot
+print(comparison.plot.RPI.PAs.Interest)
+```
+
+```{r}
+# RPI Metrics
+```
+
+```{r}
+# Mean RPI per Year for Kenya
+```
+
+```{r}
+# 1a. Extract mean RPI for the single Kenya polygon
+RPI.Kenya.Raw <- terra::extract(RPI, Kenya.Admin.Boundary, fun = mean, na.rm = TRUE)
+
+# terra::extract returns a data.frame with columns:
+#   ID, rpi.2000, rpi.2001, …, rpi.2022
+```
+
+```{r}
+# 1b. Turn into a tidy time‐series
+
+RPI.Kenya.TS <- as_tibble(RPI.Kenya.Raw) %>%
+  pivot_longer(cols = starts_with("rpi."), names_to  = "Year", values_to = "Mean.RPI") %>%
+  mutate(Year = as.integer(sub("rpi\\.", "", Year)))
+```
+
+```{r}
+# 1c. Plot
+
+ggplot(RPI.Kenya.TS, aes(x = Year, y = Mean.RPI)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(title = "Mean RPI (2000–2022) for Kenya",x = "Year",y = "Mean RPI") +
+  theme_beautiful()
+```
+
+```{r}
+# Mean RPI per Year for each Rangeland-ecosystem County
+```
+
+```{r}
+# 2a. Extract mean RPI for each county (multiple polygons)
+
+RPI.Rangeland.Counties.Raw <- terra::extract(RPI, Kenya.Rangeland.Counties, fun = mean, na.rm = TRUE)
+```
+
+```{r}
+# Bind county names back on
+
+RPI.Rangeland.Counties.Raw$ADM1_EN <- Kenya.Rangeland.Counties$ADM1_EN
+
+RPI.Rangeland.Counties.Raw$ADM2_EN <- Kenya.Rangeland.Counties$ADM2_EN
+```
+
+```{r}
+# 2b. Tidy
+
+RPI.Rangeland.Counties.TS <- as_tibble(RPI.Rangeland.Counties.Raw) %>%
+  pivot_longer(cols = starts_with("rpi."), names_to  = "Year", values_to = "Mean.RPI") %>%
+  mutate(Year = as.integer(sub("rpi\\.", "", Year)))
+```
+
+```{r}
+# 2c. Example: Taking a look at Amboseli NP which falls in Kajiado South (Admin2) - under Kajiado (Admin1)
+
+RPI.Rangeland.Counties.TS %>%
+  filter(ADM2_EN == "Kajiado South") %>%
+  ggplot(aes(x = Year, y = Mean.RPI)) +
+    geom_line() +
+    geom_point() +
+    labs(title = "Mean RPI in Kajiado South (2000–2022)", x = "Year", y = "Mean RPI") +
+    theme_beautiful()
+```
+
+```{r}
+
+# Placing all Rangeland Counties on one plot
+
+ggplot(RPI.Rangeland.Counties.TS, aes(x = Year, y = Mean.RPI, color = ADM1_EN)) +
+  geom_line() +
+  labs(title = "Mean RPI (2000–2022) by Rangeland County", x = "Year", y = "Mean RPI", color = "County") +
+  theme_beautiful()
+```
+
+```{r}
+# Trying to make the above look beautiful with Utility 2 - visualising scientific interests in key terms
+
+ggplot(RPI.Rangeland.Counties.TS, aes(x = Year, y = Mean.RPI, color = ADM1_EN)) +
+  geom_line(linewidth = 0.8) +
+  labs(title = "Mean RPI by Rangeland County (2000-2022)",
+    x = "Year",
+    y = "Mean RPI",
+    color = "County"
+  ) +
+  scale_color_viridis(discrete = TRUE, option = "plasma") + # Using a viridis palette
+  scale_x_continuous(breaks = seq(2000, 2022, by = 2)) + # Show year labels every 2 years
+  theme_beautiful() +
+  theme(legend.position = "right",
+        legend.text = element_text(size = 9),
+        legend.title = element_text(size = 10),
+        plot.title = element_text(hjust = 0.5, size = 12))
+```
+
+```{r}
+# Mean RPI per Year for the Rangeland Protected Areas
+```
+
+```{r}
+# 3a. Extract & bind name
+
+RPI.PAs.Raw <- terra::extract(RPI, Rangeland.PAs, fun = mean, na.rm = TRUE)
+
+RPI.PAs.Raw$NAME <- Rangeland.PAs$NAME
+```
+
+```{r}
+# 3b. Tidy
+
+RPI.PAs.TS <- as_tibble(RPI.PAs.Raw) %>%
+  pivot_longer(cols = starts_with("rpi."), names_to  = "Year", values_to = "Mean.RPI") %>%
+  mutate(Year = as.integer(sub("rpi\\.", "", Year)))
+```
+
+```{r}
+# 3c. Plot all PAs of the rangeland
+
+ggplot(RPI.PAs.TS, aes(x = Year, y = Mean.RPI, color = NAME)) +
+  geom_line() +
+  labs(
+    title = "Mean RPI (2000–2022) in Rangeland Protected Areas",
+    x = "Year",
+    y = "Mean RPI",
+    color = "Protected Area"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+# Mean RPI per Year for Greater Amboseli Ecosystem - National Parks only
+```
+
+```{r}
+# 4a. Extract & bind name
+
+RPI.PAs.Interest.Raw <- terra::extract(RPI, PAs.Interest, fun = mean, na.rm = TRUE)
+
+RPI.PAs.Interest.Raw$NAME <- PAs.Interest$NAME
+```
+
+```{r}
+# 4b. Tidy
+
+RPI.PAs.Interest.TS <- as_tibble(RPI.PAs.Interest.Raw) %>%
+  pivot_longer(cols = starts_with("rpi."), names_to  = "Year", values_to = "Mean.RPI") %>%
+  mutate(Year = as.integer(sub("rpi\\.", "", Year)))
+```
+
+```{r}
+# 4c. Plot
+
+ggplot(RPI.PAs.Interest.TS, aes(x = Year, y = Mean.RPI, color = NAME)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(
+    title = "Mean RPI (2000–2022) in Selected National Parks",
+    x = "Year",
+    y = "Mean RPI",
+    color = "National Park"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+# ROUGH WORK ON STATS
+
+# Mean RPI across all Years
+Mean.RPI <- terra::app(RPI, fun = mean, na.rm = TRUE)
+ggplot() +
+  geom_spatraster(data = Mean.RPI) +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA, color = "black") +
+  labs(title = "Mean RPI (2000–2022) Across Kenya") +
+  theme_beautiful()
+
+#Variability (Standard Deviation) of RPI across the Years
+SD.RPI <- terra::app(RPI, fun = sd, na.rm = TRUE)
+
+ggplot() +
+  geom_spatraster(data = SD.RPI) +
+  scale_fill_viridis(option = "magma", name = "RPI Std. Dev.") +
+  labs(title = "Temporal Standard Deviation of RPI (2000-2022)", fill = "RPI Std. Dev.") +
+  coord_sf(crs = st_crs(SD.RPI)) +
+  theme_beautiful()
+```
+
+```{r}
