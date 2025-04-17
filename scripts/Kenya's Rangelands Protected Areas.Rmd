@@ -16,20 +16,53 @@ library(terra)
 library(tidyverse)
 library(tidyterra)
 library(colorspace)
-library(scales)
-library(farver)
-library(pavo)
 library(ggrepel)
-library(patchwork)
-library(dplyr)
-library(tidyr)
-library(viridis)
+library(patchwork) # combine plots
+```
+
+```{r}
+# First of all, I shall create the "theme_beautiful" as discussed in last session
+
+theme_beautiful <- function() {
+  theme_bw() +
+    theme(
+      text = element_text(family = "Helvetica"),
+      axis.text = element_text(size = 8, color = "black"),
+      axis.title = element_text(size = 8, color = "black"),
+      axis.line.x = element_line(size = 0.3, color = "black"),
+      axis.line.y = element_line(size = 0.3, color = "black"),
+      axis.ticks = element_line(size = 0.3, color = "black"),
+      panel.border = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
+      plot.title = element_text(
+        size = 8,
+        vjust = 1,
+        hjust = 0.5,
+        color = "black"
+      ),
+      legend.text = element_text(size = 8, color = "black"),
+      legend.title = element_text(size = 8, color = "black"),
+      legend.position = c(0.9, 0.9),
+      legend.key.size = unit(0.9, "line"),
+      legend.background = element_rect(
+        color = "black",
+        fill = "transparent",
+        size = 2,
+        linetype = "blank"
+      )
+    )
+}
+windowsFonts("Helvetica" = windowsFont("Helvetica"))
 ```
 
 ```{r}
 # World Map Import
 
-Global.Country.Boundaries <- st_read("additional_data_layers_wgs84/global_country_boundaries_simplified_wgs84.shp")
+Global.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/global_country_boundaries_simplified_wgs84.shp")
 ```
 
 ```{r}
@@ -43,13 +76,14 @@ head(Global.Country.Boundaries)
 
 ggplot() +
   geom_sf(data = Global.Country.Boundaries)+
-  labs(title = "World Country Map")
+  labs(title = "World Country Map")+
+  theme_beautiful()
 ```
 
 ```{r}
 # Africa Country Boundary import
 
-Africa.Country.Boundaries <- st_read("additional_data_layers_wgs84/africa_country_boundaries_simplified_wgs84.shp")
+Africa.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/africa_country_boundaries_simplified_wgs84.shp")
 ```
 
 ```{r}
@@ -75,13 +109,14 @@ ggplot() +
   geom_sf(data = Eastern.Africa.Data, aes(fill = "Eastern Africa"), colour = "black") +
   scale_fill_manual(values = c("Africa" = "lightgreen", "Eastern Africa" = "darkgreen"),
                     name = "Region",labels = c("Africa", "Eastern Africa")) +
-  labs(title = "Eastern Africa in World Map")
+  labs(title = "Eastern Africa in World Map")+
+  theme_beautiful()
 ```
 
 ```{r}
 #Focusing on Kenya
 
-Kenya.Admin.Boundary <- st_read("additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
+  Kenya.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
 ```
 
 ```{r}
@@ -97,13 +132,14 @@ ggplot() +
   geom_sf(data = Eastern.Africa.Data, aes(fill = "Eastern Africa"), alpha = 0.5, colour = NA) +
   geom_sf(data = Kenya.Admin.Boundary, aes(fill = "Kenya"), colour = "black") +
   scale_fill_manual(name = "Region",values = c("Eastern Africa" = "darkgreen", "Kenya" = "lightgreen"))+
-  labs(title = "Kenya Administrative Boundary")
+  labs(title = "Kenya Administrative Boundary") +
+  theme_beautiful()
 ```
 
 ```{r}
 #Focusing on Boundaries within Kenya
 
-Kenya.Subregional.Admin.Boundary <- st_read("additional_data_layers_wgs84/kenya_subregional_admin2_boundary_wgs84.shp")
+Kenya.Subregional.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_subregional_admin2_boundary_wgs84.shp")
 ```
 
 ```{r}
@@ -118,13 +154,14 @@ head(Kenya.Subregional.Admin.Boundary)
 ggplot()+
   geom_sf(data = Kenya.Admin.Boundary, colour = "black")+
   geom_sf(data = Kenya.Subregional.Admin.Boundary, colour = "grey50")+
-  labs(title = "Kenya's Subregional Administrative Boundaries")
+  labs(title = "Kenya's Subregional Administrative Boundaries") +
+  theme_beautiful()
 ```
 
 ```{r}
 # Focusing on Kenya's Terrestrial Protected Areas
 
-Kenya.Terrestrial.PAs <- st_read("additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
+Kenya.Terrestrial.PAs <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
 ```
 
 ```{r}
@@ -141,7 +178,8 @@ ggplot()+
   geom_sf(data = Kenya.Subregional.Admin.Boundary, colour = "grey50")+
   geom_sf(data = Kenya.Terrestrial.PAs, aes(fill = "Protected Areas"), alpha = 0.5)+
   scale_fill_manual(values = c("Protected Areas" = "brown"),name = "Legend",labels = c("Protected Areas")) +
-  labs(title = "Kenya's Terrestrial Protected Areas")
+  labs(title = "Kenya's Terrestrial Protected Areas") +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -164,7 +202,8 @@ ggplot()+
   geom_sf(data = Kenya.Subregional.Admin.Boundary, colour = "grey50") +
   geom_sf(data = Kenya.Rangeland.Counties, aes(fill = "Rangeland Counties")) +
   scale_fill_manual(values = c("Rangeland Counties" = "grey"),name = "Legend",labels = c("Rangeland Counties")) +
-  labs(title = "Kenya's Rangeland Counties")
+  labs(title = "Kenya's Rangeland Counties") +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -196,7 +235,8 @@ ggplot()+
   geom_sf(data = Kenya.Rangeland.Counties, colour = "black", fill = "grey") +
   geom_sf(data = Rangeland.PAs, aes(fill = "Rangeland Protected Areas"), alpha = 0.5) +
   scale_fill_manual(values = c("Rangeland Protected Areas" = "brown"),name = "Legend",labels = c("Rangeland Protected Areas")) +
-  labs(title = "Rangeland Protected Areas")
+  labs(title = "Rangeland Protected Areas") +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -224,8 +264,7 @@ ggplot() +
   geom_sf_text(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Amboseli")),
                aes(label = NAME), color = "black", size = 4, fontface = "bold") +
   labs(title = "Amboseli & Tsavo Locations", fill = "National Parks") +
-  theme(legend.position = "bottom",legend.title = element_text(size = 12, face = "bold"),legend.text = element_text(size = 10),
-        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+  theme_beautiful()
 ```
 
 ```{r}
@@ -266,50 +305,11 @@ ggplot() +
 ```{r}
 # Importing RPI Datasets - Rasters (TIFs)
 
-Actual.GPP <- rast("RPI Datasets (GuyLomax)/actual_gpp_ea_v2.tif")
+Actual.GPP <- rast("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/actual_gpp_ea_v2.tif")
 
-Potential.GPP <- rast("RPI Datasets (GuyLomax)/potential_gpp_ea_v2.tif")
+Potential.GPP <- rast("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/potential_gpp_ea_v2.tif")
 
-RPI <- rast("RPI Datasets (GuyLomax)/rpi_ea_v2.tif")
-```
-
-```{r}
-# First of all, I shall create the "theme_beautiful" as discussed in last session
-
-theme_beautiful <- function() {
-  theme_bw() +
-    theme(
-      text = element_text(family = "Helvetica"),
-      axis.text = element_text(size = 8, color = "black"),
-      axis.title = element_text(size = 8, color = "black"),
-      axis.line.x = element_line(size = 0.3, color = "black"),
-      axis.line.y = element_line(size = 0.3, color = "black"),
-      axis.ticks = element_line(size = 0.3, color = "black"),
-      panel.border = element_blank(),
-      panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      panel.grid.minor.y = element_blank(),
-      panel.grid.major.y = element_blank(),
-      plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
-      plot.title = element_text(
-        size = 8,
-        vjust = 1,
-        hjust = 0.5,
-        color = "black"
-      ),
-      legend.text = element_text(size = 8, color = "black"),
-      legend.title = element_text(size = 8, color = "black"),
-      legend.position = c(0.9, 0.9),
-      legend.key.size = unit(0.9, "line"),
-      legend.background = element_rect(
-        color = "black",
-        fill = "transparent",
-        size = 2,
-        linetype = "blank"
-      )
-    )
-}
-windowsFonts("Helvetica" = windowsFont("Helvetica"))
+RPI <- rast("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/rpi_ea_v2.tif")
 ```
 
 ```{r}
@@ -586,7 +586,7 @@ ggplot(RPI.Rangeland.Counties.TS, aes(x = Year, y = Mean.RPI, color = ADM1_EN)) 
     y = "Mean RPI",
     color = "County"
   ) +
-  scale_color_viridis(discrete = TRUE, option = "plasma") + # Using a viridis palette
+#  scale_color_viridis(discrete = TRUE, option = "plasma") + # Using a viridis palette
   scale_x_continuous(breaks = seq(2000, 2022, by = 2)) + # Show year labels every 2 years
   theme_beautiful() +
   theme(legend.position = "right",
@@ -669,18 +669,22 @@ ggplot(RPI.PAs.Interest.TS, aes(x = Year, y = Mean.RPI, color = NAME)) +
 
 # Mean RPI across all Years
 Mean.RPI <- terra::app(RPI, fun = mean, na.rm = TRUE)
+
+
 ggplot() +
   geom_spatraster(data = Mean.RPI) +
   geom_sf(data = Kenya.Admin.Boundary, fill = NA, color = "black") +
   labs(title = "Mean RPI (2000–2022) Across Kenya") +
   theme_beautiful()
+```
 
+```{r}
 #Variability (Standard Deviation) of RPI across the Years
 SD.RPI <- terra::app(RPI, fun = sd, na.rm = TRUE)
 
 ggplot() +
   geom_spatraster(data = SD.RPI) +
-  scale_fill_viridis(option = "magma", name = "RPI Std. Dev.") +
+#  scale_fill_viridis(option = "magma", name = "RPI Std. Dev.") +
   labs(title = "Temporal Standard Deviation of RPI (2000-2022)", fill = "RPI Std. Dev.") +
   coord_sf(crs = st_crs(SD.RPI)) +
   theme_beautiful()
