@@ -126,7 +126,7 @@ ggplot() +
 ```{r}
 # Africa Country Boundary import
 
-Africa.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/africa_country_boundaries_simplified_wgs84.shp")
+Africa.Country.Boundaries <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/africa_country_boundaries_simplified_wgs84.shp")
 ```
 
 ```{r}
@@ -159,7 +159,7 @@ ggplot() +
 ```{r}
 #Focusing on Kenya
 
-  Kenya.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
+  Kenya.Admin.Boundary <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
 ```
 
 ```{r}
@@ -182,7 +182,7 @@ ggplot() +
 ```{r}
 #Focusing on Boundaries within Kenya
 
-Kenya.Subregional.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_subregional_admin2_boundary_wgs84.shp")
+Kenya.Subregional.Admin.Boundary <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_subregional_admin2_boundary_wgs84.shp")
 ```
 
 ```{r}
@@ -204,7 +204,7 @@ ggplot()+
 ```{r}
 # Focusing on Kenya's Terrestrial Protected Areas
 
-Kenya.Terrestrial.PAs <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
+Kenya.Terrestrial.PAs <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
 ```
 
 ```{r}
@@ -313,11 +313,11 @@ ggplot() +
 ```{r}
 # Importing RPI Datasets - Rasters (TIFs)
 
-Actual.GPP <- rast("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/actual_gpp_ea_v2.tif")
+Actual.GPP <- rast("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/actual_gpp_ea_v2.tif")
 
-Potential.GPP <- rast("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/potential_gpp_ea_v2.tif")
+Potential.GPP <- rast("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/potential_gpp_ea_v2.tif")
 
-RPI <- rast("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/rpi_ea_v2.tif")
+RPI <- rast("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/rpi_ea_v2.tif")
 ```
 
 ```{r}
@@ -717,7 +717,7 @@ NgaiNdethia <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4
 # Visualising GAE/TSAVOs
 
 ggplot()+
-  #geom_sf(data = Kenya.Admin.Boundary) +
+  geom_sf(data = Kenya.Admin.Boundary) +
   geom_sf(data = Amboseli) +
   geom_sf(data = ChyuluHills) +
   geom_sf(data = TsavoEast) +
@@ -752,7 +752,7 @@ Tawi_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA
 # Visualising the Community Conservancies & Group Ranches
 
 ggplot()+
-  #geom_sf(data = Kenya.Admin.Boundary) +
+  geom_sf(data = Kenya.Admin.Boundary) +
   geom_sf(data = DawidaRanch_T) +
   geom_sf(data = Elerai_A) +
   geom_sf(data = Eselenkei_A) +
@@ -777,12 +777,60 @@ ggplot()+
 # Visualising the Community Conservancies & Group Ranches in GAE/TSAVOs
 
 ggplot() +
-  # geom_sf(data = Kenya.Admin.Boundary) +
-  geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, alpha = 0.5) +
-  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, alpha = 0.5) +
-  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, alpha = 0.5) +
-  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, alpha = 0.5) +
-  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, alpha = 0.5) +
+  geom_sf(data = Kenya.Admin.Boundary) +
+  geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = DawidaRanch_T, aes(fill = "Dawida Ranch_T"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Elerai_A, aes(fill = "Elerai"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Eselenkei_A, aes(fill = "Eselenkei"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Imbirikani_A, aes(fill = "Imbirikani"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Kasigau_T, aes(fill = "Kasigau"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Kimana_A, aes(fill = "Kimana"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = KukuGroupRanch_A, aes(fill = "Kuku Group Ranch_A"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = MbuliaGroupRanch_T, aes(fill = "Mbulia Group Ranch_T"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Mnjonyi_T, aes(fill = "Mnjonyi"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Motikanju_A, aes(fill = "Motikanju"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Mwaganini_T, aes(fill = "Mwaganini"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Nailepu_A, aes(fill = "Nailepu"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Osupuko_A, aes(fill = "Osupuko"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Ronge_T, aes(fill = "Ronge"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TaitaHills_T, aes(fill = "Taita Hills"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Tawi_A, aes(fill = "Tawi"), color = 'black', linewidth = 0.1) +
+  scale_fill_manual(values = c(
+    "Forest Areas" = "forestgreen",
+    "Dawida Ranch_T" = "lightblue",
+    "Elerai" = "orange",
+    "Eselenkei" = "purple",
+    "Imbirikani" = "brown",
+    "Kasigau" = "yellow",
+    "Kimana" = "pink",
+    "Kuku Group Ranch_A" = "cyan",
+    "Mbulia Group Ranch_T" = "magenta",
+    "Mnjonyi" = "gray",
+    "Motikanju" = "darkred",
+    "Mwaganini" = "darkblue",
+    "Nailepu" = "lightcoral",
+    "Osupuko" = "darkgreen",
+    "Ronge" = "goldenrod",
+    "Taita Hills" = "darkcyan",
+    "Tawi" = "deeppink"
+  ), name = "Protected Area") +
+  labs(title = "Community & Group Ranches in GAE/TSAVOs") +
+  theme_beautiful()
+```
+
+```{r}
+# Visualising the Community Conservancies & Group Ranches in GAE/TSAVOs - zoomed in
+
+ggplot() +
+ geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
   geom_sf(data = DawidaRanch_T, aes(fill = "Dawida Ranch_T"), color = 'black', linewidth = 0.1) +
   geom_sf(data = Elerai_A, aes(fill = "Elerai"), color = 'black', linewidth = 0.1) +
   geom_sf(data = Eselenkei_A, aes(fill = "Eselenkei"), color = 'black', linewidth = 0.1) +
