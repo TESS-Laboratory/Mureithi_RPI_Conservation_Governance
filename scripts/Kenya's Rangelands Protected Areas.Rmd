@@ -60,6 +60,49 @@ windowsFonts("Helvetica" = windowsFont("Helvetica"))
 ```
 
 ```{r}
+# Addressing the Warnings in the original "theme_beautiful()"
+
+theme_beautiful <- function() {
+  theme_bw() +
+    theme(
+      text = element_text(family = "Helvetica"),
+      axis.text = element_text(size = 8, color = "black"),
+      axis.title = element_text(size = 8, color = "black"),
+      axis.line.x = element_line(linewidth = 0.3, color = "black"), # Use linewidth
+      axis.line.y = element_line(linewidth = 0.3, color = "black"), # Use linewidth
+      axis.ticks = element_line(linewidth = 0.3, color = "black"), # Use linewidth
+      panel.border = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
+      plot.title = element_text(
+        size = 8,
+        vjust = 1,
+        hjust = 0.5,
+        color = "black"
+      ),
+      legend.text = element_text(size = 8, color = "black"),
+      legend.title = element_text(size = 8, color = "black"),
+      legend.position = "right", # Move legend to the right
+      legend.key.size = unit(0.9, "line"),
+      legend.background = element_rect(
+        color = "black",
+        fill = "transparent",
+        linewidth = 0.3, # Use linewidth
+        linetype = "blank"
+      )
+    )
+}
+
+# Attempt to set the Helvetica font (may not work on all systems)
+if (Sys.info()[["sysname"]] == "Windows") {
+  windowsFonts("Helvetica" = windowsFont("Helvetica"))
+}
+```
+
+```{r}
 # World Map Import
 
 Global.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive/Documents/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/global_country_boundaries_simplified_wgs84.shp")
@@ -265,41 +308,6 @@ ggplot() +
                aes(label = NAME), color = "black", size = 4, fontface = "bold") +
   labs(title = "Amboseli & Tsavo Locations", fill = "National Parks") +
   theme_beautiful()
-```
-
-```{r}
-PAs.Interest <- PAs.Interest %>%
-  mutate(nudge_x = case_when(
-    NAME == "Tsavo East" ~ 0,
-    NAME == "Tsavo West" ~ 0,
-    NAME == "Chyulu Hills" ~ -0.2,  # Move Chyulu Hills slightly left
-    NAME == "Amboseli" ~ 0.2        # Move Amboseli slightly right
-  ),
-  nudge_y = case_when(
-    NAME == "Tsavo East" ~ 0,
-    NAME == "Tsavo West" ~ 0,
-    NAME == "Chyulu Hills" ~ 0.1,   # Move Chyulu Hills slightly up
-    NAME == "Amboseli" ~ -0.1       # Move Amboseli slightly down
-  ))
-
-ggplot() +
-  geom_sf(data = Kenya.Admin.Boundary, colour = "grey") +
-  geom_sf(data = Kenya.Rangeland.Counties, colour = "black", fill = "grey", alpha = 0.5) +
-  geom_sf(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Chyulu Hills", "Amboseli")),
-          aes(fill = NAME), color = "black", size = 1.5, linetype = "solid") +
-  scale_fill_manual(values = c("Tsavo West" = "mediumseagreen",
-                               "Tsavo East" = "seagreen",
-                               "Chyulu Hills" = "lightgreen",
-                               "Amboseli" = "forestgreen")) +
-  geom_sf_text(data = PAs.Interest %>% filter(NAME %in% c("Tsavo East", "Tsavo West", "Chyulu Hills", "Amboseli")),
-               aes(label = NAME, geometry = geometry), 
-               color = "black", size = 4, fontface = "bold",
-               nudge_x = PAs.Interest$nudge_x,
-               nudge_y = PAs.Interest$nudge_y) +
-  labs(title = "Greater Amboseli Ecosystem", fill = "Protected Area Name - National Parks") +
-  theme(legend.position = "bottom", legend.title = element_text(size = 12, face = "bold"), legend.text = element_text(size = 10),
-        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
-
 ```
 
 ```{r}
@@ -687,6 +695,128 @@ ggplot() +
 #  scale_fill_viridis(option = "magma", name = "RPI Std. Dev.") +
   labs(title = "Temporal Standard Deviation of RPI (2000-2022)", fill = "RPI Std. Dev.") +
   coord_sf(crs = st_crs(SD.RPI)) +
+  theme_beautiful()
+```
+
+```{r}
+# MAPS SOURCED FROM WDPA
+```
+
+
+```{r}
+# Importing National Parks & National Reserves (GAE/TSAVOs)
+
+Amboseli <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/Amboseli-WDPA_WDOECM_Apr2025_Public_758_shp/WDPA_WDOECM_Apr2025_Public_758_shp_0/WDPA_WDOECM_Apr2025_Public_758_shp-polygons.shp")
+ChyuluHills <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/ChyuluHills-WDPA_WDOECM_Apr2025_Public_19563_shp/WDPA_WDOECM_Apr2025_Public_19563_shp_0/WDPA_WDOECM_Apr2025_Public_19563_shp-polygons.shp")
+TsavoWest <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/TsavoWest-WDPA_WDOECM_Apr2025_Public_19564_shp/WDPA_WDOECM_Apr2025_Public_19564_shp_0/WDPA_WDOECM_Apr2025_Public_19564_shp-polygons.shp")
+TsavoEast <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/TsavoEast-WDPA_WDOECM_Apr2025_Public_752_shp/WDPA_WDOECM_Apr2025_Public_752_shp_0/WDPA_WDOECM_Apr2025_Public_752_shp-polygons.shp")
+NgaiNdethia <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/NgaiNdethia-WDPA_WDOECM_Apr2025_Public_2595_shp/WDPA_WDOECM_Apr2025_Public_2595_shp_0/WDPA_WDOECM_Apr2025_Public_2595_shp-polygons.shp")
+```
+
+```{r}
+# Visualising GAE/TSAVOs
+
+ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary) +
+  geom_sf(data = Amboseli) +
+  geom_sf(data = ChyuluHills) +
+  geom_sf(data = TsavoEast) +
+  geom_sf(data = TsavoWest) +
+  geom_sf(data = NgaiNdethia) +
+  labs(title = "GAE/TSAVOs - National Parks & Reserves")
+```
+
+```{r}
+# Importing Community Conservancies & Group Ranches
+
+DawidaRanch_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/DawidaRanch(T)-WDPA_WDOECM_Apr2025_Public_72297_shp/WDPA_WDOECM_Apr2025_Public_72297_shp_0/WDPA_WDOECM_Apr2025_Public_72297_shp-points.shp")
+Elerai_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Elerai(A)-WDPA_WDOECM_Apr2025_Public_555555482_shp/WDPA_WDOECM_Apr2025_Public_555555482_shp_0/WDPA_WDOECM_Apr2025_Public_555555482_shp-polygons.shp")
+Eselenkei_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Esenlenkei(A)-WDPA_WDOECM_Apr2025_Public_555555485_shp/WDPA_WDOECM_Apr2025_Public_555555485_shp_0/WDPA_WDOECM_Apr2025_Public_555555485_shp-polygons.shp")
+Imbirikani_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Imbirikani(A)-WDPA_WDOECM_Apr2025_Public_72283_shp/WDPA_WDOECM_Apr2025_Public_72283_shp_0/WDPA_WDOECM_Apr2025_Public_72283_shp-polygons.shp")
+Kasigau_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Kasigau(T)-WDPA_WDOECM_Apr2025_Public_7582_shp/WDPA_WDOECM_Apr2025_Public_7582_shp_0/WDPA_WDOECM_Apr2025_Public_7582_shp-polygons.shp")
+Kimana_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Kimana(A)-WDPA_WDOECM_Apr2025_Public_555555481_shp/WDPA_WDOECM_Apr2025_Public_555555481_shp_0/WDPA_WDOECM_Apr2025_Public_555555481_shp-polygons.shp")
+KukuGroupRanch_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/KukuGroupRanch(A)-WDPA_WDOECM_Apr2025_Public_72290_shp/WDPA_WDOECM_Apr2025_Public_72290_shp_0/WDPA_WDOECM_Apr2025_Public_72290_shp-points.shp")
+MbuliaGroupRanch_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/MbuliaGroupRanch(T)-WDPA_WDOECM_Apr2025_Public_72293_shp/WDPA_WDOECM_Apr2025_Public_72293_shp_0/WDPA_WDOECM_Apr2025_Public_72293_shp-points.shp")
+Mnjonyi_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Mnjonyi(T)-WDPA_WDOECM_Apr2025_Public_555785981_shp/WDPA_WDOECM_Apr2025_Public_555785981_shp_0/WDPA_WDOECM_Apr2025_Public_555785981_shp-polygons.shp")
+Motikanju_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Motikanju(A)-WDPA_WDOECM_Apr2025_Public_555555486_shp/WDPA_WDOECM_Apr2025_Public_555555486_shp_0/WDPA_WDOECM_Apr2025_Public_555555486_shp-polygons.shp")
+Mwaganini_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Mwaganini(T)-WDPA_WDOECM_Apr2025_Public_555785983_shp/WDPA_WDOECM_Apr2025_Public_555785983_shp_0/WDPA_WDOECM_Apr2025_Public_555785983_shp-polygons.shp")
+Nailepu_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Nailepu(A)-WDPA_WDOECM_Apr2025_Public_555555488_shp/WDPA_WDOECM_Apr2025_Public_555555488_shp_0/WDPA_WDOECM_Apr2025_Public_555555488_shp-polygons.shp")
+Osupuko_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Osupuko(A)-WDPA_WDOECM_Apr2025_Public_555555487_shp/WDPA_WDOECM_Apr2025_Public_555555487_shp_0/WDPA_WDOECM_Apr2025_Public_555555487_shp-polygons.shp")
+Ronge_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Ronge(T)-WDPA_WDOECM_Apr2025_Public_555785982_shp/WDPA_WDOECM_Apr2025_Public_555785982_shp_0/WDPA_WDOECM_Apr2025_Public_555785982_shp-polygons.shp")
+TaitaHills_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/TaitaHills(T)-WDPA_WDOECM_Apr2025_Public_7408_shp/WDPA_WDOECM_Apr2025_Public_7408_shp_0/WDPA_WDOECM_Apr2025_Public_7408_shp-polygons.shp")
+Tawi_A <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/Tawi(A)-WDPA_WDOECM_Apr2025_Public_555555489_shp/WDPA_WDOECM_Apr2025_Public_555555489_shp_0/WDPA_WDOECM_Apr2025_Public_555555489_shp-polygons.shp")
+```
+
+```{r}
+# Visualising the Community Conservancies & Group Ranches
+
+ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary) +
+  geom_sf(data = DawidaRanch_T) +
+  geom_sf(data = Elerai_A) +
+  geom_sf(data = Eselenkei_A) +
+  geom_sf(data = Imbirikani_A) +
+  geom_sf(data = Kasigau_T) +
+  geom_sf(data = Kimana_A) +
+  geom_sf(data = KukuGroupRanch_A) +
+  geom_sf(data = MbuliaGroupRanch_T) +
+  geom_sf(data = Mnjonyi_T) +
+  geom_sf(data = Motikanju_A) +
+  geom_sf(data = Mwaganini_T) +
+  geom_sf(data = Nailepu_A) +
+  geom_sf(data = Osupuko_A) +
+  geom_sf(data = Ronge_T) +
+  geom_sf(data = TaitaHills_T) +
+  geom_sf(data = Tawi_A) +
+  labs(title = "Community & Group Ranches - GAE/TSAVOs")
+```
+
+```{r}
+# Visualising the Community Conservancies & Group Ranches in GAE/TSAVOs
+
+ggplot() +
+  # geom_sf(data = Kenya.Admin.Boundary) +
+  geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = DawidaRanch_T, aes(fill = "Dawida Ranch_T"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Elerai_A, aes(fill = "Elerai"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Eselenkei_A, aes(fill = "Eselenkei"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Imbirikani_A, aes(fill = "Imbirikani"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Kasigau_T, aes(fill = "Kasigau"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Kimana_A, aes(fill = "Kimana"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = KukuGroupRanch_A, aes(fill = "Kuku Group Ranch_A"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = MbuliaGroupRanch_T, aes(fill = "Mbulia Group Ranch_T"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Mnjonyi_T, aes(fill = "Mnjonyi"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Motikanju_A, aes(fill = "Motikanju"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Mwaganini_T, aes(fill = "Mwaganini"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Nailepu_A, aes(fill = "Nailepu"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Osupuko_A, aes(fill = "Osupuko"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Ronge_T, aes(fill = "Ronge"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = TaitaHills_T, aes(fill = "Taita Hills"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Tawi_A, aes(fill = "Tawi"), color = 'black', linewidth = 0.1) +
+  scale_fill_manual(values = c(
+    "Forest Areas" = "forestgreen",
+    "Dawida Ranch_T" = "lightblue",
+    "Elerai" = "orange",
+    "Eselenkei" = "purple",
+    "Imbirikani" = "brown",
+    "Kasigau" = "yellow",
+    "Kimana" = "pink",
+    "Kuku Group Ranch_A" = "cyan",
+    "Mbulia Group Ranch_T" = "magenta",
+    "Mnjonyi" = "gray",
+    "Motikanju" = "darkred",
+    "Mwaganini" = "darkblue",
+    "Nailepu" = "lightcoral",
+    "Osupuko" = "darkgreen",
+    "Ronge" = "goldenrod",
+    "Taita Hills" = "darkcyan",
+    "Tawi" = "deeppink"
+  ), name = "Protected Area") +
+  labs(title = "Community & Group Ranches in GAE/TSAVOs") +
   theme_beautiful()
 ```
 
