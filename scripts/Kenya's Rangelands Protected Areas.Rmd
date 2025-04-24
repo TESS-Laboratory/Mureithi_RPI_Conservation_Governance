@@ -706,17 +706,18 @@ ggplot() +
 
 
 ```{r}
-# Importing National Parks & National Reserves (GAE/TSAVOs)
+# Importing National Parks & National Reserves (GAE/TCA)
 
 Amboseli <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/Amboseli-WDPA_WDOECM_Apr2025_Public_758_shp/WDPA_WDOECM_Apr2025_Public_758_shp_0/WDPA_WDOECM_Apr2025_Public_758_shp-polygons.shp")
 ChyuluHills <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/ChyuluHills-WDPA_WDOECM_Apr2025_Public_19563_shp/WDPA_WDOECM_Apr2025_Public_19563_shp_0/WDPA_WDOECM_Apr2025_Public_19563_shp-polygons.shp")
 TsavoWest <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/TsavoWest-WDPA_WDOECM_Apr2025_Public_19564_shp/WDPA_WDOECM_Apr2025_Public_19564_shp_0/WDPA_WDOECM_Apr2025_Public_19564_shp-polygons.shp")
 TsavoEast <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/TsavoEast-WDPA_WDOECM_Apr2025_Public_752_shp/WDPA_WDOECM_Apr2025_Public_752_shp_0/WDPA_WDOECM_Apr2025_Public_752_shp-polygons.shp")
 NgaiNdethia <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/NgaiNdethia-WDPA_WDOECM_Apr2025_Public_2595_shp/WDPA_WDOECM_Apr2025_Public_2595_shp_0/WDPA_WDOECM_Apr2025_Public_2595_shp-polygons.shp")
+SouthKitui <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/SouthKitui-WDPA_WDOECM_Apr2025_Public_2590_shp/WDPA_WDOECM_Apr2025_Public_2590_shp_0/WDPA_WDOECM_Apr2025_Public_2590_shp-polygons.shp")
 ```
 
 ```{r}
-# Visualising GAE/TSAVOs
+# Visualising GAE/TCA
 
 ggplot()+
   geom_sf(data = Kenya.Admin.Boundary) +
@@ -725,7 +726,8 @@ ggplot()+
   geom_sf(data = TsavoEast) +
   geom_sf(data = TsavoWest) +
   geom_sf(data = NgaiNdethia) +
-  labs(title = "GAE/TSAVOs - National Parks & Reserves") +
+  geom_sf(data = SouthKitui) +
+  labs(title = "GAE/TCA - National Parks & Reserves") +
   theme_beautiful()
 ```
 
@@ -771,20 +773,27 @@ ggplot()+
   geom_sf(data = Ronge_T) +
   geom_sf(data = TaitaHills_T) +
   geom_sf(data = Tawi_A) +
-  labs(title = "Community & Group Ranches - GAE/TSAVOs") +
+  labs(title = "Community & Group Ranches - GAE/TCA") +
   theme_beautiful()
 ```
 
 ```{r}
-# Visualising the Community Conservancies & Group Ranches in GAE/TSAVOs
+# Visualising the Community Conservancies & Group Ranches in GAE/TCA
 
 ggplot() +
   geom_sf(data = Kenya.Admin.Boundary) +
-  geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+  geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = SouthKitui, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
   geom_sf(data = DawidaRanch_T, aes(fill = "Dawida Ranch_T"), color = 'black', linewidth = 0.1) +
   geom_sf(data = Elerai_A, aes(fill = "Elerai"), color = 'black', linewidth = 0.1) +
   geom_sf(data = Eselenkei_A, aes(fill = "Eselenkei"), color = 'black', linewidth = 0.1) +
@@ -820,19 +829,26 @@ ggplot() +
     "Taita Hills" = "darkcyan",
     "Tawi" = "deeppink"
   ), name = "Protected Area") +
-  labs(title = "Community & Group Ranches in GAE/TSAVOs") +
+  labs(title = "Community & Group Ranches in GAE/TCA") +
   theme_beautiful()
 ```
 
 ```{r}
-# Visualising the Community Conservancies & Group Ranches in GAE/TSAVOs - zoomed in
+# Visualising the Community Conservancies & Group Ranches in GAE/TCA - zoomed in
 
 ggplot() +
- geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
-  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1) +
+ geom_sf(data = Amboseli, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+         alpha = 0.5) +
+  geom_sf(data = ChyuluHills, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = TsavoEast, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = TsavoWest, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = NgaiNdethia, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
+  geom_sf(data = SouthKitui, aes(fill = "Forest Areas"), color = 'black', linewidth = 0.1, 
+          alpha = 0.5) +
   geom_sf(data = DawidaRanch_T, aes(fill = "Dawida Ranch_T"), color = 'black', linewidth = 0.1) +
   geom_sf(data = Elerai_A, aes(fill = "Elerai"), color = 'black', linewidth = 0.1) +
   geom_sf(data = Eselenkei_A, aes(fill = "Eselenkei"), color = 'black', linewidth = 0.1) +
@@ -868,7 +884,7 @@ ggplot() +
     "Taita Hills" = "darkcyan",
     "Tawi" = "deeppink"
   ), name = "Protected Area") +
-  labs(title = "Community & Group Ranches in GAE/TSAVOs") +
+  labs(title = "Community & Group Ranches in GAE/TCA") +
   theme_beautiful()
 ```
 
