@@ -13,7 +13,7 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, tmaptools)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap)
 ```
 
 ```{r}
@@ -336,7 +336,8 @@ Amboseli.RPI.Mean <- mean(Amboseli.RPI.Crop, na.rm = TRUE)
 # Visualise
 tmap_mode("view")
 tm_shape(Amboseli.RPI.Mean) +
-  tm_raster(style = "cont", palette = "viridis", title = "Mean RPI") +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(Amboseli) +
   tm_borders(col = "white", lwd = 2)
 ```
@@ -353,7 +354,8 @@ TsavoEast.RPI.Mean <- mean(TsavoEast.RPI.Crop, na.rm = TRUE)
 # Visualise
 tmap_mode("view")
 tm_shape(TsavoEast.RPI.Mean) +
-  tm_raster(style = "cont", palette = "viridis", title = "Mean RPI") +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(TsavoEast) +
   tm_borders(col = "white", lwd = 2)
 ```
@@ -370,9 +372,620 @@ TsavoWest.RPI.Mean <- mean(TsavoWest.RPI.Crop, na.rm = TRUE)
 # Visualise
 tmap_mode("view")
 tm_shape(TsavoWest.RPI.Mean) +
-  tm_raster(style = "cont", palette = "viridis", title = "Mean RPI") +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(TsavoWest) +
   tm_borders(col = "white", lwd = 2)
+```
+
+```{r}
+## Visualising Chyulu Hills NP
+
+ChyuluHills.RPI.Mask <- mask(RPI, ChyuluHills)
+ChyuluHills.RPI.Crop <- crop(ChyuluHills.RPI.Mask, ChyuluHills)
+
+# Averaging across years for visualization
+ChyuluHills.RPI.Mean <- mean(ChyuluHills.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(ChyuluHills.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
+  tm_shape(ChyuluHills) +
+  tm_borders(col = "white", lwd = 2)
+```
+
+```{r}
+## Visualising Ngai Ndethia NR
+
+NgaiNdethia.RPI.Mask <- mask(RPI, NgaiNdethia)
+NgaiNdethia.RPI.Crop <- crop(NgaiNdethia.RPI.Mask, NgaiNdethia)
+
+# Averaging across years for visualization
+NgaiNdethia.RPI.Mean <- mean(NgaiNdethia.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(NgaiNdethia.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
+  tm_shape(NgaiNdethia) +
+  tm_borders(col = "white", lwd = 2)
+```
+
+```{r}
+## Visualising South Kitui NR
+
+SouthKitui.RPI.Mask <- mask(RPI, SouthKitui)
+SouthKitui.RPI.Crop <- crop(SouthKitui.RPI.Mask, SouthKitui)
+
+# Averaging across years for visualization
+SouthKitui.RPI.Mean <- mean(SouthKitui.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(SouthKitui.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
+  tm_shape(SouthKitui) +
+  tm_borders(col = "white", lwd = 2)
+```
+
+```{r}
+## Visualising AET.Conservancies
+
+AET.Conservancies.RPI.Mask <- mask(RPI, AET.Conservancies)
+AET.Conservancies.RPI.Crop <- crop(AET.Conservancies.RPI.Mask, AET.Conservancies)
+
+# Averaging across years for visualization
+AET.Conservancies.RPI.Mean <- mean(AET.Conservancies.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(AET.Conservancies.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
+  tm_shape(AET.Conservancies) +
+  tm_borders(col = "white", lwd = 2)
+```
+
+```{r}
+## Visualising AET.Others
+
+AET.Others.RPI.Mask <- mask(RPI, AET.Others)
+AET.Others.RPI.Crop <- crop(AET.Others.RPI.Mask, AET.Others)
+
+# Averaging across years for visualization
+AET.Others.RPI.Mean <- mean(AET.Others.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(AET.Others.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI")) +
+  tm_shape(AET.Others) +
+  tm_borders(col = "white", lwd = 2)
+```
+
+```{r}
+# Extracting RPI Values for each Area
+```
+
+```{r}
+## Extracting RPI for Amboseli NP
+
+Amboseli.RPI.Values <- terra::extract(Amboseli.RPI.Crop, Amboseli)
+
+### Remove ID column (first column added by extract)
+Amboseli.RPI.Values <- Amboseli.RPI.Values[, -1]
+
+Amboseli.Summary <- data.frame(
+  Layer = names(Amboseli.RPI.Crop),
+  Mean = apply(Amboseli.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(Amboseli.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(Amboseli.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(Amboseli.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(Amboseli.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(Amboseli.Summary)
+```
+
+```{r}
+## Extracting RPI for TsavoEast NP
+
+TsavoEast.RPI.Values <- terra::extract(TsavoEast.RPI.Crop, TsavoEast)
+
+### Remove ID column (first column added by extract)
+TsavoEast.RPI.Values <- TsavoEast.RPI.Values[, -1]
+
+TsavoEast.Summary <- data.frame(
+  Layer = names(TsavoEast.RPI.Crop),
+  Mean = apply(TsavoEast.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(TsavoEast.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(TsavoEast.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(TsavoEast.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(TsavoEast.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(TsavoEast.Summary)
+```
+
+```{r}
+## Extracting RPI for TsavoWest NP
+
+TsavoWest.RPI.Values <- terra::extract(TsavoWest.RPI.Crop, TsavoWest)
+
+### Remove ID column (first column added by extract)
+TsavoWest.RPI.Values <- TsavoWest.RPI.Values[, -1]
+
+TsavoWest.Summary <- data.frame(
+  Layer = names(TsavoWest.RPI.Crop),
+  Mean = apply(TsavoWest.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(TsavoWest.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(TsavoWest.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(TsavoWest.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(TsavoWest.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(TsavoWest.Summary)
+```
+
+```{r}
+## Extracting RPI for ChyuluHills NP
+
+ChyuluHills.RPI.Values <- terra::extract(ChyuluHills.RPI.Crop, ChyuluHills)
+
+### Remove ID column (first column added by extract)
+ChyuluHills.RPI.Values <- ChyuluHills.RPI.Values[, -1]
+
+ChyuluHills.Summary <- data.frame(
+  Layer = names(ChyuluHills.RPI.Crop),
+  Mean = apply(ChyuluHills.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(ChyuluHills.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(ChyuluHills.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(ChyuluHills.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(ChyuluHills.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(ChyuluHills.Summary)
+```
+
+```{r}
+## Extracting RPI for NgaiNdethia NR
+
+NgaiNdethia.RPI.Values <- terra::extract(NgaiNdethia.RPI.Crop, NgaiNdethia)
+
+### Remove ID column (first column added by extract)
+NgaiNdethia.RPI.Values <- NgaiNdethia.RPI.Values[, -1]
+
+NgaiNdethia.Summary <- data.frame(
+  Layer = names(NgaiNdethia.RPI.Crop),
+  Mean = apply(NgaiNdethia.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(NgaiNdethia.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(NgaiNdethia.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(NgaiNdethia.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(NgaiNdethia.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(NgaiNdethia.Summary)
+```
+
+```{r}
+## Extracting RPI for SouthKitui NR
+
+SouthKitui.RPI.Values <- terra::extract(SouthKitui.RPI.Crop, SouthKitui)
+
+### Remove ID column (first column added by extract)
+SouthKitui.RPI.Values <- SouthKitui.RPI.Values[, -1]
+
+SouthKitui.Summary <- data.frame(
+  Layer = names(SouthKitui.RPI.Crop),
+  Mean = apply(SouthKitui.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(SouthKitui.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(SouthKitui.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(SouthKitui.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(SouthKitui.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(SouthKitui.Summary)
+```
+
+```{r}
+## Extracting RPI for AET.Conservancies
+
+AET.Conservancies.RPI.Values <- terra::extract(AET.Conservancies.RPI.Crop, AET.Conservancies)
+
+### Remove ID column (first column added by extract)
+AET.Conservancies.RPI.Values <- AET.Conservancies.RPI.Values[, -1]
+
+AET.Conservancies.Summary <- data.frame(
+  Layer = names(AET.Conservancies.RPI.Crop),
+  Mean = apply(AET.Conservancies.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(AET.Conservancies.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(AET.Conservancies.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(AET.Conservancies.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(AET.Conservancies.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(AET.Conservancies.Summary)
+```
+
+```{r}
+## Extracting RPI for AET.Others
+
+AET.Others.RPI.Values <- terra::extract(AET.Others.RPI.Crop, AET.Others)
+
+### Remove ID column (first column added by extract)
+AET.Others.RPI.Values <- AET.Others.RPI.Values[, -1]
+
+AET.Others.Summary <- data.frame(
+  Layer = names(AET.Others.RPI.Crop),
+  Mean = apply(AET.Others.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(AET.Others.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(AET.Others.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(AET.Others.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(AET.Others.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(AET.Others.Summary)
+```
+
+```{r}
+# Visualising Extracted RPI Values
+```
+
+```{r}
+## Visualising Amboseli NP
+
+Amboseli.RPI.Visual <- Amboseli.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "Amboseli"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in Amboseli NP",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Amboseli NP (using a Violin Plot)
+
+ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in Amboseli NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising TsavoEast NP
+
+TsavoEast.RPI.Visual <- TsavoEast.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "TsavoEast"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in TsavoEast NP",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising TsavoEast NP (using a Violin Plot)
+
+ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in TsavoEast NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising TsavoWest NP
+
+TsavoWest.RPI.Visual <- TsavoWest.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "TsavoWest"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in TsavoWest NP",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising TsavoWest NP (using a Violin Plot)
+
+ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in TsavoWest NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising ChyuluHills NP
+
+ChyuluHills.RPI.Visual <- ChyuluHills.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "ChyuluHills"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in ChyuluHills NP",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising ChyuluHills NP (using a Violin Plot)
+
+ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in ChyuluHills NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising NgaiNdethia NR
+
+NgaiNdethia.RPI.Visual <- NgaiNdethia.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "NgaiNdethia"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in NgaiNdethia NR",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising NgaiNdethia NR (using a Violin Plot)
+
+ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in NgaiNdethia NR (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising SouthKitui NR
+
+SouthKitui.RPI.Visual <- SouthKitui.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "SouthKitui"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in SouthKitui NR",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising SouthKitui NR (using a Violin Plot)
+
+ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in SouthKitui NR (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.Conservancies
+
+AET.Conservancies.RPI.Visual <- AET.Conservancies.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "AET.Conservancies"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in AET.Conservancies",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.Conservancies (using a Violin Plot)
+
+ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in AET.Conservancies (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.Others
+
+AET.Others.RPI.Visual <- AET.Others.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "AET.Others"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(Area, Year, RPI_value)
+
+# Now plot
+ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in AET.Others",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.Others (using a Violin Plot)
+
+ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
+  labs(
+    title = "RPI Distribution Over Years in AET.Others (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
 ```
 
 ```{r}
