@@ -13,7 +13,7 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend)
 ```
 
 ```{r}
@@ -653,7 +653,7 @@ Amboseli.RPI.Visual <- Amboseli.RPI.Values %>%
     Area = "Amboseli"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value) ## I will need "ID" for Trend Analysis (Theil-Sen)
 
 # Now plot
 ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -690,14 +690,14 @@ TsavoEast.RPI.Visual <- TsavoEast.RPI.Values %>%
     names_to = "Layer",
     values_to = "RPI_value"
   ) %>%
-  # Keep only layers starting with "rpi."
+  # Keeps only layers starting with "rpi."
   filter(grepl("^rpi\\.", Layer)) %>%
   mutate(
     Year = as.integer(sub("rpi\\.", "", Layer)),
     Area = "TsavoEast"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -741,7 +741,7 @@ TsavoWest.RPI.Visual <- TsavoWest.RPI.Values %>%
     Area = "TsavoWest"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -785,7 +785,7 @@ ChyuluHills.RPI.Visual <- ChyuluHills.RPI.Values %>%
     Area = "ChyuluHills"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -829,7 +829,7 @@ NgaiNdethia.RPI.Visual <- NgaiNdethia.RPI.Values %>%
     Area = "NgaiNdethia"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -873,7 +873,7 @@ SouthKitui.RPI.Visual <- SouthKitui.RPI.Values %>%
     Area = "SouthKitui"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -917,7 +917,7 @@ AET.Conservancies.RPI.Visual <- AET.Conservancies.RPI.Values %>%
     Area = "AET.Conservancies"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -961,7 +961,7 @@ AET.Others.RPI.Visual <- AET.Others.RPI.Values %>%
     Area = "AET.Others"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
-  select(Area, Year, RPI_value)
+  select(ID, Area, Year, RPI_value)
 
 # Now plot
 ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
@@ -986,6 +986,635 @@ ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
     y = "RPI Value"
   ) +
   theme_beautiful()
+```
+
+```{r}
+## Conversation on refining the Violin plots:
+
+# 1.Skepticism about RPI Fluctuations:
+  # Do not fully trust year-to-year fluctuations in the Retail Price Index (RPI).
+
+#2.Focus on Comparisons:
+  # Emphasise comparisons in:
+    # (i) Average performance
+    # (ii) Trends over time
+  # Analyse these comparisons across different spatial units and/or management periods.
+
+# 3. Signal vs. Noise:
+  # Aim to focus on the real signal rather than the noise in the data.
+
+# 4. Outlier Classification:
+  # Recommend including arguments against disabling "outlier" classification.
+  # Suggest that there are insufficient grounds to treat the red dots differently.
+```
+
+```{r}
+## Visualising Amboseli NP
+
+ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in Amboseli NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over Amboseli NP as a line 
+
+Amboseli.Mean <- Amboseli.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(Amboseli.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in Amboseli NP",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising TsavoEast NP
+
+ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in Tsavo East NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over TsavoEast NP as a line 
+
+TsavoEast.Mean <- TsavoEast.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(TsavoEast.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in Tsavo East NP",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising TsavoWest NP
+
+ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in Tsavo West NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over TsavoWest NP as a line 
+
+TsavoWest.Mean <- TsavoWest.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(TsavoWest.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in Tsavo West NP",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising ChyuluHills NP
+
+ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in Chyulu Hills NP (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over ChyuluHills NP as a line 
+
+ChyuluHills.Mean <- ChyuluHills.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(ChyuluHills.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in Chyulu Hills NP",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising NgaiNdethia NR
+
+ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in Ngai Ndethia NR (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over NgaiNdethia NR as a line 
+
+NgaiNdethia.Mean <- NgaiNdethia.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(NgaiNdethia.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in Ngai Ndethia NR",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising SouthKitui NR
+
+ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in South Kitui NR (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over SouthKitui NR as a line 
+
+SouthKitui.Mean <- SouthKitui.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(SouthKitui.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in South Kitui NR",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.Conservancies
+
+ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in AET.Conservancies (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over AET.Conservancies as a line 
+
+AET.Conservancies.Mean <- AET.Conservancies.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(AET.Conservancies.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in AET.Conservancies",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.Others
+
+## Visualising Amboseli NP
+
+ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in AET.Others (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over AET.Others as a line 
+
+AET.Others.Mean <- AET.Others.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(AET.Others.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in AET.Others",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+# Estimating Theil-Sen Slope Trends
+```
+
+```{r}
+## Theil-Sen across Amboseli NP
+
+  # Sorting data by "Year" & "ID"
+Amboseli.RPI.Visual.Arranged <- Amboseli.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+Amboseli.Pixel.List <- Amboseli.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+Amboseli.TheilSen <- map_dfr(Amboseli.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+Amboseli.TheilSen <- Amboseli.TheilSen %>%
+  mutate(Area = "Amboseli")
+
+  # Getting overall summary per area
+Amboseli.SummaryTrend <- Amboseli.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across TsavoEast NP
+
+  # Sorting data by "Year" & "ID"
+TsavoEast.RPI.Visual.Arranged <- TsavoEast.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+TsavoEast.Pixel.List <- TsavoEast.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+TsavoEast.TheilSen <- map_dfr(TsavoEast.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+TsavoEast.TheilSen <- TsavoEast.TheilSen %>%
+  mutate(Area = "TsavoEast")
+
+  # Getting overall summary per area
+TsavoEast.SummaryTrend <- TsavoEast.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across TsavoWest NP
+
+  # Sorting data by "Year" & "ID"
+TsavoWest.RPI.Visual.Arranged <- TsavoWest.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+TsavoWest.Pixel.List <- TsavoWest.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+TsavoWest.TheilSen <- map_dfr(TsavoWest.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+TsavoWest.TheilSen <- TsavoWest.TheilSen %>%
+  mutate(Area = "TsavoWest")
+
+  # Getting overall summary per area
+TsavoWest.SummaryTrend <- TsavoWest.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across ChyuluHills NP
+
+  # Sorting data by "Year" & "ID"
+ChyuluHills.RPI.Visual.Arranged <- ChyuluHills.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID 
+    #{"group_split()" - apply a time-series analysis function independently to the time serieS associated with each distinct spatial unit/pixel}
+ChyuluHills.Pixel.List <- ChyuluHills.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+ChyuluHills.TheilSen <- map_dfr(ChyuluHills.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+ChyuluHills.TheilSen <- ChyuluHills.TheilSen %>%
+  mutate(Area = "ChyuluHills")
+
+  # Getting overall summary per area
+ChyuluHills.SummaryTrend <- ChyuluHills.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across NgaiNdethia NR
+
+  # Sorting data by "Year" & "ID"
+NgaiNdethia.RPI.Visual.Arranged <- NgaiNdethia.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+NgaiNdethia.Pixel.List <- NgaiNdethia.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+NgaiNdethia.TheilSen <- map_dfr(NgaiNdethia.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+NgaiNdethia.TheilSen <- NgaiNdethia.TheilSen %>%
+  mutate(Area = "NgaiNdethia")
+
+  # Getting overall summary per area
+NgaiNdethia.SummaryTrend <- NgaiNdethia.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across SouthKitui NR
+
+  # Sorting data by "Year" & "ID"
+SouthKitui.RPI.Visual.Arranged <- SouthKitui.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+SouthKitui.Pixel.List <- SouthKitui.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+SouthKitui.TheilSen <- map_dfr(SouthKitui.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+SouthKitui.TheilSen <- SouthKitui.TheilSen %>%
+  mutate(Area = "SouthKitui")
+
+  # Getting overall summary per area
+SouthKitui.SummaryTrend <- SouthKitui.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across AET.Conservancies
+
+  # Sorting data by "Year" & "ID"
+AET.Conservancies.RPI.Visual.Arranged <- AET.Conservancies.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+AET.Conservancies.Pixel.List <- AET.Conservancies.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+AET.Conservancies.TheilSen <- map_dfr(AET.Conservancies.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+AET.Conservancies.TheilSen <- AET.Conservancies.TheilSen %>%
+  mutate(Area = "Amboseli")
+
+  # Getting overall summary per area
+AET.Conservancies.SummaryTrend <- AET.Conservancies.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+## Theil-Sen across AET.Others
+
+  # Sorting data by "Year" & "ID"
+AET.Others.RPI.Visual.Arranged <- AET.Others.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+AET.Others.Pixel.List <- AET.Others.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+AET.Others.TheilSen <- map_dfr(AET.Others.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+AET.Others.TheilSen <- AET.Others.TheilSen %>%
+  mutate(Area = "AET.Others")
+
+  # Getting overall summary per area
+AET.Others.SummaryTrend <- AET.Others.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
+# Visualising MeanSlope across study area
+
+All.Pixel.Slopes <- bind_rows(
+  Amboseli.TheilSen, TsavoEast.TheilSen, TsavoWest.TheilSen, ChyuluHills.TheilSen,
+  NgaiNdethia.TheilSen, SouthKitui.TheilSen, AET.Conservancies.TheilSen, AET.Others.TheilSen)
+
+
+All.Trends.Summary <- All.Pixel.Slopes %>%
+  group_by(Area) %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope)),
+    .groups = "drop"
+  )
+
+
+ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
+  geom_col(fill = "steelblue", color = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+  labs(
+    title = "Mean RPI Trend (Theil–Sen) by Area",
+    x = "Area",
+    y = "Mean Slope"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+## Visualising Violin Plot to compare across the study area
+
+ggplot(All.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, outlier.shape = NA) +
+  labs(title = "Distribution of RPI Trends (Theil–Sen Slopes) by Area", x = "Area", y = "Slope") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ```{r}
