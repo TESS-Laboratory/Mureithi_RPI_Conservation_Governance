@@ -992,7 +992,7 @@ ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ## Conversation on refining the Violin plots:
 
 # 1.Skepticism about RPI Fluctuations:
-  # Do not fully trust year-to-year fluctuations in the Retail Price Index (RPI).
+  # Do not fully trust year-to-year fluctuations in the (RPI).
 
 #2.Focus on Comparisons:
   # Emphasise comparisons in:
