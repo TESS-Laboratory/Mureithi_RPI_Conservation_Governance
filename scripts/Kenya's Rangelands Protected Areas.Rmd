@@ -17,46 +17,7 @@ pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, 
 ```
 
 ```{r}
-# First of all, I shall create the "theme_beautiful" as discussed in last session
-
-theme_beautiful <- function() {
-  theme_bw() +
-    theme(
-      text = element_text(family = "Helvetica"),
-      axis.text = element_text(size = 8, color = "black"),
-      axis.title = element_text(size = 8, color = "black"),
-      axis.line.x = element_line(size = 0.3, color = "black"),
-      axis.line.y = element_line(size = 0.3, color = "black"),
-      axis.ticks = element_line(size = 0.3, color = "black"),
-      panel.border = element_blank(),
-      panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      panel.grid.minor.y = element_blank(),
-      panel.grid.major.y = element_blank(),
-      plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"),
-      plot.title = element_text(
-        size = 8,
-        vjust = 1,
-        hjust = 0.5,
-        color = "black"
-      ),
-      legend.text = element_text(size = 8, color = "black"),
-      legend.title = element_text(size = 8, color = "black"),
-      legend.position = c(0.9, 0.9),
-      legend.key.size = unit(0.9, "line"),
-      legend.background = element_rect(
-        color = "black",
-        fill = "transparent",
-        size = 2,
-        linetype = "blank"
-      )
-    )
-}
-windowsFonts("Helvetica" = windowsFont("Helvetica"))
-```
-
-```{r}
-# Addressing the Warnings in the original "theme_beautiful()"
+# Set theme for plots
 
 theme_beautiful <- function() {
   theme_bw() +
@@ -266,7 +227,7 @@ ggplot() +
 
 AET.Conservancies <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/5. AET-Conservancies/AET_Conservancies.shp")
 
-AET.Others <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/5. AET-Conservancies/AET_Other_Conserved_Areas.shp")
+AET.Buffers <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/5. AET-Conservancies/AET_Other_Conserved_Areas.shp")
 
 DawidaRanch_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/Community&Groups/DawidaRanch(T)-WDPA_WDOECM_Apr2025_Public_72297_shp/WDPA_WDOECM_Apr2025_Public_72297_shp_0/WDPA_WDOECM_Apr2025_Public_72297_shp-points.shp")
 
@@ -288,7 +249,7 @@ TaitaHills_T <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/
 
 ggplot()+
   geom_sf(data = AET.Conservancies, aes(fill = consv_name), color = "black", linewidth = 0.1) +
-  #geom_sf(data = AET.Others, aes(fill = consv_name), color = "black", linewidth = 0.1) +
+  geom_sf(data = AET.Buffers, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   geom_sf(data = DawidaRanch_T, aes(fill = NAME), color = 'black', linewidth = 0.1) +
   geom_sf(data = Kasigau_T, aes(fill = NAME), color = 'black', linewidth = 0.1) +
   geom_sf(data = Mnjonyi_T, aes(fill = NAME), color = 'black', linewidth = 0.1) +
@@ -303,7 +264,7 @@ ggplot()+
 ```{r}
 # Visualising the Community & Group Lands surrounding Amboseli NP
 
-ggplot()+
+AET.Conservancies.Plot <- ggplot()+
   geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = AET.Conservancies, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Community & Group Lands surrounding Amboseli NP") +
@@ -313,11 +274,18 @@ ggplot()+
 ```{r}
 # Visualising the Community & Group Rangelands/Grazelands/Buffers surrounding Amboseli NP
 
-ggplot()+
+AET.Buffers.Plot <- ggplot()+
  geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  geom_sf(data = AET.Others, aes(fill = consv_name), color = "black", linewidth = 0.1) +
+  geom_sf(data = AET.Buffers, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Bufferzones, Corridors & Grazelands surrounding Amboseli NP") +
   theme_beautiful()
+```
+
+```{r}
+# Combining the two plots showing Community Lands for Amboseli NP
+AET.Conservancies.Plot + AET.Buffers.Plot + plot_layout(ncol = 1) +
+  plot_annotation(title = "Community & Group Lands surrounding Amboseli NP",
+                  theme = theme(plot.title = element_text(hjust = 0.5)))
 ```
 
 ```{r}
@@ -451,20 +419,20 @@ tm_shape(AET.Conservancies.RPI.Mean) +
 ```
 
 ```{r}
-## Visualising AET.Others
+## Visualising AET.Buffers
 
-AET.Others.RPI.Mask <- mask(RPI, AET.Others)
-AET.Others.RPI.Crop <- crop(AET.Others.RPI.Mask, AET.Others)
+AET.Buffers.RPI.Mask <- mask(RPI, AET.Buffers)
+AET.Buffers.RPI.Crop <- crop(AET.Buffers.RPI.Mask, AET.Buffers)
 
 # Averaging across years for visualization
-AET.Others.RPI.Mean <- mean(AET.Others.RPI.Crop, na.rm = TRUE)
+AET.Buffers.RPI.Mean <- mean(AET.Buffers.RPI.Crop, na.rm = TRUE)
 
 # Visualise
 tmap_mode("view")
-tm_shape(AET.Others.RPI.Mean) +
+tm_shape(AET.Buffers.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
-  tm_shape(AET.Others) +
+  tm_shape(AET.Buffers) +
   tm_borders(col = "white", lwd = 2)
 ```
 
@@ -475,10 +443,10 @@ tm_shape(AET.Others.RPI.Mean) +
 ```{r}
 ## Extracting RPI for Amboseli NP
 
-Amboseli.RPI.Values <- terra::extract(Amboseli.RPI.Crop, Amboseli)
+Amboseli.RPI.Values.Full <- terra::extract(Amboseli.RPI.Crop, Amboseli, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-Amboseli.RPI.Values <- Amboseli.RPI.Values[, -1]
+Amboseli.RPI.Values <- Amboseli.RPI.Values.Full[, names(Amboseli.RPI.Crop)]
 
 Amboseli.Summary <- data.frame(
   Layer = names(Amboseli.RPI.Crop),
@@ -495,10 +463,10 @@ print(Amboseli.Summary)
 ```{r}
 ## Extracting RPI for TsavoEast NP
 
-TsavoEast.RPI.Values <- terra::extract(TsavoEast.RPI.Crop, TsavoEast)
+TsavoEast.RPI.Values.Full <- terra::extract(TsavoEast.RPI.Crop, TsavoEast, cells= TRUE)
 
 ### Remove ID column (first column added by extract)
-TsavoEast.RPI.Values <- TsavoEast.RPI.Values[, -1]
+TsavoEast.RPI.Values <- TsavoEast.RPI.Values.Full[,names(TsavoEast.RPI.Crop)]
 
 TsavoEast.Summary <- data.frame(
   Layer = names(TsavoEast.RPI.Crop),
@@ -515,10 +483,10 @@ print(TsavoEast.Summary)
 ```{r}
 ## Extracting RPI for TsavoWest NP
 
-TsavoWest.RPI.Values <- terra::extract(TsavoWest.RPI.Crop, TsavoWest)
+TsavoWest.RPI.Values.Full <- terra::extract(TsavoWest.RPI.Crop, TsavoWest, cells= TRUE)
 
 ### Remove ID column (first column added by extract)
-TsavoWest.RPI.Values <- TsavoWest.RPI.Values[, -1]
+TsavoWest.RPI.Values <- TsavoWest.RPI.Values.Full[, names(Tsavost.RPI.Crop)]
 
 TsavoWest.Summary <- data.frame(
   Layer = names(TsavoWest.RPI.Crop),
@@ -535,10 +503,10 @@ print(TsavoWest.Summary)
 ```{r}
 ## Extracting RPI for ChyuluHills NP
 
-ChyuluHills.RPI.Values <- terra::extract(ChyuluHills.RPI.Crop, ChyuluHills)
+ChyuluHills.RPI.Values.Full <- terra::extract(ChyuluHills.RPI.Crop, ChyuluHills, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-ChyuluHills.RPI.Values <- ChyuluHills.RPI.Values[, -1]
+ChyuluHills.RPI.Values <- ChyuluHills.RPI.Values.Full[, names(ChyuluHills.RPI.Crop)]
 
 ChyuluHills.Summary <- data.frame(
   Layer = names(ChyuluHills.RPI.Crop),
@@ -555,10 +523,10 @@ print(ChyuluHills.Summary)
 ```{r}
 ## Extracting RPI for NgaiNdethia NR
 
-NgaiNdethia.RPI.Values <- terra::extract(NgaiNdethia.RPI.Crop, NgaiNdethia)
+NgaiNdethia.RPI.Values.Full <- terra::extract(NgaiNdethia.RPI.Crop, NgaiNdethia, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-NgaiNdethia.RPI.Values <- NgaiNdethia.RPI.Values[, -1]
+NgaiNdethia.RPI.Values <- NgaiNdethia.RPI.Values.Full[, names(Amboseli.RPI.Crop)]
 
 NgaiNdethia.Summary <- data.frame(
   Layer = names(NgaiNdethia.RPI.Crop),
@@ -575,10 +543,10 @@ print(NgaiNdethia.Summary)
 ```{r}
 ## Extracting RPI for SouthKitui NR
 
-SouthKitui.RPI.Values <- terra::extract(SouthKitui.RPI.Crop, SouthKitui)
+SouthKitui.RPI.Values.Full <- terra::extract(SouthKitui.RPI.Crop, SouthKitui, cells= TRUE)
 
 ### Remove ID column (first column added by extract)
-SouthKitui.RPI.Values <- SouthKitui.RPI.Values[, -1]
+SouthKitui.RPI.Values <- SouthKitui.RPI.Values.Full[, names(SouthKitui.RPI.Crop)]
 
 SouthKitui.Summary <- data.frame(
   Layer = names(SouthKitui.RPI.Crop),
@@ -595,10 +563,10 @@ print(SouthKitui.Summary)
 ```{r}
 ## Extracting RPI for AET.Conservancies
 
-AET.Conservancies.RPI.Values <- terra::extract(AET.Conservancies.RPI.Crop, AET.Conservancies)
+AET.Conservancies.RPI.Values.Full <- terra::extract(AET.Conservancies.RPI.Crop, AET.Conservancies, cells= TRUE)
 
 ### Remove ID column (first column added by extract)
-AET.Conservancies.RPI.Values <- AET.Conservancies.RPI.Values[, -1]
+AET.Conservancies.RPI.Values <- AET.Conservancies.RPI.Values.Full[, names(AET.Conservancies.RPI.Crop)]
 
 AET.Conservancies.Summary <- data.frame(
   Layer = names(AET.Conservancies.RPI.Crop),
@@ -613,23 +581,23 @@ print(AET.Conservancies.Summary)
 ```
 
 ```{r}
-## Extracting RPI for AET.Others
+## Extracting RPI for AET.Buffers
 
-AET.Others.RPI.Values <- terra::extract(AET.Others.RPI.Crop, AET.Others)
+AET.Buffers.RPI.Values.Full <- terra::extract(AET.Buffers.RPI.Crop, AET.Buffers, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-AET.Others.RPI.Values <- AET.Others.RPI.Values[, -1]
+AET.Buffers.RPI.Values <- AET.Buffers.RPI.Values.Full[, names(AET.Buffers.RPI.Crop)]
 
-AET.Others.Summary <- data.frame(
-  Layer = names(AET.Others.RPI.Crop),
-  Mean = apply(AET.Others.RPI.Values, 2, mean, na.rm = TRUE),
-  SD = apply(AET.Others.RPI.Values, 2, sd, na.rm = TRUE),
-  Q25 = apply(AET.Others.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
-  Median = apply(AET.Others.RPI.Values, 2, median, na.rm = TRUE),
-  Q75 = apply(AET.Others.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+AET.Buffers.Summary <- data.frame(
+  Layer = names(AET.Buffers.RPI.Crop),
+  Mean = apply(AET.Buffers.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(AET.Buffers.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(AET.Buffers.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(AET.Buffers.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(AET.Buffers.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
 )
 
-print(AET.Others.Summary)
+print(AET.Buffers.Summary)
 ```
 
 ```{r}
@@ -945,9 +913,9 @@ ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising AET.Others
+## Visualising AET.Buffers
 
-AET.Others.RPI.Visual <- AET.Others.RPI.Values %>%
+AET.Buffers.RPI.Visual <- AET.Buffers.RPI.Values %>%
   mutate(ID = row_number()) %>%  # optional, to keep track of pixels
   pivot_longer(
     cols = -ID,                 # exclude ID column from pivoting
@@ -958,16 +926,16 @@ AET.Others.RPI.Visual <- AET.Others.RPI.Values %>%
   filter(grepl("^rpi\\.", Layer)) %>%
   mutate(
     Year = as.integer(sub("rpi\\.", "", Layer)),
-    Area = "AET.Others"
+    Area = "AET.Buffers"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
   select(ID, Area, Year, RPI_value)
 
 # Now plot
-ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_boxplot(fill = "lightblue", outlier.color = "red") +
   labs(
-    title = "RPI Distribution Over Years in AET.Others",
+    title = "RPI Distribution Over Years in AET.Buffers",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -975,13 +943,13 @@ ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising AET.Others (using a Violin Plot)
+## Visualising AET.Buffers (using a Violin Plot)
 
-ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
   labs(
-    title = "RPI Distribution Over Years in AET.Others (Violin Plot)",
+    title = "RPI Distribution Over Years in AET.Buffers (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1015,7 +983,7 @@ ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in Amboseli NP (Violin Plot)",
     x = "Year",
@@ -1033,7 +1001,7 @@ Amboseli.Mean <- Amboseli.RPI.Visual %>%
 
 ggplot(Amboseli.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in Amboseli NP",
     x = "Year",
@@ -1049,7 +1017,7 @@ ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in Tsavo East NP (Violin Plot)",
     x = "Year",
@@ -1067,7 +1035,7 @@ TsavoEast.Mean <- TsavoEast.RPI.Visual %>%
 
 ggplot(TsavoEast.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in Tsavo East NP",
     x = "Year",
@@ -1083,7 +1051,7 @@ ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in Tsavo West NP (Violin Plot)",
     x = "Year",
@@ -1101,7 +1069,7 @@ TsavoWest.Mean <- TsavoWest.RPI.Visual %>%
 
 ggplot(TsavoWest.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in Tsavo West NP",
     x = "Year",
@@ -1117,7 +1085,7 @@ ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in Chyulu Hills NP (Violin Plot)",
     x = "Year",
@@ -1135,7 +1103,7 @@ ChyuluHills.Mean <- ChyuluHills.RPI.Visual %>%
 
 ggplot(ChyuluHills.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in Chyulu Hills NP",
     x = "Year",
@@ -1151,7 +1119,7 @@ ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in Ngai Ndethia NR (Violin Plot)",
     x = "Year",
@@ -1169,7 +1137,7 @@ NgaiNdethia.Mean <- NgaiNdethia.RPI.Visual %>%
 
 ggplot(NgaiNdethia.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in Ngai Ndethia NR",
     x = "Year",
@@ -1185,7 +1153,7 @@ ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in South Kitui NR (Violin Plot)",
     x = "Year",
@@ -1203,7 +1171,7 @@ SouthKitui.Mean <- SouthKitui.RPI.Visual %>%
 
 ggplot(SouthKitui.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in South Kitui NR",
     x = "Year",
@@ -1219,7 +1187,7 @@ ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
     title = "RPI Distribution Over Years in AET.Conservancies (Violin Plot)",
     x = "Year",
@@ -1237,7 +1205,7 @@ AET.Conservancies.Mean <- AET.Conservancies.RPI.Visual %>%
 
 ggplot(AET.Conservancies.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
     title = "Mean RPI Over Time in AET.Conservancies",
     x = "Year",
@@ -1247,17 +1215,17 @@ ggplot(AET.Conservancies.Mean, aes(x = Year, y = Mean_RPI)) +
 ```
 
 ```{r}
-## Visualising AET.Others
+## Visualising AET.Buffers
 
 ## Visualising Amboseli NP
 
-ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
-  stat_summary(fun = mean, geom = "point", shape = 21, fill = "white", size = 2) + # Combined the mean line with points to make it easier to visualise
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
-    title = "RPI Distribution Over Years in AET.Others (Violin Plot)",
+    title = "RPI Distribution Over Years in AET.Buffers (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1265,17 +1233,17 @@ ggplot(AET.Others.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising Mean RPI over AET.Others as a line 
+## Visualising Mean RPI over AET.Buffers as a line 
 
-AET.Others.Mean <- AET.Others.RPI.Visual %>%
+AET.Buffers.Mean <- AET.Buffers.RPI.Visual %>%
   group_by(Year) %>%
   summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
 
-ggplot(AET.Others.Mean, aes(x = Year, y = Mean_RPI)) +
+ggplot(AET.Buffers.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
-  geom_point(color = "black", fill = "white", shape = 21, size = 2) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
-    title = "Mean RPI Over Time in AET.Others",
+    title = "Mean RPI Over Time in AET.Buffers",
     x = "Year",
     y = "Mean RPI"
   ) +
@@ -1540,16 +1508,16 @@ AET.Conservancies.SummaryTrend <- AET.Conservancies.TheilSen %>%
 ```
 
 ```{r}
-## Theil-Sen across AET.Others
+## Theil-Sen across AET.Buffers
 
   # Sorting data by "Year" & "ID"
-AET.Others.RPI.Visual.Arranged <- AET.Others.RPI.Visual %>% arrange(ID, Year)
+AET.Buffers.RPI.Visual.Arranged <- AET.Buffers.RPI.Visual %>% arrange(ID, Year)
 
 # Split data by pixel ID
-AET.Others.Pixel.List <- AET.Others.RPI.Visual.Arranged %>% group_split(ID)
+AET.Buffers.Pixel.List <- AET.Buffers.RPI.Visual.Arranged %>% group_split(ID)
 
 # Apply sens.slope to each pixel group
-AET.Others.TheilSen <- map_dfr(AET.Others.Pixel.List, function(df) {
+AET.Buffers.TheilSen <- map_dfr(AET.Buffers.Pixel.List, function(df) {
   if (sum(!is.na(df$RPI_value)) >= 3) {
     slope <- tryCatch(
       sens.slope(df$RPI_value)$estimates,
@@ -1562,11 +1530,11 @@ AET.Others.TheilSen <- map_dfr(AET.Others.Pixel.List, function(df) {
 })
 
   # Joining slope results back with area info
-AET.Others.TheilSen <- AET.Others.TheilSen %>%
-  mutate(Area = "AET.Others")
+AET.Buffers.TheilSen <- AET.Buffers.TheilSen %>%
+  mutate(Area = "AET.Buffers")
 
   # Getting overall summary per area
-AET.Others.SummaryTrend <- AET.Others.TheilSen %>%
+AET.Buffers.SummaryTrend <- AET.Buffers.TheilSen %>%
   summarise(
     MeanSlope = mean(Slope, na.rm = TRUE),
     MedianSlope = median(Slope, na.rm = TRUE),
@@ -1580,7 +1548,7 @@ AET.Others.SummaryTrend <- AET.Others.TheilSen %>%
 
 All.Pixel.Slopes <- bind_rows(
   Amboseli.TheilSen, TsavoEast.TheilSen, TsavoWest.TheilSen, ChyuluHills.TheilSen,
-  NgaiNdethia.TheilSen, SouthKitui.TheilSen, AET.Conservancies.TheilSen, AET.Others.TheilSen)
+  NgaiNdethia.TheilSen, SouthKitui.TheilSen, AET.Conservancies.TheilSen, AET.Buffers.TheilSen)
 
 
 All.Trends.Summary <- All.Pixel.Slopes %>%
@@ -1615,6 +1583,281 @@ ggplot(All.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
   labs(title = "Distribution of RPI Trends (Theil–Sen Slopes) by Area", x = "Area", y = "Slope") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Creating Raster Maps of Theil-Sen Slopes
+```
+
+```{r}
+## Amboseli Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+Amboseli.Slope.Raster <- terra::rast(Amboseli.RPI.Crop[[1]])
+terra::values(Amboseli.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+Amboseli.Cell.Map <- data.frame(ID = 1:nrow(Amboseli.RPI.Values.Full), cell = Amboseli.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+Amboseli.Slope.Cells <- dplyr::left_join(Amboseli.TheilSen, Amboseli.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+Amboseli.Slope.Raster[Amboseli.Slope.Cells$cell] <- Amboseli.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(Amboseli.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — Amboseli") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## TsavoEast Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+TsavoEast.Slope.Raster <- terra::rast(TsavoEast.RPI.Crop[[1]])
+terra::values(TsavoEast.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+TsavoEast.Cell.Map <- data.frame(ID = 1:nrow(TsavoEast.RPI.Values.Full), cell = TsavoEast.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+TsavoEast.Slope.Cells <- dplyr::left_join(TsavoEast.TheilSen, TsavoEast.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+TsavoEast.Slope.Raster[TsavoEast.Slope.Cells$cell] <- TsavoEast.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(TsavoEast.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — Tsavo East") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## TsavoWest Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+TsavoWest.Slope.Raster <- terra::rast(TsavoWest.RPI.Crop[[1]])
+terra::values(TsavoWest.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+TsavoWest.Cell.Map <- data.frame(ID = 1:nrow(TsavoWest.RPI.Values.Full), cell = TsavoWest.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+TsavoWest.Slope.Cells <- dplyr::left_join(TsavoWest.TheilSen, TsavoWest.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+TsavoWest.Slope.Raster[TsavoWest.Slope.Cells$cell] <- TsavoWest.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(TsavoWest.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — Tsavo West") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## ChyuluHills Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+ChyuluHills.Slope.Raster <- terra::rast(ChyuluHills.RPI.Crop[[1]])
+terra::values(ChyuluHills.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+ChyuluHills.Cell.Map <- data.frame(ID = 1:nrow(ChyuluHills.RPI.Values.Full), cell = ChyuluHills.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+ChyuluHills.Slope.Cells <- dplyr::left_join(ChyuluHills.TheilSen, ChyuluHills.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+ChyuluHills.Slope.Raster[ChyuluHills.Slope.Cells$cell] <- ChyuluHills.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(ChyuluHills.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — Chyulu Hills") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## NgaiNdethia Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+NgaiNdethia.Slope.Raster <- terra::rast(NgaiNdethia.RPI.Crop[[1]])
+terra::values(NgaiNdethia.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+NgaiNdethia.Cell.Map <- data.frame(ID = 1:nrow(NgaiNdethia.RPI.Values.Full), cell = NgaiNdethia.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+NgaiNdethia.Slope.Cells <- dplyr::left_join(NgaiNdethia.TheilSen, NgaiNdethia.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+NgaiNdethia.Slope.Raster[NgaiNdethia.Slope.Cells$cell] <- NgaiNdethia.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(NgaiNdethia.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — Ngai Ndethia") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## SouthKitui Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+SouthKitui.Slope.Raster <- terra::rast(SouthKitui.RPI.Crop[[1]])
+terra::values(SouthKitui.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+SouthKitui.Cell.Map <- data.frame(ID = 1:nrow(SouthKitui.RPI.Values.Full), cell = SouthKitui.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+SouthKitui.Slope.Cells <- dplyr::left_join(SouthKitui.TheilSen, SouthKitui.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+SouthKitui.Slope.Raster[SouthKitui.Slope.Cells$cell] <- SouthKitui.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(SouthKitui.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — South Kitui") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## AET.Conservancies Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+AET.Conservancies.Slope.Raster <- terra::rast(AET.Conservancies.RPI.Crop[[1]])
+terra::values(AET.Conservancies.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+AET.Conservancies.Cell.Map <- data.frame(ID = 1:nrow(AET.Conservancies.RPI.Values.Full), cell = AET.Conservancies.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+AET.Conservancies.Slope.Cells <- dplyr::left_join(AET.Conservancies.TheilSen, AET.Conservancies.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+AET.Conservancies.Slope.Raster[AET.Conservancies.Slope.Cells$cell] <- AET.Conservancies.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(AET.Conservancies.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — AET Conservancies") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## AET.Buffers Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+AET.Buffers.Slope.Raster <- terra::rast(AET.Buffers.RPI.Crop[[1]])
+terra::values(AET.Buffers.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+AET.Buffers.Cell.Map <- data.frame(ID = 1:nrow(AET.Buffers.RPI.Values.Full), cell = AET.Buffers.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+AET.Buffers.Slope.Cells <- dplyr::left_join(AET.Buffers.TheilSen, AET.Buffers.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+AET.Buffers.Slope.Raster[AET.Buffers.Slope.Cells$cell] <- AET.Buffers.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(AET.Buffers.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope")
+  ) +
+  tm_title("Spatial Distribution of RPI Trends — AET Buffers") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Further Analysis
+```
+
+```{r}
+## Grouping Study Area Information
+
+Study.Area <- tibble::tibble(
+  Area = c("TsavoEast", "TsavoWest", "Amboseli", "ChyuluHills",
+           "NgaiNdethia", "SouthKitui", "AET.Conservancies", "AET.Buffers"),
+  ProtectionType = c("NationalPark", "NationalPark", "NationalPark", "NationalPark",
+                     "NationalReserve", "NationalReserve", "CommunityLand", "CommunityLand"))
+```
+
+```{r}
+## Joining Governance Metadata to Pixel Level Slope Data
+
+All.Pixel.Slopes <- All.Pixel.Slopes %>%
+  left_join(Study.Area, by = "Area")
+
+## Visualising Theil-Sen Slope Trends by Protection Type
+
+ggplot(All.Pixel.Slopes, aes(x = ProtectionType, y = Slope, fill = ProtectionType)) +
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.5, color = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+  labs(
+    title = "Distribution of RPI Trends by Governance Type",
+    x = "Governance Category",
+    y = "Theil–Sen Slope"
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_beautiful()
+```
+
+```{r}
+## Checking out Summary Statistics by Protection Type
+
+Governance.Summary <- All.Pixel.Slopes %>%
+  group_by(ProtectionType) %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope)),
+    .groups = "drop"
+  )
+
+print(Governance.Summary)
+```
+
+```{r}
+## Stats 1: Kruskal-Wallis Test
+
+kruskal.test(Slope ~ ProtectionType, data = All.Pixel.Slopes)
+```
+
+```{r}
+## Stats 2: Pairwise Wilcoxon Tests
+
+pairwise.wilcox.test(All.Pixel.Slopes$Slope, All.Pixel.Slopes$ProtectionType, p.adjust.method = "bonferroni")
 ```
 
 ```{r}
