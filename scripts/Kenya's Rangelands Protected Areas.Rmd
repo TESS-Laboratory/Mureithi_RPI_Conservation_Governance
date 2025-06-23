@@ -13,7 +13,7 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider)
 ```
 
 ```{r}
@@ -2018,7 +2018,41 @@ tmap_arrange(
 ```
 
 ```{r}
+# 5-Year rolling Mean of RPI Trends
 
+  # 1. Calculate the 5-year rolling mean for each 'Area'
+    # This is crucial: group_by(Area) before applying slide_dbl
+
+Primary.Concern.Areas.RPI.Trends.5yr <- Primary.Concern.Areas.RPI.Trends %>%
+  mutate(Year = as.numeric(Year)) %>% # Ensures Year is numeric & Grouping by Area so the rolling mean is calculated independently for each area
+  group_by(Area) %>%
+  # Arranging by year within each group to ensure correct rolling window calculation
+  arrange(Year) %>%
+  mutate(
+    Rolling_Mean_RPI = slide_dbl(
+      .x = MeanRPI,  # Apply rolling mean to the annual mean RPI
+      .f = mean,
+      .before = 4,  # Current year + 4 previous years = 5 years
+      .after = 0,
+      .complete = TRUE # Only calculate for full 5-year windows (eg: Years starts in 2000, its Rolling_Mean_RPI will be NA for 2000, 2001, 2002, and 2003. The first non-NA value will be for 2004 (which averages 2000-2004).)
+    )
+  ) %>%
+  ungroup() # Ungrouping after calculation as I don't need grouping for subsequent steps
+
+  # 2. Visualising 5-Year Rolling Mean RPI Trends for Primary Concern Areas
+
+ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Year, y = Rolling_Mean_RPI, color = Area)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(title = "5-Year Rolling Mean RPI Trends in Primary Concern Areas",
+    x = "Year (End of 5-Year Window)", # Adjust label for clarity
+    y = "5-Year Rolling Mean RPI") +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom") +
+  theme_beautiful() +
+  
+  # This is to adjust x-axis breaks to avoid clutter, especially if years are dense
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) # Adjust n as needed for number of labels
 ```
 
 ```{r}
