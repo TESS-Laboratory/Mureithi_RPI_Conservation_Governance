@@ -264,7 +264,7 @@ ggplot()+
 ```{r}
 # Visualising the Community & Group Lands surrounding Amboseli NP
 
-AET.Conservancies.Plot <- ggplot()+
+ggplot()+
   geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = AET.Conservancies, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Community & Group Lands surrounding Amboseli NP") +
@@ -274,18 +274,11 @@ AET.Conservancies.Plot <- ggplot()+
 ```{r}
 # Visualising the Community & Group Rangelands/Grazelands/Buffers surrounding Amboseli NP
 
-AET.Buffers.Plot <- ggplot()+
+ggplot()+
  geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = AET.Buffers, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Bufferzones, Corridors & Grazelands surrounding Amboseli NP") +
   theme_beautiful()
-```
-
-```{r}
-# Combining the two plots showing Community Lands for Amboseli NP
-AET.Conservancies.Plot + AET.Buffers.Plot + plot_layout(ncol = 1) +
-  plot_annotation(title = "Community & Group Lands surrounding Amboseli NP",
-                  theme = theme(plot.title = element_text(hjust = 0.5)))
 ```
 
 ```{r}
@@ -2056,4 +2049,18 @@ ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Year, y = Rolling_Mean_RPI,
 ```
 
 ```{r}
+# Creating a Violin Plot for 5-Year Rolling Mean RPI Trends
+
+ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Area, y = Rolling_Mean_RPI, fill = Area)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, color = "black") +
+  labs(title = "Distribution of 5-Year Rolling Mean RPI Trends by Area",
+    x = "Area", y = "5-Year Rolling Mean RPI") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_beautiful() +
+  
+  # Adjusting the fill colors for better visibility
+  scale_fill_brewer(palette = "Set2")
 ```
+
+```{r}
