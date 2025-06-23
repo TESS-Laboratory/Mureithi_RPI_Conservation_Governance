@@ -218,7 +218,7 @@ ggplot() +
   geom_sf(data = TsavoWest, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = NgaiNdethia, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = SouthKitui, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  labs(title = "National Parks and Reserves under Study", fill = "Protected Area") +
+  labs(title = "National Parks and Reserves - GAE/TCA", fill = "Protected Area") +
   theme_beautiful()
 ```
 
@@ -307,7 +307,9 @@ tm_shape(Amboseli.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(Amboseli) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Amboseli NP") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -325,7 +327,9 @@ tm_shape(TsavoEast.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(TsavoEast) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Tsavo East NP") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -343,7 +347,9 @@ tm_shape(TsavoWest.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(TsavoWest) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Tsavo West NP") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -361,7 +367,9 @@ tm_shape(ChyuluHills.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(ChyuluHills) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Chyulu Hills NP") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -379,7 +387,9 @@ tm_shape(NgaiNdethia.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(NgaiNdethia) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Ngai Ndethia NR") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -397,7 +407,9 @@ tm_shape(SouthKitui.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(SouthKitui) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in South Kitui NR") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -415,7 +427,9 @@ tm_shape(AET.Conservancies.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(AET.Conservancies) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in AET Conservancies") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -433,7 +447,9 @@ tm_shape(AET.Buffers.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI")) +
   tm_shape(AET.Buffers) +
-  tm_borders(col = "white", lwd = 2)
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Menean RPI in AET Buffers") +
+  tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -486,7 +502,7 @@ print(TsavoEast.Summary)
 TsavoWest.RPI.Values.Full <- terra::extract(TsavoWest.RPI.Crop, TsavoWest, cells= TRUE)
 
 ### Remove ID column (first column added by extract)
-TsavoWest.RPI.Values <- TsavoWest.RPI.Values.Full[, names(Tsavost.RPI.Crop)]
+TsavoWest.RPI.Values <- TsavoWest.RPI.Values.Full[, names(TsavoWest.RPI.Crop)]
 
 TsavoWest.Summary <- data.frame(
   Layer = names(TsavoWest.RPI.Crop),
@@ -526,7 +542,7 @@ print(ChyuluHills.Summary)
 NgaiNdethia.RPI.Values.Full <- terra::extract(NgaiNdethia.RPI.Crop, NgaiNdethia, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-NgaiNdethia.RPI.Values <- NgaiNdethia.RPI.Values.Full[, names(Amboseli.RPI.Crop)]
+NgaiNdethia.RPI.Values <- NgaiNdethia.RPI.Values.Full[, names(NgaiNdethia.RPI.Crop)]
 
 NgaiNdethia.Summary <- data.frame(
   Layer = names(NgaiNdethia.RPI.Crop),
@@ -1560,6 +1576,7 @@ All.Trends.Summary <- All.Pixel.Slopes %>%
     N = sum(!is.na(Slope)),
     .groups = "drop"
   )
+    ## All.Trends.Summary summarises the overall direction and strength of change in RPI for each area over the full time series.
 
 
 ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
@@ -1861,3 +1878,148 @@ pairwise.wilcox.test(All.Pixel.Slopes$Slope, All.Pixel.Slopes$ProtectionType, p.
 ```
 
 ```{r}
+# Temporal Trends across Years
+```
+
+```{r}
+## Yearly summary data
+
+# Combining all pixel values with area info
+All.Pixel.Values <- bind_rows(
+  Amboseli.RPI.Visual, TsavoEast.RPI.Visual, TsavoWest.RPI.Visual, ChyuluHills.RPI.Visual,
+  NgaiNdethia.RPI.Visual, SouthKitui.RPI.Visual, AET.Conservancies.RPI.Visual, 
+  AET.Buffers.RPI.Visual)
+
+# Grouping by Year and Area to compute annual means
+Annual.RPI.Trends <- All.Pixel.Values %>%
+  group_by(Area, Year) %>%
+  summarise(MeanRPI = mean(RPI_value, na.rm = TRUE), .groups = "drop")
+
+# Visualising Annual RPI Trends
+
+ggplot(Annual.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(title = "Annual Mean RPI Trends by Area", x = "Year", y = "Mean RPI") +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom") +
+  theme_beautiful()
+```
+
+```{r}
+## Zooming into the Areas of Primary Concern
+
+Primary.Concern.Areas <- bind_rows(Amboseli.RPI.Visual, TsavoEast.RPI.Visual, TsavoWest.RPI.Visual, AET.Conservancies.RPI.Visual, AET.Buffers.RPI.Visual)
+
+# Grouping by Year and Area to compute annual means
+Primary.Concern.Areas.RPI.Trends <- Primary.Concern.Areas %>%
+  group_by(Area, Year) %>%
+  summarise(MeanRPI = mean(RPI_value, na.rm = TRUE), .groups = "drop")
+
+    # "Primary.Concern.Areas.RPI.Trends" calculated the annual average RPI for each Area
+
+# Visualising Annual RPI Trends for Primary Concern Areas
+ggplot(Primary.Concern.Areas.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(title = "Annual Mean RPI Trends in Primary Concern Areas", x = "Year", y = "Mean RPI") +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom") +
+  theme_beautiful()
+```
+
+```{r}
+# Stastistical Analysis of Temporal Trends
+
+# Fitting a linear model
+
+lm_test <- lm(MeanRPI ~ Year * Area, data = Primary.Concern.Areas.RPI.Trends)
+anova(lm_test)
+summary(lm_test)
+```
+
+```{r}
+## Explanation of Results above:
+# The ANOVA results indicate whether there are significant differences in RPI trends across different areas and years.
+
+# The summary provides coefficients for the linear model, showing how RPI changes with each year and area.
+
+  # Area is highly significant (p < 0.001) → Different areas have different mean RPI levels.
+
+  # Year is not significant → No overall temporal trend across all areas.
+
+  # Year × Area is not significant (but close at p = 0.127) → Trend differences across areas are not statistically strong, but there are hints that Tsavo East is rising faster (Year:AreaTsavoEast is significant).
+```
+
+```{r}
+# Visualising Temporal Trends in Primary Concern Areas
+
+Primary.Pixel.Slopes <- All.Pixel.Slopes %>%
+  filter(Area %in% c("Amboseli", "TsavoEast", "TsavoWest", "AET.Conservancies", "AET.Buffers"))
+
+ggplot(Primary.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, color = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+  labs(title = "RPI Pixel Trend Distributions in Key Areas",
+       x = "Area", y = "Theil–Sen Slope") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_beautiful()
+```
+
+```{r}
+# Mapping Per-Pixel Slope for the Primary Concern Areas
+
+
+tmap_mode("view")  # placed "view" in stead of "plot" for interactiveness
+
+tmap_arrange(
+  tm_shape(Amboseli.Slope.Raster) +
+    tm_raster(
+      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+      col.legend = tm_legend(title = "Slope")
+    ) +
+    tm_title("Amboseli"),
+
+  tm_shape(TsavoEast.Slope.Raster) +
+    tm_raster(
+      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+      col.legend = tm_legend(title = "Slope")
+    ) +
+    tm_title("Tsavo East"),
+
+  tm_shape(TsavoWest.Slope.Raster) +
+    tm_raster(
+      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+      col.legend = tm_legend(title = "Slope")
+    ) +
+    tm_title("Tsavo West"),
+
+  tm_shape(AET.Conservancies.Slope.Raster) +
+    tm_raster(
+      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+      col.legend = tm_legend(title = "Slope")
+    ) +
+    tm_title("AET Conservancies"),
+
+  tm_shape(AET.Buffers.Slope.Raster) +
+    tm_raster(
+      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
+      col.legend = tm_legend(title = "Slope")
+    ) +
+    tm_title("AET Buffers"),
+
+  ncol = 2, nrow = 3  # Balanced grid
+)
+
+
+  # Saving the maps as a PNG file
+    # tmap_save(filename = "RPI_Slope_Maps_ConcernAreas.png", width = 10, height = 8, dpi = 300)
+```
+
+```{r}
+
+```
+
+```{r}
+```
