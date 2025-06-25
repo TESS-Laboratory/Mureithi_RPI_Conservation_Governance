@@ -13,7 +13,7 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats)
 ```
 
 ```{r}
@@ -211,15 +211,37 @@ SouthKitui <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.
 ```{r}
 # Visualising GAE/TCA
 
-ggplot() +
-  geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  geom_sf(data = ChyuluHills, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  geom_sf(data = TsavoEast, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  geom_sf(data = TsavoWest, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  geom_sf(data = NgaiNdethia, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  geom_sf(data = SouthKitui, aes(fill = NAME), color = "black", linewidth = 0.3) +
-  labs(title = "National Parks and Reserves - GAE/TCA", fill = "Protected Area") +
-  theme_beautiful()
+#ggplot() +
+#  geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
+#  geom_sf(data = ChyuluHills, aes(fill = NAME), color = "black", linewidth = 0.3) +
+#  geom_sf(data = TsavoEast, aes(fill = NAME), color = "black", linewidth = 0.3) +
+#  geom_sf(data = TsavoWest, aes(fill = NAME), color = "black", linewidth = 0.3) +
+#  geom_sf(data = NgaiNdethia, aes(fill = NAME), color = "black", linewidth = 0.3) +
+#  geom_sf(data = SouthKitui, aes(fill = NAME), color = "black", linewidth = 0.3) +
+#  labs(title = "National Parks and Reserves - GAE/TCA", fill = "Protected Area") +
+#  theme_beautiful()
+
+GAE.TCA <- bind_rows(
+  Amboseli,
+  ChyuluHills,
+  TsavoEast,
+  TsavoWest,
+  NgaiNdethia,
+  SouthKitui
+) %>%
+  mutate(Area = NAME)  # standardize the column
+
+
+tmap_mode("view")  # or "plot" for static
+
+tm_shape(GAE.TCA) +
+  tm_polygons(
+    fill = "Area",
+    fill.scale = tm_scale_categorical(values = "brewer.set3"),
+    fill.legend = tm_legend(title = "Protected Area"),
+    col = "black", lwd = 0.5
+  ) +
+  tm_title("National Parks and Reserves - GAE/TCA")
 ```
 
 ```{r}
@@ -282,6 +304,31 @@ ggplot()+
 ```
 
 ```{r}
+## Visualising AET.Conservancies and AET.Buffers in one map to show Connectivity
+
+# Add a category column to both layers
+AET.Conservancies <- AET.Conservancies %>%
+  mutate(ZoneType = "Conservancy")
+
+AET.Buffers <- AET.Buffers %>%
+  mutate(ZoneType = "Buffer")
+
+# Combine both layers into one
+AET.AllZones <- bind_rows(AET.Conservancies, AET.Buffers)
+
+# Plotting the combined AET zones
+tmap_mode("view")
+tm_shape(AET.AllZones) +
+  tm_polygons(
+    fill = "ZoneType",
+    fill.scale = tm_scale_categorical(values = c("Buffer" = "forestgreen", "Conservancy" = "limegreen")),
+    fill.legend = tm_legend(title = "AET Areas"),
+    col = "black", lwd = 0.4
+  ) +
+  tm_title ("Connectivity of AET Conservancies and Buffers")
+```
+
+```{r}
 # Visualising RPI for each Area
 ```
 
@@ -298,7 +345,7 @@ Amboseli.RPI.Mean <- mean(Amboseli.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(Amboseli.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(Amboseli) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in Amboseli NP") +
@@ -318,7 +365,7 @@ TsavoEast.RPI.Mean <- mean(TsavoEast.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(TsavoEast.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(TsavoEast) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in Tsavo East NP") +
@@ -338,7 +385,7 @@ TsavoWest.RPI.Mean <- mean(TsavoWest.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(TsavoWest.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(TsavoWest) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in Tsavo West NP") +
@@ -358,7 +405,7 @@ ChyuluHills.RPI.Mean <- mean(ChyuluHills.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(ChyuluHills.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(ChyuluHills) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in Chyulu Hills NP") +
@@ -378,7 +425,7 @@ NgaiNdethia.RPI.Mean <- mean(NgaiNdethia.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(NgaiNdethia.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(NgaiNdethia) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in Ngai Ndethia NR") +
@@ -398,7 +445,7 @@ SouthKitui.RPI.Mean <- mean(SouthKitui.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(SouthKitui.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(SouthKitui) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in South Kitui NR") +
@@ -418,7 +465,7 @@ AET.Conservancies.RPI.Mean <- mean(AET.Conservancies.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(AET.Conservancies.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(AET.Conservancies) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in AET Conservancies") +
@@ -438,11 +485,79 @@ AET.Buffers.RPI.Mean <- mean(AET.Buffers.RPI.Crop, na.rm = TRUE)
 tmap_mode("view")
 tm_shape(AET.Buffers.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI")) +
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
   tm_shape(AET.Buffers) +
   tm_borders(col = "white", lwd = 2) +
-  tm_title("Spatial Distribution of Menean RPI in AET Buffers") +
+  tm_title("Spatial Distribution of Mean RPI in AET Buffers") +
   tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## Visualising AET.AllZones
+
+AET.AllZones.RPI.Mask <- mask(RPI, AET.AllZones)
+AET.AllZones.RPI.Crop <- crop(AET.AllZones.RPI.Mask, AET.AllZones)
+
+# Averaging across years for visualization
+AET.AllZones.RPI.Mean <- mean(AET.AllZones.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(AET.AllZones.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.Buffers) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Amboseli's Surrounding Lands") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## Viewing Mean.RPI Maps for Primary Concern Areas
+
+tmap_mode("view")
+
+# Creating individual map panels
+Map.Amboseli.RPI.Mean <- tm_shape(Amboseli.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Amboseli) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Amboseli")
+
+Map.TsavoEast.RPI.Mean <- tm_shape(TsavoEast.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(TsavoEast) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo East")
+
+Map.TsavoWest.RPI.Mean <- tm_shape(TsavoWest.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(TsavoWest) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo West")
+
+Map.AET.Conservancies.RPI.Mean <- tm_shape(AET.Conservancies.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.Conservancies) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("AET Conservancies")
+
+Map.AET.Buffers.RPI.Mean <- tm_shape(AET.Buffers.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.Buffers) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("AET Buffers")
+
+Map.AET.AllZones.RPI.Mean <- tm_shape(AET.AllZones.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.AllZones) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("AET All Zones")
+
+# Combining into grid
+tmap_arrange(Map.Amboseli.RPI.Mean, Map.TsavoEast.RPI.Mean,
+             Map.TsavoWest.RPI.Mean, Map.AET.Conservancies.RPI.Mean, 
+             Map.AET.Buffers.RPI.Mean, Map.AET.AllZones.RPI.Mean, ncol = 3, nrow = 3)
 ```
 
 ```{r}
@@ -607,6 +722,26 @@ AET.Buffers.Summary <- data.frame(
 )
 
 print(AET.Buffers.Summary)
+```
+
+```{r}
+## Extracting RPI for AET.AllZones
+
+AET.AllZones.RPI.Values.Full <- terra::extract(AET.AllZones.RPI.Crop, AET.AllZones, cells = TRUE)
+
+### Remove ID column (first column added by extract)
+AET.AllZones.RPI.Values <- AET.AllZones.RPI.Values.Full[, names(AET.AllZones.RPI.Crop)]
+
+AET.AllZones.Summary <- data.frame(
+  Layer = names(AET.AllZones.RPI.Crop),
+  Mean = apply(AET.AllZones.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(AET.AllZones.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(AET.AllZones.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(AET.AllZones.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(AET.AllZones.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+)
+
+print(AET.AllZones.Summary)
 ```
 
 ```{r}
@@ -959,6 +1094,36 @@ ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
   labs(
     title = "RPI Distribution Over Years in AET.Buffers (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising AET.AllZones
+
+AET.AllZones.RPI.Visual <- AET.AllZones.RPI.Values %>%
+  mutate(ID = row_number()) %>%  # optional, to keep track of pixels
+  pivot_longer(
+    cols = -ID,                 # exclude ID column from pivoting
+    names_to = "Layer",
+    values_to = "RPI_value"
+  ) %>%
+  # Keep only layers starting with "rpi."
+  filter(grepl("^rpi\\.", Layer)) %>%
+  mutate(
+    Year = as.integer(sub("rpi\\.", "", Layer)),
+    Area = "AET.AllZones"
+  ) %>%
+  filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
+  select(ID, Area, Year, RPI_value) ## I will need "ID" for Trend Analysis (Theil-Sen)
+
+# Now plot
+ggplot(AET.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red") +
+  labs(
+    title = "RPI Distribution Over Years in AET.AllZones",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1553,6 +1718,42 @@ AET.Buffers.SummaryTrend <- AET.Buffers.TheilSen %>%
 ```
 
 ```{r}
+## Theil-Sen across AET.AllZones
+
+  # Sorting data by "Year" & "ID"
+AET.AllZones.RPI.Visual.Arranged <- AET.AllZones.RPI.Visual %>% arrange(ID, Year)
+
+# Split data by pixel ID
+AET.AllZones.Pixel.List <- AET.AllZones.RPI.Visual.Arranged %>% group_split(ID)
+
+# Apply sens.slope to each pixel group
+AET.AllZones.TheilSen <- map_dfr(AET.AllZones.Pixel.List, function(df) {
+  if (sum(!is.na(df$RPI_value)) >= 3) {
+    slope <- tryCatch(
+      sens.slope(df$RPI_value)$estimates,
+      error = function(e) NA_real_
+    )
+  } else {
+    slope <- NA_real_
+  }
+  tibble(ID = unique(df$ID), Slope = slope)
+})
+
+  # Joining slope results back with area info
+AET.AllZones.TheilSen <- AET.AllZones.TheilSen %>%
+  mutate(Area = "AET.AllZones")
+
+  # Getting overall summary per area
+AET.AllZones.SummaryTrend <- AET.AllZones.TheilSen %>%
+  summarise(
+    MeanSlope = mean(Slope, na.rm = TRUE),
+    MedianSlope = median(Slope, na.rm = TRUE),
+    SD = sd(Slope, na.rm = TRUE),
+    N = sum(!is.na(Slope))
+  )
+```
+
+```{r}
 # Visualising MeanSlope across study area
 
 All.Pixel.Slopes <- bind_rows(
@@ -1618,9 +1819,8 @@ Amboseli.Slope.Raster[Amboseli.Slope.Cells$cell] <- Amboseli.Slope.Cells$Slope
 # 4. Plot the raster
 tm_shape(Amboseli.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Amboseli") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1644,9 +1844,8 @@ TsavoEast.Slope.Raster[TsavoEast.Slope.Cells$cell] <- TsavoEast.Slope.Cells$Slop
 # 4. Plot the raster
 tm_shape(TsavoEast.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse= TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Tsavo East") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1670,9 +1869,8 @@ TsavoWest.Slope.Raster[TsavoWest.Slope.Cells$cell] <- TsavoWest.Slope.Cells$Slop
 # 4. Plot the raster
 tm_shape(TsavoWest.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Tsavo West") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1696,9 +1894,8 @@ ChyuluHills.Slope.Raster[ChyuluHills.Slope.Cells$cell] <- ChyuluHills.Slope.Cell
 # 4. Plot the raster
 tm_shape(ChyuluHills.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Chyulu Hills") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1722,9 +1919,8 @@ NgaiNdethia.Slope.Raster[NgaiNdethia.Slope.Cells$cell] <- NgaiNdethia.Slope.Cell
 # 4. Plot the raster
 tm_shape(NgaiNdethia.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Ngai Ndethia") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1748,9 +1944,8 @@ SouthKitui.Slope.Raster[SouthKitui.Slope.Cells$cell] <- SouthKitui.Slope.Cells$S
 # 4. Plot the raster
 tm_shape(SouthKitui.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — South Kitui") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1774,9 +1969,8 @@ AET.Conservancies.Slope.Raster[AET.Conservancies.Slope.Cells$cell] <- AET.Conser
 # 4. Plot the raster
 tm_shape(AET.Conservancies.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — AET Conservancies") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1800,10 +1994,34 @@ AET.Buffers.Slope.Raster[AET.Buffers.Slope.Cells$cell] <- AET.Buffers.Slope.Cell
 # 4. Plot the raster
 tm_shape(AET.Buffers.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope")
-  ) +
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse= TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — AET Buffers") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## AET.AllZones Raster Map of Theil-Sen Slopes
+
+# 1. I shall use the original raster as a template using only 1 layer for structure
+AET.AllZones.Slope.Raster <- terra::rast(AET.AllZones.RPI.Crop[[1]])
+terra::values(AET.AllZones.Slope.Raster) <- NA  # blank it out
+
+# 2. I shall then link slope values to cell numbers
+AET.AllZones.Cell.Map <- data.frame(ID = 1:nrow(AET.AllZones.RPI.Values.Full), cell = AET.AllZones.RPI.Values.Full$cell)
+
+  # Merging slopes with cells
+AET.AllZones.Slope.Cells <- dplyr::left_join(AET.AllZones.TheilSen, AET.AllZones.Cell.Map, by = "ID")
+
+# 3. Populate slope values into raster cells
+AET.AllZones.Slope.Raster[AET.AllZones.Slope.Cells$cell] <- AET.AllZones.Slope.Cells$Slope
+
+# 4. Plot the raster
+tm_shape(AET.AllZones.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Theil–Sen Slope", reverse= TRUE)) +
+  tm_title("Spatial Distribution of RPI Trends in Amboseli's surrounding lands") +
   tm_layout(legend.outside = TRUE)
 ```
 
@@ -1922,6 +2140,34 @@ ggplot(Primary.Concern.Areas.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area
 ```
 
 ```{r}
+# Calculating Theil-Sen Slope for Primary Concern Areas
+
+# Calculate slope & intercept for each area
+Primary.TheilSen.Lines <- Primary.Concern.Areas.RPI.Trends %>%
+  group_by(Area) %>%
+  summarise(
+    slope = sens.slope(MeanRPI)$estimates,
+    intercept = mean(MeanRPI, na.rm = TRUE) - slope * mean(Year, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Plotting with "geom_line()" for dashed actual means & "geom_abline()" for Theil–Sen trends
+ggplot(Primary.Concern.Areas.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) + # Dashed annual trend lines
+  geom_line(size = 1, linetype = "dashed") +
+  # Points
+  geom_point(size = 2) +
+  # Theil–Sen trend lines manually
+  geom_abline(data = Primary.TheilSen.Lines,
+              aes(slope = slope, intercept = intercept, color = Area),
+              linetype = "solid", linewidth = 1.2, show.legend = FALSE) +
+  labs(title = "Annual Mean RPI Trends (dashed lines) with Theil–Sen Lines (straight lines)",x = "Year", y = "Mean RPI") +
+  scale_color_brewer(palette = "Set1") +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+```
+
+```{r}
 # Stastistical Analysis of Temporal Trends
 
 # Fitting a linear model
@@ -1947,14 +2193,23 @@ summary(lm_test)
 ```{r}
 # Visualising Temporal Trends in Primary Concern Areas
 
-Primary.Pixel.Slopes <- All.Pixel.Slopes %>%
-  filter(Area %in% c("Amboseli", "TsavoEast", "TsavoWest", "AET.Conservancies", "AET.Buffers"))
+# Step 1: Compute median slope per Area and reorder levels
+area_order <- Primary.Pixel.Slopes %>%
+  group_by(Area) %>%
+  summarise(MedianSlope = median(Slope, na.rm = TRUE)) %>%
+  arrange(desc(MedianSlope)) %>%
+  pull(Area)
 
+# Step 2: Apply factor level ordering to the dataset
+Primary.Pixel.Slopes <- Primary.Pixel.Slopes %>%
+  mutate(Area = factor(Area, levels = area_order))
+
+# Step 3: Plot with reordered factor
 ggplot(Primary.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
   geom_violin(trim = FALSE) +
   geom_boxplot(width = 0.1, outlier.shape = NA, color = "black") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
-  labs(title = "RPI Pixel Trend Distributions in Key Areas",
+  labs(title = "RPI Pixel Trend Distributions in Key Areas (Sorted by Median Slope)",
        x = "Area", y = "Theil–Sen Slope") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme_beautiful()
@@ -1969,41 +2224,29 @@ tmap_mode("view")  # placed "view" in stead of "plot" for interactiveness
 tmap_arrange(
   tm_shape(Amboseli.Slope.Raster) +
     tm_raster(
-      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-      col.legend = tm_legend(title = "Slope")
-    ) +
+      col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+      col.legend = tm_legend(title = "Slope", reverse = TRUE)) +
     tm_title("Amboseli"),
 
   tm_shape(TsavoEast.Slope.Raster) +
     tm_raster(
-      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-      col.legend = tm_legend(title = "Slope")
-    ) +
+      col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+      col.legend = tm_legend(title = "Slope", reverse = TRUE)) +
     tm_title("Tsavo East"),
 
   tm_shape(TsavoWest.Slope.Raster) +
     tm_raster(
-      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-      col.legend = tm_legend(title = "Slope")
-    ) +
+      col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+      col.legend = tm_legend(title = "Slope", reverse = TRUE))+
     tm_title("Tsavo West"),
 
-  tm_shape(AET.Conservancies.Slope.Raster) +
+  tm_shape(AET.AllZones.Slope.Raster) +
     tm_raster(
-      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-      col.legend = tm_legend(title = "Slope")
-    ) +
-    tm_title("AET Conservancies"),
+      col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+      col.legend = tm_legend(title = "Slope", reverse = TRUE)) +
+    tm_title("Amboseli Surrounding Lands"),
 
-  tm_shape(AET.Buffers.Slope.Raster) +
-    tm_raster(
-      col.scale = tm_scale_continuous(values = "rd_bu", midpoint = 0),
-      col.legend = tm_legend(title = "Slope")
-    ) +
-    tm_title("AET Buffers"),
-
-  ncol = 2, nrow = 3  # Balanced grid
-)
+  ncol = 2, nrow = 2)
 
 
   # Saving the maps as a PNG file
@@ -2031,8 +2274,10 @@ Primary.Concern.Areas.RPI.Trends.5yr <- Primary.Concern.Areas.RPI.Trends %>%
     )
   ) %>%
   ungroup() # Ungrouping after calculation as I don't need grouping for subsequent steps
+```
 
-  # 2. Visualising 5-Year Rolling Mean RPI Trends for Primary Concern Areas
+```{r}
+# Visualising 5-Year Rolling Mean RPI Trends for Primary Concern Areas
 
 ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Year, y = Rolling_Mean_RPI, color = Area)) +
   geom_line(linewidth = 1) +
@@ -2051,6 +2296,11 @@ ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Year, y = Rolling_Mean_RPI,
 ```{r}
 # Creating a Violin Plot for 5-Year Rolling Mean RPI Trends
 
+# Reorder Area by descending median Rolling_Mean_RPI
+Primary.Concern.Areas.RPI.Trends.5yr <- Primary.Concern.Areas.RPI.Trends.5yr %>%
+  mutate(Area = factor(Area, levels = names(sort(tapply(Rolling_Mean_RPI, Area, median, na.rm = TRUE), decreasing = TRUE))))
+
+# Then to plot the violin plot
 ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Area, y = Rolling_Mean_RPI, fill = Area)) +
   geom_violin(trim = FALSE) +
   geom_boxplot(width = 0.1, outlier.shape = NA, color = "black") +
@@ -2064,3 +2314,6 @@ ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Area, y = Rolling_Mean_RPI,
 ```
 
 ```{r}
+
+
+
