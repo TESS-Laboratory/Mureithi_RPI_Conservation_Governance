@@ -2314,6 +2314,52 @@ ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Area, y = Rolling_Mean_RPI,
 ```
 
 ```{r}
+# Temporal Performance Overview
+```
 
+```{r}
+## Import 
+
+Temporal.Performance <- rast("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/RPI Datasets (GuyLomax)/rpi_ea_temporal_performance.tif")
+```
+
+```{r}
+## Clipping Temporal Performance to Kenya Admin Boundary
+
+### Ensure CRS matches
+Kenya.Admin.Boundary <- st_transform(Kenya.Admin.Boundary, crs(Temporal.Performance))
+
+### Convert to terra vector
+Kenya.Admin.Boundary.Vect <- vect(Kenya.Admin.Boundary)
+
+### Crop and mask
+Temporal.Performance.Kenya <- crop(Temporal.Performance, Kenya.Admin.Boundary.Vect)
+Temporal.Performance.Kenya <- mask(Temporal.Performance.Kenya, Kenya.Admin.Boundary.Vect)
+```
+
+```{r}
+##  Plotting Temporal Performance clipped to Kenya's Administrative Boundary
+
+ggplot() +
+  geom_spatraster(data = Temporal.Performance.Kenya) +
+  facet_wrap(~lyr, ncol = 3) +
+  scale_fill_gradientn(
+    colours = c("lightblue", "limegreen", "yellow", "red"),
+    na.value = "grey90"
+  ) +
+  geom_sf(data = Kenya.Admin.Boundary, fill = NA, color = "black", linewidth = 0.3) +
+  labs(
+    title = "Temporal Performance over Kenya",
+    subtitle = "MAE, RMSE, and R² metrics",
+    fill = "Performance"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold", size = 12),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+```
 
 
