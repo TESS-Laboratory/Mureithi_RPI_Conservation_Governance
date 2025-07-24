@@ -2191,31 +2191,6 @@ summary(lm_test)
 ```
 
 ```{r}
-# Visualising Temporal Trends in Primary Concern Areas
-
-# Step 1: Compute median slope per Area and reorder levels
-area_order <- Primary.Pixel.Slopes %>%
-  group_by(Area) %>%
-  summarise(MedianSlope = median(Slope, na.rm = TRUE)) %>%
-  arrange(desc(MedianSlope)) %>%
-  pull(Area)
-
-# Step 2: Apply factor level ordering to the dataset
-Primary.Pixel.Slopes <- Primary.Pixel.Slopes %>%
-  mutate(Area = factor(Area, levels = area_order))
-
-# Step 3: Plot with reordered factor
-ggplot(Primary.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
-  geom_violin(trim = FALSE) +
-  geom_boxplot(width = 0.1, outlier.shape = NA, color = "black") +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
-  labs(title = "RPI Pixel Trend Distributions in Key Areas (Sorted by Median Slope)",
-       x = "Area", y = "Theil–Sen Slope") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme_beautiful()
-```
-
-```{r}
 # Mapping Per-Pixel Slope for the Primary Concern Areas
 
 
@@ -2362,4 +2337,156 @@ ggplot() +
   )
 ```
 
+```{r}
+## Extracting RSQ values from the raster & linking to each RPI.Mean
+## Extract R² layer
 
+RSQ.Layer <- Temporal.Performance[["rsq"]]
+```
+
+```{r}
+# Check alignment for Amboseli — they should match in extent/resolution
+
+all.equal(ext(RSQ.Layer), ext(Amboseli.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2704655 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in Amboseli
+crs(RSQ.Layer) == crs(Amboseli.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in Amboseli
+RSQ.Resampled.Amboseli <- resample(RSQ.Layer, Amboseli.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again in Amboseli
+all.equal(ext(RSQ.Resampled.Amboseli), ext(Amboseli.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
+# Check alignment — they should match in extent/resolution in TsavoEast
+all.equal(ext(RSQ.Layer), ext(TsavoEast.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2447468 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in TsavoEast
+crs(RSQ.Layer) == crs(TsavoEast.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in TsavoEast
+RSQ.Resampled.TsavoEast <- resample(RSQ.Layer, TsavoEast.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again in TsavoEast
+all.equal(ext(RSQ.Resampled.TsavoEast), ext(TsavoEast.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
+# Check alignment — they should match in extent/resolution in TsavoWest
+all.equal(ext(RSQ.Layer), ext(TsavoWest.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2509435 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in TsavoWest
+crs(RSQ.Layer) == crs(TsavoWest.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in TsavoWest
+RSQ.Resampled.TsavoWest <- resample(RSQ.Layer, TsavoWest.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again for TsavoWest
+all.equal(ext(RSQ.Resampled.TsavoWest), ext(TsavoWest.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
+# Check alignment — they should match in extent/resolution in AET.Conservancies
+all.equal(ext(RSQ.Layer), ext(AET.Conservancies.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2535526 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in AET.Conservancies
+crs(RSQ.Layer) == crs(AET.Conservancies.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in AET.Conservancies
+RSQ.Resampled.AET.Conservancies <- resample(RSQ.Layer, AET.Conservancies.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again
+all.equal(ext(RSQ.Resampled.AET.Conservancies), ext(AET.Conservancies.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
+# Check alignment — they should match in extent/resolution in AET.Buffers
+all.equal(ext(RSQ.Layer), ext(AET.Buffers.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2540185 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in AET.Buffers
+crs(RSQ.Layer) == crs(AET.Buffers.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in AET.Buffers
+RSQ.Resampled.AET.Buffers <- resample(RSQ.Layer, AET.Buffers.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again
+all.equal(ext(RSQ.Resampled.AET.Buffers), ext(AET.Buffers.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
+# Check alignment — they should match in extent/resolution
+all.equal(ext(RSQ.Layer), ext(AET.AllZones.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.252714 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in AET.AllZones
+crs(RSQ.Layer) == crs(AET.AllZones.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster
+RSQ.Resampled.AET.AllZones <- resample(RSQ.Layer, AET.AllZones.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again
+all.equal(ext(RSQ.Resampled.AET.AllZones), ext(AET.AllZones.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
