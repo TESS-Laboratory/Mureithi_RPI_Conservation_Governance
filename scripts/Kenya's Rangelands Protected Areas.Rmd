@@ -2693,7 +2693,7 @@ colnames(AET.AllZones.Values.RPI.Rsquare) <- c("RPI", "RSQ")
 ```{r}
 # 1. Amboseli 
 
-ggplot(Amboseli.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
+Amboseli.Values.RPI.Rsquare.Plot <- ggplot(Amboseli.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2703,79 +2703,104 @@ ggplot(Amboseli.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
     color = "RPI Value"
   ) +
   theme_beautiful()
+
+Amboseli.Values.RPI.Rsquare.Plot
 ```
 
 ```{r}
 # 2. TsavoEast
 
-ggplot(TsavoEast.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
+TsavoEast.Values.RPI.Rsquare.Plot <- ggplot(TsavoEast.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
-    title = "RPI vs R²: Amboseli",
+    title = "RPI vs R²: Tsavo East",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI",
     color = "RPI Value"
   ) +
   theme_beautiful()
+
+TsavoEast.Values.RPI.Rsquare.Plot
 ```
 
 ```{r}
 # 3. TsavoWest
 
-ggplot(TsavoWest.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
+TsavoWest.Values.RPI.Rsquare.Plot <- ggplot(TsavoWest.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
-    title = "RPI vs R²: Amboseli",
+    title = "RPI vs R²: Tsavo West",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI",
     color = "RPI Value"
   ) +
   theme_beautiful()
+
+TsavoWest.Values.RPI.Rsquare.Plot
 ```
 
 ```{r}
 # 4. AET.Conservancies
 
-ggplot(AET.Conservancies.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
+AET.Conservancies.Values.RPI.Rsquare.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
-    title = "RPI vs R²: Amboseli",
+    title = "RPI vs R²: AET.Conservancies",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI",
     color = "RPI Value"
   ) +
   theme_beautiful()
+
+AET.Conservancies.Values.RPI.Rsquare.Plot
 ```
 
 ```{r}
 # 5. AET.Buffers
 
-ggplot(AET.Buffers.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
+AET.Buffers.Values.RPI.Rsquare.Plot <- ggplot(AET.Buffers.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
-    title = "RPI vs R²: Amboseli",
+    title = "RPI vs R²: AET.Buffers",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI",
     color = "RPI Value"
   ) +
   theme_beautiful()
+
+AET.Buffers.Values.RPI.Rsquare.Plot
 ```
 
 ```{r}
 # 6. AET.AllZones
 
-ggplot(AET.AllZones.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
+AET.AllZones.Values.RPI.Rsquare.Plot <- ggplot(AET.AllZones.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
-    title = "RPI vs R²: Amboseli",
+    title = "RPI vs R²: Amboseli Surrounding Lands",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI",
     color = "RPI Value"
   ) +
   theme_beautiful()
+
+AET.AllZones.Values.RPI.Rsquare.Plot
 ```
+
+```{r}
+# # Combining all the plots together
+
+All.RPI.Rsquare.Plots <- 
+  (Amboseli.Values.RPI.Rsquare.Plot | TsavoEast.Values.RPI.Rsquare.Plot | TsavoWest.Values.RPI.Rsquare.Plot) /
+  (AET.Conservancies.Values.RPI.Rsquare.Plot | AET.Buffers.Values.RPI.Rsquare.Plot | AET.AllZones.Values.RPI.Rsquare.Plot)
+
+# Show the combined plot
+All.RPI.Rsquare.Plots
+```
+
+
