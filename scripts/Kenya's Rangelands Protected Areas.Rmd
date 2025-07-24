@@ -2693,7 +2693,7 @@ colnames(AET.AllZones.Values.RPI.Rsquare) <- c("RPI", "RSQ")
 ```{r}
 # 1. Amboseli 
 
-ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+ggplot(Amboseli.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2702,13 +2702,13 @@ ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
     y = "Mean RPI",
     color = "RPI Value"
   ) +
-  theme_beautiful
+  theme_beautiful()
 ```
 
 ```{r}
 # 2. TsavoEast
 
-ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+ggplot(TsavoEast.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2717,13 +2717,13 @@ ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
     y = "Mean RPI",
     color = "RPI Value"
   ) +
-  theme_beautiful
+  theme_beautiful()
 ```
 
 ```{r}
 # 3. TsavoWest
 
-ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+ggplot(TsavoWest.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2732,13 +2732,13 @@ ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
     y = "Mean RPI",
     color = "RPI Value"
   ) +
-  theme_beautiful
+  theme_beautiful()
 ```
 
 ```{r}
 # 4. AET.Conservancies
 
-ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+ggplot(AET.Conservancies.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2747,13 +2747,13 @@ ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
     y = "Mean RPI",
     color = "RPI Value"
   ) +
-  theme_beautiful
+  theme_beautiful()
 ```
 
 ```{r}
 # 5. AET.Buffers
 
-ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+ggplot(AET.Buffers.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2762,13 +2762,13 @@ ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
     y = "Mean RPI",
     color = "RPI Value"
   ) +
-  theme_beautiful
+  theme_beautiful()
 ```
 
 ```{r}
 # 6. AET.AllZones
 
-ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+ggplot(AET.AllZones.Values.RPI.Rsquare, aes(x = RSQ, y = RPI, color = RPI)) +
   geom_point(alpha = 0.4, size = 1) +
   scale_color_viridis_c(option = "D") +
   labs(
@@ -2777,5 +2777,5 @@ ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
     y = "Mean RPI",
     color = "RPI Value"
   ) +
-  theme_beautiful
+  theme_beautiful()
 ```
