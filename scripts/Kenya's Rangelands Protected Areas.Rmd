@@ -2605,3 +2605,177 @@ tm_shape(AET.AllZones.RPI.Mean.Filtered) +
 ```
 
 ```{r}
+## Comparing the maps side by side
+
+tmap_mode("view")  # Sets plot to interactive mode
+
+tmap_arrange(
+  tm_shape(Amboseli.RPI.Mean.Filtered) +
+    tm_raster(col.legend = tm_legend(title = "Amboseli (R² ≥ 0.3)")), # Updated title
+  tm_shape(TsavoEast.RPI.Mean.Filtered) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo East (R² ≥ 0.3)")), # Updated title
+  tm_shape(TsavoWest.RPI.Mean.Filtered) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo West (R² ≥ 0.3)")), # Updated title
+  tm_shape(AET.AllZones.RPI.Mean.Filtered) +
+    tm_raster(col.legend = tm_legend(title = "AET All Zones (R² ≥ 0.3)")), # Updated title
+  ncol = 2
+)
+```
+
+```{r}
+# # Test Statistics for Filtered RPI Maps
+```
+
+```{r}
+# 1. Amboseli
+
+# Extract values from both rasters into a data.frame
+Amboseli.Values.RPI.Rsquare <- as.data.frame(c(Amboseli.RPI.Mean, RSQ.Resampled.Amboseli), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Amboseli.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 2. TsavoEast
+
+# Extract values from both rasters into a data.frame
+TsavoEast.Values.RPI.Rsquare <- as.data.frame(c(TsavoEast.RPI.Mean, RSQ.Resampled.TsavoEast), na.rm = TRUE)
+
+# Rename for clarity
+colnames(TsavoEast.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. TsavoWest
+
+# Extract values from both rasters into a data.frame
+TsavoWest.Values.RPI.Rsquare <- as.data.frame(c(TsavoWest.RPI.Mean, RSQ.Resampled.TsavoWest), na.rm = TRUE)
+
+# Rename for clarity
+colnames(TsavoWest.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 4. AET.Conservancies
+
+# Extract values from both rasters into a data.frame
+AET.Conservancies.Values.RPI.Rsquare <- as.data.frame(c(AET.Conservancies.RPI.Mean, RSQ.Resampled.AET.Conservancies), na.rm = TRUE)
+
+# Rename for clarity
+colnames(AET.Conservancies.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 5. AET.Buffers
+
+# Extract values from both rasters into a data.frame
+AET.Buffers.Values.RPI.Rsquare <- as.data.frame(c(AET.Buffers.RPI.Mean, RSQ.Resampled.AET.Buffers), na.rm = TRUE)
+
+# Rename for clarity
+colnames(AET.Buffers.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 6. AET.AllZones
+
+# Extract values from both rasters into a data.frame
+AET.AllZones.Values.RPI.Rsquare <- as.data.frame(c(AET.AllZones.RPI.Mean, RSQ.Resampled.AET.AllZones), na.rm = TRUE)
+
+# Rename for clarity
+colnames(AET.AllZones.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# #Plotting the R² and RPI values for each area
+```
+
+```{r}
+# 1. Amboseli 
+
+ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_viridis_c(option = "D") +
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI",
+    color = "RPI Value"
+  ) +
+  theme_beautiful
+```
+
+```{r}
+# 2. TsavoEast
+
+ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_viridis_c(option = "D") +
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI",
+    color = "RPI Value"
+  ) +
+  theme_beautiful
+```
+
+```{r}
+# 3. TsavoWest
+
+ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_viridis_c(option = "D") +
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI",
+    color = "RPI Value"
+  ) +
+  theme_beautiful
+```
+
+```{r}
+# 4. AET.Conservancies
+
+ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_viridis_c(option = "D") +
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI",
+    color = "RPI Value"
+  ) +
+  theme_beautiful
+```
+
+```{r}
+# 5. AET.Buffers
+
+ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_viridis_c(option = "D") +
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI",
+    color = "RPI Value"
+  ) +
+  theme_beautiful
+```
+
+```{r}
+# 6. AET.AllZones
+
+ggplot(amboseli_vals, aes(x = RSQ, y = RPI, color = RPI)) +
+  geom_point(alpha = 0.4, size = 1) +
+  scale_color_viridis_c(option = "D") +
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI",
+    color = "RPI Value"
+  ) +
+  theme_beautiful
+```
