@@ -2490,3 +2490,118 @@ all.equal(ext(RSQ.Resampled.AET.AllZones), ext(AET.AllZones.RPI.Mean))  # Should
 ```
 
 ```{r}
+## Mask RPI rasters using R² threshold
+
+# #  Set R² threshold
+RSQ.Threshold.3 <- 0.3  # I will adjust this to 0.1 or 0.2 after discussions with Guy Lomax
+
+# 1. Creating mask for pixels with R² >= threshold
+RSQ.Mask.Amboseli <- RSQ.Resampled.Amboseli >= RSQ.Threshold.3
+
+# 2. Applying the mask to the RPI mean raster
+Amboseli.RPI.Mean.Filtered <- mask(Amboseli.RPI.Mean, RSQ.Mask.Amboseli, maskvalues = FALSE)
+
+# 2. Visualising the filtered result
+tmap_mode("view")
+tm_shape(Amboseli.RPI.Mean.Filtered) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(Amboseli) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Repeating the masking process for other areas
+
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.TsavoEast <- RSQ.Resampled.TsavoEast >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+TsavoEast.RPI.Mean.Filtered <- mask(TsavoEast.RPI.Mean, RSQ.Mask.TsavoEast, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(TsavoEast.RPI.Mean.Filtered) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(TsavoEast) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.TsavoWest <- RSQ.Resampled.TsavoWest >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+TsavoWest.RPI.Mean.Filtered <- mask(TsavoWest.RPI.Mean, RSQ.Mask.TsavoWest, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(TsavoWest.RPI.Mean.Filtered) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(TsavoWest) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.AET.Conservancies <- RSQ.Resampled.AET.Conservancies >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+AET.Conservancies.RPI.Mean.Filtered <- mask(AET.Conservancies.RPI.Mean, RSQ.Mask.AET.Conservancies, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(AET.Conservancies.RPI.Mean.Filtered) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(AET.Conservancies) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.AET.Buffers <- RSQ.Resampled.AET.Buffers >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+AET.Buffers.RPI.Mean.Filtered <- mask(AET.Buffers.RPI.Mean, RSQ.Mask.AET.Buffers, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(AET.Buffers.RPI.Mean.Filtered) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(AET.Buffers) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.AET.AllZones <- RSQ.Resampled.AET.AllZones >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+AET.AllZones.RPI.Mean.Filtered <- mask(AET.AllZones.RPI.Mean, RSQ.Mask.AET.AllZones, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(AET.AllZones.RPI.Mean.Filtered) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(AET.AllZones) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
