@@ -2803,4 +2803,12 @@ All.RPI.Rsquare.Plots <-
 All.RPI.Rsquare.Plots
 ```
 
+```{r}
+# # Feedback on the above!
 
+# In several zones — notably AET.Conservancies, Amboseli, and AET.AllZones — we observed clusters of pixels with consistently low RPI values (e.g., < 0.5) and strongly negative R² values (e.g., < -1). This combination suggests that the quantile regression forest model systematically overestimates inter-annual GPP variability in areas with consistently low productivity, such as rocky or sparsely vegetated regions. In these cases, the null model (assuming constant GPP) outperforms the predictive model, leading to highly negative R² values. As such, these areas are likely unsuitable for interpreting RPI trends, and we exclude them from further analysis by masking out pixels with R² < 0.
+```
+
+```{r}
+# # Masking out Pixels with Negative R^2
+```
