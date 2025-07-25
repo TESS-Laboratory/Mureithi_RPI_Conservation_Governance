@@ -3177,22 +3177,50 @@ Kenya.RPI.Rsquare.Plot
 ```
 
 ```{r}
-# Map Pixels with R² ≤ 0.1 in Kenya (A poor model fit filtering out poor-quality predictions)
+# # Map Pixels with R² ≤ 0.1 in Kenya (A poor model fit filtering out poor-quality predictions)
 
-RSQ.Low.Performance.Kenya <- RSQ.Kenya <= 0.1
+# --- CREATE RSQ.Low.Performance.Mask ---
+# Method 1: Logical Mask (Recommended for simplicity)
+# Pixels where RSQ.Kenya <= 0.1 will be TRUE, others will be FALSE.
+# tmap handles logical rasters very well.
+RSQ.Low.Performance.Mask <- RSQ.Kenya <= 0.1
+
+# Method 2: Numeric Mask (If you prefer 1s and NAs explicitly) & this creates a raster where pixels <= 0.1 are 1, and > 0.1 become NA.
+    # RSQ.Low.Performance.Mask <- classify(RSQ.Kenya, rcl = matrix(c(-Inf, 0.1, 1, 0.1, Inf, NA), ncol = 3, byrow = TRUE))
+# Or
+    # RSQ.Low.Performance.Mask <- app(RSQ.Kenya, fun = function(x) { ifelse(x <= 0.1, 1, NA) })
+```
+
+```{r}
+# Plotting the Masked Layer
 
 tmap_mode("view")
-tm_shape(RSQ.Low.Performance.Kenya) +
+
+tm_shape(RSQ.Low.Performance.Mask) +
   tm_raster(
-    style = "cat", palette = c("transparent", "red"),
-    title = "R² ≤ 0.1", labels = c("Good", "Poor")
+    # tmap will automatically use the single layer for 'col'.
+    # We define the discrete scale based on internal 0/1 representation of TRUE/FALSE.
+    col.scale = tm_scale_discrete(
+      # Map 0 (representing FALSE) to NA (transparent).
+      # Map 1 (representing TRUE) to "red".
+      values = c("0" = NA, "1" = "red"),
+
+      # Labels for the legend.
+      # An empty string "" for the first entry (corresponding to 0/FALSE)
+      # will make it invisible in the legend, showing only the red category.
+      labels = c("", expression(R^2 ~ "≤ 0.1")),
+      show.na = FALSE # Ensures any actual NA values in the raster are not shown in the legend
+    ),
+    col_alpha = 0.6, # Transparency for the red areas
+    col.legend = tm_legend(title = "Poor Model Fit"), # Title for the legend box
+    legend.show = TRUE # Make sure the legend is displayed
   ) +
   tm_shape(Kenya.Admin.Boundary) +
   tm_borders(col = "black") +
   tm_layout(
-    main.title = "Pixels with R² ≤ 0.1 (Kenya)",
-    legend.outside = TRUE
-  )
+    legend.outside = TRUE # Place the legend outside the map area
+  ) +
+  tm_title("Pixels with Poor Model Fit (R² ≤ 0.1) in Kenya") # Main title for the map
 ```
 
 ```{r}
