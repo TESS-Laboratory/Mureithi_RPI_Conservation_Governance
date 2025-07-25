@@ -2499,14 +2499,14 @@ RSQ.Threshold.3 <- 0.3  # I will adjust this to 0.1 or 0.2 after discussions wit
 RSQ.Mask.Amboseli <- RSQ.Resampled.Amboseli >= RSQ.Threshold.3
 
 # 2. Applying the mask to the RPI mean raster
-Amboseli.RPI.Mean.Filtered <- mask(Amboseli.RPI.Mean, RSQ.Mask.Amboseli, maskvalues = FALSE)
+Amboseli.RPI.Mean.Filtered.3 <- mask(Amboseli.RPI.Mean, RSQ.Mask.Amboseli, maskvalues = FALSE)
 
 # 2. Visualising the filtered result
 tmap_mode("view")
-tm_shape(Amboseli.RPI.Mean.Filtered) +
+tm_shape(Amboseli.RPI.Mean.Filtered.3) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "viridis"), 
-    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
   tm_shape(Amboseli) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
@@ -2519,14 +2519,14 @@ tm_shape(Amboseli.RPI.Mean.Filtered) +
 RSQ.Mask.TsavoEast <- RSQ.Resampled.TsavoEast >= RSQ.Threshold.3
 
 # Applying the mask to the RPI mean raster
-TsavoEast.RPI.Mean.Filtered <- mask(TsavoEast.RPI.Mean, RSQ.Mask.TsavoEast, maskvalues = FALSE)
+TsavoEast.RPI.Mean.Filtered.3 <- mask(TsavoEast.RPI.Mean, RSQ.Mask.TsavoEast, maskvalues = FALSE)
 
 # Visualising the filtered result
 tmap_mode("view")
-tm_shape(TsavoEast.RPI.Mean.Filtered) +
+tm_shape(TsavoEast.RPI.Mean.Filtered.3) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "viridis"), 
-    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
   tm_shape(TsavoEast) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
@@ -2537,14 +2537,14 @@ tm_shape(TsavoEast.RPI.Mean.Filtered) +
 RSQ.Mask.TsavoWest <- RSQ.Resampled.TsavoWest >= RSQ.Threshold.3
 
 # Applying the mask to the RPI mean raster
-TsavoWest.RPI.Mean.Filtered <- mask(TsavoWest.RPI.Mean, RSQ.Mask.TsavoWest, maskvalues = FALSE)
+TsavoWest.RPI.Mean.Filtered.3 <- mask(TsavoWest.RPI.Mean, RSQ.Mask.TsavoWest, maskvalues = FALSE)
 
 # Visualising the filtered result
 tmap_mode("view")
-tm_shape(TsavoWest.RPI.Mean.Filtered) +
+tm_shape(TsavoWest.RPI.Mean.Filtered.3) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "viridis"), 
-    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
   tm_shape(TsavoWest) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
@@ -2555,14 +2555,14 @@ tm_shape(TsavoWest.RPI.Mean.Filtered) +
 RSQ.Mask.AET.Conservancies <- RSQ.Resampled.AET.Conservancies >= RSQ.Threshold.3
 
 # Applying the mask to the RPI mean raster
-AET.Conservancies.RPI.Mean.Filtered <- mask(AET.Conservancies.RPI.Mean, RSQ.Mask.AET.Conservancies, maskvalues = FALSE)
+AET.Conservancies.RPI.Mean.Filtered.3 <- mask(AET.Conservancies.RPI.Mean, RSQ.Mask.AET.Conservancies, maskvalues = FALSE)
 
 # Visualising the filtered result
 tmap_mode("view")
-tm_shape(AET.Conservancies.RPI.Mean.Filtered) +
+tm_shape(AET.Conservancies.RPI.Mean.Filtered.3) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "viridis"), 
-    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
   tm_shape(AET.Conservancies) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
@@ -2573,14 +2573,14 @@ tm_shape(AET.Conservancies.RPI.Mean.Filtered) +
 RSQ.Mask.AET.Buffers <- RSQ.Resampled.AET.Buffers >= RSQ.Threshold.3
 
 # Applying the mask to the RPI mean raster
-AET.Buffers.RPI.Mean.Filtered <- mask(AET.Buffers.RPI.Mean, RSQ.Mask.AET.Buffers, maskvalues = FALSE)
+AET.Buffers.RPI.Mean.Filtered.3 <- mask(AET.Buffers.RPI.Mean, RSQ.Mask.AET.Buffers, maskvalues = FALSE)
 
 # Visualising the filtered result
 tmap_mode("view")
-tm_shape(AET.Buffers.RPI.Mean.Filtered) +
+tm_shape(AET.Buffers.RPI.Mean.Filtered.3) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "viridis"), 
-    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
   tm_shape(AET.Buffers) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
@@ -2591,14 +2591,14 @@ tm_shape(AET.Buffers.RPI.Mean.Filtered) +
 RSQ.Mask.AET.AllZones <- RSQ.Resampled.AET.AllZones >= RSQ.Threshold.3
 
 # Applying the mask to the RPI mean raster
-AET.AllZones.RPI.Mean.Filtered <- mask(AET.AllZones.RPI.Mean, RSQ.Mask.AET.AllZones, maskvalues = FALSE)
+AET.AllZones.RPI.Mean.Filtered.3 <- mask(AET.AllZones.RPI.Mean, RSQ.Mask.AET.AllZones, maskvalues = FALSE)
 
 # Visualising the filtered result
 tmap_mode("view")
-tm_shape(AET.AllZones.RPI.Mean.Filtered) +
+tm_shape(AET.AllZones.RPI.Mean.Filtered.3) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "viridis"), 
-    col.legend = tm_legend(title = "RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
   tm_shape(AET.AllZones) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
@@ -2610,80 +2610,80 @@ tm_shape(AET.AllZones.RPI.Mean.Filtered) +
 tmap_mode("view")  # Sets plot to interactive mode
 
 tmap_arrange(
-  tm_shape(Amboseli.RPI.Mean.Filtered) +
-    tm_raster(col.legend = tm_legend(title = "Amboseli (R² ≥ 0.3)")), # Updated title
-  tm_shape(TsavoEast.RPI.Mean.Filtered) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo East (R² ≥ 0.3)")), # Updated title
-  tm_shape(TsavoWest.RPI.Mean.Filtered) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo West (R² ≥ 0.3)")), # Updated title
-  tm_shape(AET.AllZones.RPI.Mean.Filtered) +
-    tm_raster(col.legend = tm_legend(title = "AET All Zones (R² ≥ 0.3)")), # Updated title
+  tm_shape(Amboseli.RPI.Mean.Filtered.3) +
+    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI(R² ≥ 0.3)")), # Updated title
+  tm_shape(TsavoEast.RPI.Mean.Filtered.3) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI(R² ≥ 0.3)")), # Updated title
+  tm_shape(TsavoWest.RPI.Mean.Filtered.3) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI(R² ≥ 0.3)")), # Updated title
+  tm_shape(AET.AllZones.RPI.Mean.Filtered.3) +
+    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI(R² ≥ 0.3)")), # Updated title
   ncol = 2
 )
 ```
 
 ```{r}
-# # Test Statistics for Filtered RPI Maps
+# # Test Statistics for Filtered (0.3 R^2 threshold) RPI Maps
 ```
 
 ```{r}
 # 1. Amboseli
 
 # Extract values from both rasters into a data.frame
-Amboseli.Values.RPI.Rsquare <- as.data.frame(c(Amboseli.RPI.Mean, RSQ.Resampled.Amboseli), na.rm = TRUE)
+Amboseli.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(Amboseli.RPI.Mean.Filtered.3, RSQ.Resampled.Amboseli), na.rm = TRUE)
 
 # Rename for clarity
-colnames(Amboseli.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+colnames(Amboseli.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
 # 2. TsavoEast
 
 # Extract values from both rasters into a data.frame
-TsavoEast.Values.RPI.Rsquare <- as.data.frame(c(TsavoEast.RPI.Mean, RSQ.Resampled.TsavoEast), na.rm = TRUE)
+TsavoEast.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(TsavoEast.RPI.Mean.Filtered.3, RSQ.Resampled.TsavoEast), na.rm = TRUE)
 
 # Rename for clarity
-colnames(TsavoEast.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+colnames(TsavoEast.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
 # 3. TsavoWest
 
 # Extract values from both rasters into a data.frame
-TsavoWest.Values.RPI.Rsquare <- as.data.frame(c(TsavoWest.RPI.Mean, RSQ.Resampled.TsavoWest), na.rm = TRUE)
+TsavoWest.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(TsavoWest.RPI.Mean.Filtered.3, RSQ.Resampled.TsavoWest), na.rm = TRUE)
 
 # Rename for clarity
-colnames(TsavoWest.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+colnames(TsavoWest.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
 # 4. AET.Conservancies
 
 # Extract values from both rasters into a data.frame
-AET.Conservancies.Values.RPI.Rsquare <- as.data.frame(c(AET.Conservancies.RPI.Mean, RSQ.Resampled.AET.Conservancies), na.rm = TRUE)
+AET.Conservancies.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(AET.Conservancies.RPI.Mean.Filtered.3, RSQ.Resampled.AET.Conservancies), na.rm = TRUE)
 
 # Rename for clarity
-colnames(AET.Conservancies.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+colnames(AET.Conservancies.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
 # 5. AET.Buffers
 
 # Extract values from both rasters into a data.frame
-AET.Buffers.Values.RPI.Rsquare <- as.data.frame(c(AET.Buffers.RPI.Mean, RSQ.Resampled.AET.Buffers), na.rm = TRUE)
+AET.Buffers.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(AET.Buffers.RPI.Mean.Filtered.3, RSQ.Resampled.AET.Buffers), na.rm = TRUE)
 
 # Rename for clarity
-colnames(AET.Buffers.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+colnames(AET.Buffers.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
 # 6. AET.AllZones
 
 # Extract values from both rasters into a data.frame
-AET.AllZones.Values.RPI.Rsquare <- as.data.frame(c(AET.AllZones.RPI.Mean, RSQ.Resampled.AET.AllZones), na.rm = TRUE)
+AET.AllZones.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(AET.AllZones.RPI.Mean.Filtered.3, RSQ.Resampled.AET.AllZones), na.rm = TRUE)
 
 # Rename for clarity
-colnames(AET.AllZones.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+colnames(AET.AllZones.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
@@ -2693,7 +2693,7 @@ colnames(AET.AllZones.Values.RPI.Rsquare) <- c("RPI", "RSQ")
 ```{r}
 # 1. Amboseli 
 
-Amboseli.Values.RPI.Rsquare.Plot <- ggplot(Amboseli.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+Amboseli.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(Amboseli.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
@@ -2704,13 +2704,13 @@ Amboseli.Values.RPI.Rsquare.Plot <- ggplot(Amboseli.Values.RPI.Rsquare, aes(x = 
   theme_beautiful() +
   theme(legend.position = "right")
 
-Amboseli.Values.RPI.Rsquare.Plot
+Amboseli.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
 # 2. TsavoEast
 
-TsavoEast.Values.RPI.Rsquare.Plot <- ggplot(TsavoEast.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+TsavoEast.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(TsavoEast.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
@@ -2721,13 +2721,13 @@ TsavoEast.Values.RPI.Rsquare.Plot <- ggplot(TsavoEast.Values.RPI.Rsquare, aes(x 
   theme_beautiful() +
   theme(legend.position = "right")
 
-TsavoEast.Values.RPI.Rsquare.Plot
+TsavoEast.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
 # 3. TsavoWest
 
-TsavoWest.Values.RPI.Rsquare.Plot <- ggplot(TsavoWest.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+TsavoWest.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(TsavoWest.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
@@ -2738,13 +2738,13 @@ TsavoWest.Values.RPI.Rsquare.Plot <- ggplot(TsavoWest.Values.RPI.Rsquare, aes(x 
   theme_beautiful() +
   theme(legend.position = "right")
 
-TsavoWest.Values.RPI.Rsquare.Plot
+TsavoWest.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
 # 4. AET.Conservancies
 
-AET.Conservancies.Values.RPI.Rsquare.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+AET.Conservancies.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
@@ -2755,13 +2755,13 @@ AET.Conservancies.Values.RPI.Rsquare.Plot <- ggplot(AET.Conservancies.Values.RPI
   theme_beautiful() +
   theme(legend.position = "right")
 
-AET.Conservancies.Values.RPI.Rsquare.Plot
+AET.Conservancies.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
 # 5. AET.Buffers
 
-AET.Buffers.Values.RPI.Rsquare.Plot <- ggplot(AET.Buffers.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+AET.Buffers.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(AET.Buffers.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
@@ -2772,13 +2772,13 @@ AET.Buffers.Values.RPI.Rsquare.Plot <- ggplot(AET.Buffers.Values.RPI.Rsquare, ae
   theme_beautiful() +
   theme(legend.position = "right")
 
-AET.Buffers.Values.RPI.Rsquare.Plot
+AET.Buffers.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
 # 6. AET.AllZones
 
-AET.AllZones.Values.RPI.Rsquare.Plot <- ggplot(AET.AllZones.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+AET.AllZones.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(AET.AllZones.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
@@ -2789,26 +2789,347 @@ AET.AllZones.Values.RPI.Rsquare.Plot <- ggplot(AET.AllZones.Values.RPI.Rsquare, 
   theme_beautiful() +
   theme(legend.position = "right")
 
-AET.AllZones.Values.RPI.Rsquare.Plot
+AET.AllZones.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
 # # Combining all the plots together
 
-All.RPI.Rsquare.Plots <- 
-  (Amboseli.Values.RPI.Rsquare.Plot | TsavoEast.Values.RPI.Rsquare.Plot | TsavoWest.Values.RPI.Rsquare.Plot) /
-  (AET.Conservancies.Values.RPI.Rsquare.Plot | AET.Buffers.Values.RPI.Rsquare.Plot | AET.AllZones.Values.RPI.Rsquare.Plot)
+All.RPI.Rsquare.Filtered.3.Plots <- 
+  (Amboseli.Values.RPI.Rsquare.Filtered.3.Plot | TsavoEast.Values.RPI.Rsquare.Filtered.3.Plot | TsavoWest.Values.RPI.Rsquare.Filtered.3.Plot) /
+  (AET.Conservancies.Values.RPI.Rsquare.Filtered.3.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.3.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.3.Plot)
 
 # Show the combined plot
-All.RPI.Rsquare.Plots
+All.RPI.Rsquare.Filtered.3.Plots
 ```
 
 ```{r}
 # # Feedback on the above!
 
-# In several zones — notably AET.Conservancies, Amboseli, and AET.AllZones — we observed clusters of pixels with consistently low RPI values (e.g., < 0.5) and strongly negative R² values (e.g., < -1). This combination suggests that the quantile regression forest model systematically overestimates inter-annual GPP variability in areas with consistently low productivity, such as rocky or sparsely vegetated regions. In these cases, the null model (assuming constant GPP) outperforms the predictive model, leading to highly negative R² values. As such, these areas are likely unsuitable for interpreting RPI trends, and we exclude them from further analysis by masking out pixels with R² < 0.
+# In several zones, notably AET.Conservancies, Amboseli, and AET.AllZones, there are observed clusters of pixels with consistently low RPI values (e.g., < 0.5) and strongly negative R² values (e.g., < -1). This combination suggests that the quantile regression forest model systematically overestimates inter-annual GPP variability in areas with consistently low productivity, such as rocky or sparsely vegetated regions. In these cases, the null model (assuming constant GPP) outperforms the predictive model, leading to highly negative R² values. As such, these areas are likely unsuitable for interpreting RPI trends, and we exclude them from further analysis by masking out pixels with R² < 0.
 ```
 
 ```{r}
-# # Masking out Pixels with Negative R^2
+# # Masking out Pixels with Negative R^2 (RPI pixels where R² < 0.1)
+
+# #  Set R² threshold
+RSQ.Threshold.1 <- 0.1  # After agreement with Guy that "Any positive R-squared should be an improvement on using raw GPP or NDVI data"
+```
+
+```{r}
+# 1. Amboseli
+ 
+RSQ.Mask.Amboseli <- RSQ.Resampled.Amboseli >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+Amboseli.RPI.Mean.Filtered.1 <- mask(Amboseli.RPI.Mean, RSQ.Mask.Amboseli, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Amboseli.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(Amboseli) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# 2. Tsavo East
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.TsavoEast <- RSQ.Resampled.TsavoEast >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+TsavoEast.RPI.Mean.Filtered.1 <- mask(TsavoEast.RPI.Mean, RSQ.Mask.TsavoEast, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(TsavoEast) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# 3. Tsavo West
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.TsavoWest <- RSQ.Resampled.TsavoWest >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+TsavoWest.RPI.Mean.Filtered.1 <- mask(TsavoWest.RPI.Mean, RSQ.Mask.TsavoWest, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(TsavoWest) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+#4. Amboseli Surrounding Conservancies
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.AET.Conservancies <- RSQ.Resampled.AET.Conservancies >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+AET.Conservancies.RPI.Mean.Filtered.1 <- mask(AET.Conservancies.RPI.Mean, RSQ.Mask.AET.Conservancies, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(AET.Conservancies.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(AET.Conservancies) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# 5. Amboseli Surrounding Grazelands
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.AET.Buffers <- RSQ.Resampled.AET.Buffers >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+AET.Buffers.RPI.Mean.Filtered.1 <- mask(AET.Buffers.RPI.Mean, RSQ.Mask.AET.Buffers, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(AET.Buffers.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(AET.Buffers) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# 6. Amboseli Surrounding Lands
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.AET.AllZones <- RSQ.Resampled.AET.AllZones >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+AET.AllZones.RPI.Mean.Filtered.1 <- mask(AET.AllZones.RPI.Mean, RSQ.Mask.AET.AllZones, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(AET.AllZones) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## Comparing the maps side by side
+
+tmap_mode("view")  # Sets plot to interactive mode
+
+tmap_arrange(
+  tm_shape(Amboseli.RPI.Mean.Filtered.1) +
+    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI(R² ≥ 0.1)")), # Updated title
+  tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI(R² ≥ 0.1)")), # Updated title
+  tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI(R² ≥ 0.1)")), # Updated title
+  tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
+    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI(R² ≥ 0.1)")), # Updated title
+  ncol = 2
+)
+```
+
+```{r}
+# # Test Statistics for Filtered (0.3 R^2 threshold) RPI Maps
+```
+
+```{r}
+# 1. Amboseli
+
+# Extract values from both rasters into a data.frame
+Amboseli.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(Amboseli.RPI.Mean.Filtered.1, RSQ.Resampled.Amboseli), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Amboseli.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 2. TsavoEast
+
+# Extract values from both rasters into a data.frame
+TsavoEast.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(TsavoEast.RPI.Mean.Filtered.1, RSQ.Resampled.TsavoEast), na.rm = TRUE)
+
+# Rename for clarity
+colnames(TsavoEast.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. TsavoWest
+
+# Extract values from both rasters into a data.frame
+TsavoWest.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(TsavoWest.RPI.Mean.Filtered.1, RSQ.Resampled.TsavoWest), na.rm = TRUE)
+
+# Rename for clarity
+colnames(TsavoWest.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 4. AET.Conservancies
+
+# Extract values from both rasters into a data.frame
+AET.Conservancies.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(AET.Conservancies.RPI.Mean.Filtered.1, RSQ.Resampled.AET.Conservancies), na.rm = TRUE)
+
+# Rename for clarity
+colnames(AET.Conservancies.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 5. AET.Buffers
+
+# Extract values from both rasters into a data.frame
+AET.Buffers.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(AET.Buffers.RPI.Mean.Filtered.1, RSQ.Resampled.AET.Buffers), na.rm = TRUE)
+
+# Rename for clarity
+colnames(AET.Buffers.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 6. AET.AllZones
+
+# Extract values from both rasters into a data.frame
+AET.AllZones.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(AET.AllZones.RPI.Mean.Filtered.1, RSQ.Resampled.AET.AllZones), na.rm = TRUE)
+
+# Rename for clarity
+colnames(AET.AllZones.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# #Plotting the R² and RPI values for each area
+```
+
+```{r}
+# 1. Amboseli 
+
+Amboseli.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Amboseli.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Amboseli",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Amboseli.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 2. TsavoEast
+
+TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(TsavoEast.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo East",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 3. TsavoWest
+
+TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(TsavoWest.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo West",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 4. AET.Conservancies
+
+AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Amboseli surrounding Conservancies",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 5. AET.Buffers
+
+AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.Buffers.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Amboseli surrounding Grazelands",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 6. AET.AllZones
+
+AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.AllZones.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Amboseli Surrounding Lands",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# # Combining all the plots together
+
+All.RPI.Rsquare.Filtered.1.Plots <- 
+  (Amboseli.Values.RPI.Rsquare.Filtered.1.Plot | TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot | TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot) /
+  (AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot)
+
+# Show the combined plot
+All.RPI.Rsquare.Filtered.1.Plots
 ```
