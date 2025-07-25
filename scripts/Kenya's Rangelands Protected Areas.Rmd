@@ -2954,7 +2954,7 @@ tmap_arrange(
 ```
 
 ```{r}
-# # Test Statistics for Filtered (0.3 R^2 threshold) RPI Maps
+# # Test Statistics for Filtered (0.1 R^2 threshold) RPI Maps
 ```
 
 ```{r}
@@ -3133,3 +3133,66 @@ All.RPI.Rsquare.Filtered.1.Plots <-
 # Show the combined plot
 All.RPI.Rsquare.Filtered.1.Plots
 ```
+
+```{r}
+# # Clip RPI & R² to Kenya
+```
+
+```{r}
+# First, calculate the mean RPI across all years
+RPI.Mean.EA <- app(RPI, mean, na.rm = TRUE)
+
+# Crop and mask both layers to Kenya
+RPI.Mean.Kenya <- mask(crop(RPI.Mean.EA, Kenya.Admin.Boundary), Kenya.Admin.Boundary)
+
+RSQ.Kenya <- mask(crop(RSQ.Layer, Kenya.Admin.Boundary), Kenya.Admin.Boundary)
+```
+
+```{r}
+# Convert to Data Frame
+
+Kenya.Values.RPI.Rsquare <- as.data.frame(
+  c(RPI = RPI.Mean.Kenya, RSQ = RSQ.Kenya),
+  na.rm = TRUE
+)
+colnames(Kenya.Values.RPI.Rsquare) <- c("RPI", "RSQ")
+```
+
+```{r}
+# Plotting with red Threshold line
+
+Kenya.RPI.Rsquare.Plot <- ggplot(Kenya.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 50) +
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +
+  geom_vline(xintercept = 0.1, linetype = "dashed", color = "red", size = 1) +
+  labs(
+    title = "RPI vs R² across Kenya (Before Filtering)",
+    subtitle = "Red dashed line = R² threshold (0.1)",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_minimal()
+
+Kenya.RPI.Rsquare.Plot
+```
+
+```{r}
+# Map Pixels with R² ≤ 0.1 in Kenya (A poor model fit filtering out poor-quality predictions)
+
+RSQ.Low.Performance.Kenya <- RSQ.Kenya <= 0.1
+
+tmap_mode("view")
+tm_shape(RSQ.Low.Performance.Kenya) +
+  tm_raster(
+    style = "cat", palette = c("transparent", "red"),
+    title = "R² ≤ 0.1", labels = c("Good", "Poor")
+  ) +
+  tm_shape(Kenya.Admin.Boundary) +
+  tm_borders(col = "black") +
+  tm_layout(
+    main.title = "Pixels with R² ≤ 0.1 (Kenya)",
+    legend.outside = TRUE
+  )
+```
+
+```{r}
