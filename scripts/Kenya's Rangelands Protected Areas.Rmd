@@ -235,16 +235,6 @@ SouthKitui <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.
 ```{r}
 # Visualising GAE/TCA
 
-#ggplot() +
-#  geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
-#  geom_sf(data = ChyuluHills, aes(fill = NAME), color = "black", linewidth = 0.3) +
-#  geom_sf(data = TsavoEast, aes(fill = NAME), color = "black", linewidth = 0.3) +
-#  geom_sf(data = TsavoWest, aes(fill = NAME), color = "black", linewidth = 0.3) +
-#  geom_sf(data = NgaiNdethia, aes(fill = NAME), color = "black", linewidth = 0.3) +
-#  geom_sf(data = SouthKitui, aes(fill = NAME), color = "black", linewidth = 0.3) +
-#  labs(title = "National Parks and Reserves - GAE/TCA", fill = "Protected Area") +
-#  theme_beautiful()
-
 GAE.TCA <- bind_rows(
   Amboseli,
   ChyuluHills,
@@ -253,10 +243,26 @@ GAE.TCA <- bind_rows(
   NgaiNdethia,
   SouthKitui
 ) %>%
-  mutate(Area = NAME)  # standardize the column
+  mutate(Area = NAME)  # standardises the column
+```
 
+```{r}
+tmap_mode("plot")
 
-tmap_mode("view")  # or "plot" for static
+tm_shape(GAE.TCA) +
+  tm_polygons(
+    fill = "Area",
+    fill.scale = tm_scale_categorical(values = "brewer.set3"),
+    fill.legend = tm_legend(title = "Protected Area"),
+    col = "black", lwd = 0.5
+  ) +
+  tm_title("National Parks and Reserves - GAE/TCA")
+```
+
+```{r}
+# Enlarging the above map
+
+tmap_mode("view")
 
 tm_shape(GAE.TCA) +
   tm_polygons(
@@ -3247,5 +3253,4 @@ tm_shape(RSQ.Low.Performance.Mask) +
   tm_title("Pixels with Poor Model Fit (R² ≤ 0.1) in Kenya") # Main title for the map
 ```
 
-```{r}
 
