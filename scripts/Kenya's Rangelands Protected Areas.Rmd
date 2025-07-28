@@ -104,7 +104,7 @@ ggplot() +
 ```{r}
 #Focusing on Kenya
 
-  Kenya.Admin.Boundary <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
+Kenya.Admin.Boundary <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
 ```
 
 ```{r}
@@ -125,16 +125,6 @@ Kenya.Regional.Admin.Boundary <- st_read("C:/BIOM4009 ResearchProject/DATA/Geosp
 ```
 
 ```{r}
-# Plotting Kenya's Regional Boundaries
-
-ggplot()+
-  geom_sf(data = Kenya.Admin.Boundary, colour = "black")+
-  geom_sf(data = Kenya.Regional.Admin.Boundary, colour = "grey50")+
-  labs(title = "Kenya's Subregional Administrative Boundaries") +
-  theme_beautiful()
-```
-
-```{r}
 # Focusing on Kenya's Terrestrial Protected Areas
 
 Kenya.Terrestrial.PAs <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
@@ -143,13 +133,29 @@ Kenya.Terrestrial.PAs <- st_read("C:/BIOM4009 ResearchProject/DATA/Geospatial Da
 ```{r}
 # Plotting Kenya's Terrestrial PAs
 
-ggplot()+
-  geom_sf(data = Kenya.Admin.Boundary, colour = "black")+
-  geom_sf(data = Kenya.Regional.Admin.Boundary, colour = "grey50")+
-  geom_sf(data = Kenya.Terrestrial.PAs, aes(fill = "Protected Areas"), alpha = 0.5)+
-  scale_fill_manual(values = c("Protected Areas" = "brown"),name = "Legend",labels = c("Protected Areas")) +
-  labs(title = "Kenya's Terrestrial Protected Areas") +
-  theme_beautiful()
+Kenya.Terrestrial.PAs.Map <-
+  tm_shape(Kenya.Regional.Admin.Boundary) +
+  tm_borders(col = "grey70", lwd = 0.5) +
+  tm_shape(Kenya.Terrestrial.PAs) +
+  # Reverting to 'col' for the constant fill color, as 'fill' seems to be for mapped variables (I am struggling to understand tmap v3 and tmap v4) - 'alpha' is still used for constant transparency.
+  tm_fill(
+    col = "lightgrey",   
+    alpha = 1,           
+    legend.show = TRUE,
+    legend.title = "Kenya's Terrestrial Protected Areas") +
+  tm_borders(col = "black", lwd = 1) +
+  tm_shape(Kenya.Admin.Boundary) +
+  tm_borders(col = "black", lwd = 1.2) +
+  tm_layout(
+    title.size = 1,
+    legend.text.size = 0.8,
+    legend.title.size = 0.9,
+    legend.position = c("right", "bottom"),
+    frame = FALSE,
+    text.fontfamily = "Helvetica") +
+  tm_title("Kenya's Terrestrial Protected Areas")
+
+Kenya.Terrestrial.PAs.Map
 ```
 
 ```{r}
