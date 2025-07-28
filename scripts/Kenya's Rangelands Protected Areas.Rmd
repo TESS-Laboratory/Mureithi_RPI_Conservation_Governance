@@ -167,13 +167,31 @@ Kenya.Rangeland.Counties <- Kenya.Regional.Admin.Boundary %>%
 ```{r}
 # Plotting the Rangeland Counties
 
-ggplot()+
-  geom_sf(data = Kenya.Admin.Boundary, colour = "black") +
-  geom_sf(data = Kenya.Regional.Admin.Boundary, colour = "grey50") +
-  geom_sf(data = Kenya.Rangeland.Counties, aes(fill = "Rangeland Counties")) +
-  scale_fill_manual(values = c("Rangeland Counties" = "grey"),name = "Legend",labels = c("Rangeland Counties")) +
-  labs(title = "Kenya's Rangeland Counties") +
-  theme_beautiful()
+tmap_mode("plot")
+
+Kenya.Rangeland.Map <-
+  tm_shape(Kenya.Regional.Admin.Boundary) +
+  tm_borders(col = "grey70", lwd = 0.5) +
+  tm_shape(Kenya.Rangeland.Counties) +
+  # Reverting to 'col' for the constant fill color, as 'fill' seems to be for mapped variables (I am struggling to understand tmap v3 and tmap v4) - 'alpha' is still used for constant transparency.
+  tm_fill(
+    col = "lightgrey",   
+    alpha = 1,           
+    legend.show = TRUE,
+    legend.title = "Rangeland Counties") +
+  tm_borders(col = "black", lwd = 1) +
+  tm_shape(Kenya.Admin.Boundary) +
+  tm_borders(col = "black", lwd = 1.2) +
+  tm_layout(
+    title.size = 1,
+    legend.text.size = 0.8,
+    legend.title.size = 0.9,
+    legend.position = c("right", "bottom"),
+    frame = FALSE,
+    text.fontfamily = "Helvetica") +
+  tm_title("Kenya's Rangeland Counties")
+
+Kenya.Rangeland.Map
 ```
 
 ```{r}
