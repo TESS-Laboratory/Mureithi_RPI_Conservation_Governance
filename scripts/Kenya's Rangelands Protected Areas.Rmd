@@ -2368,6 +2368,13 @@ ggplot() +
 ```
 
 ```{r}
+#MAE, the mean absolute error between predicted GPP and actual GPP.
+# R2, the proportion of GPP variance explained by each method.
+# Rppt, the correlation between the resulting values of each index and precipitation, the most important climatic driver of GPP.
+# average root mean squared error (RMSE)
+```
+
+```{r}
 ## Extracting RSQ values from the raster & linking to each RPI.Mean
 ## Extract R² layer
 
@@ -3252,5 +3259,4 @@ tm_shape(RSQ.Low.Performance.Mask) +
   ) +
   tm_title("Pixels with Poor Model Fit (R² ≤ 0.1) in Kenya") # Main title for the map
 ```
-
 
