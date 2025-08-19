@@ -3310,3 +3310,4 @@ tmap_arrange(Map.Amboseli.RPI.Mean.Filtered.1,
              Map.AET.AllZones.RPI.Mean.Filtered.1, 
              ncol = 3, nrow = 3)
 ```
+
