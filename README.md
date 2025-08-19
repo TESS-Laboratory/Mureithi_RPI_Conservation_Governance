@@ -1,10 +1,4 @@
 # Mureithi_RPI_Conservation_Governance
 
-The aim of this project is to assess the extent to which RPI can quantify human 
-impacts on rangeland vegetation productivity and understand how governance 
-structures and local community engagement influence rangeland health outcomes. 
-The specific research questions addressed are:  
-1. Does RPI reflect the impacts of governance frameworks and interventions on 
-rangeland condition in Kenya?  
-2. How can these insights from RPI be used to inform the design and evaluation 
-of adaptive management strategies that support Land Degradation Neutrality?  
+This repository contains R scripts and data used in the analysis of vegetation productivity patterns across different governance types in Kenya's rangelands presented by Isaac Nduta Mureithi. This project is part of a masters dissertation in Conservation and Biodiversity at the University of Exeter, as part of the Oppenheimer Programme in African Landscape Systems (OPALS) https://opals-exeter.org/". Provenance of all data required to run the scripts can be found in the Zenodo repository (https://zenodo.org/records/14843888).
+The folder data contains study area shapefiles for Kenya's administrative boundaries, protected areas from WDPA, conservancy boundaries, and Relative Productivity Index (RPI) raster datasets. The Kenya's Rangeland Protected Areas.Rmd is the main R Markdown document containing the complete analysis workflow including data import, spatial processing, trend analysis using Theil-Sen slope estimation, and visualization of RPI patterns across Amboseli National Park, Tsavo East and West National Parks, AET conservancies, and surrounding buffer areas. The analysis utilises libraries including sf, terra, tidyverse, tmap, and trend for spatial data processing, statistical analysis, and mapping. The document includes custom themes for publication-quality visualizations, temporal performance metrics (MAE, R², RMSE, Rppt), and comparative analysis of vegetation productivity across different governance types.  
