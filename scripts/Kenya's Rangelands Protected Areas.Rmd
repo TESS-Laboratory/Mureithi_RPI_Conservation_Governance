@@ -2676,6 +2676,76 @@ RSQ.Resampled.TsavoWest <- resample(RSQ.Layer, TsavoWest.RPI.Mean, method = "bil
 # Step 3: Now try checking again for TsavoWest
 all.equal(ext(RSQ.Resampled.TsavoWest), ext(TsavoWest.RPI.Mean))  # Should now be TRUE
 ```
+```{r}
+# Check alignment — they should match in extent/resolution in Tsavo.Ranches
+all.equal(ext(RSQ.Layer), ext(Tsavo.Ranches.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2552299 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in Tsavo.Ranches
+crs(RSQ.Layer) == crs(Tsavo.Ranches.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in Tsavo.Ranches
+RSQ.Resampled.Tsavo.Ranches <- resample(RSQ.Layer, Tsavo.Ranches.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again
+all.equal(ext(RSQ.Resampled.Tsavo.Ranches), ext(Tsavo.Ranches.RPI.Mean))  # Should now be TRUE
+```
+```{r}
+# Check alignment — they should match in extent/resolution in Tsavo.SettledAreas
+all.equal(ext(RSQ.Layer), ext(Tsavo.SettledAreas.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.2579323 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in Tsavo.SettledAreas
+crs(RSQ.Layer) == crs(Tsavo.SettledAreas.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in Tsavo.SettledAreas
+RSQ.Resampled.Tsavo.SettledAreas <- resample(RSQ.Layer, Tsavo.SettledAreas.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again
+all.equal(ext(RSQ.Resampled.Tsavo.SettledAreas), ext(Tsavo.SettledAreas.RPI.Mean))  # Should now be TRUE
+```
+
+```{r}
+# Check alignment — they should match in extent/resolution in Tsavo.AllZones
+all.equal(ext(RSQ.Layer), ext(Tsavo.AllZones.RPI.Mean))  # should return TRUE
+```
+
+```{r}
+# The above mean relative difference of 0.25a48572 informs me that the Rasters are not aligned
+```
+
+```{r}
+# Step 1: Ensure the CRS is the same in Tsavo.AllZones
+crs(RSQ.Layer) == crs(Tsavo.AllZones.RPI.Mean)  # Should be TRUE
+```
+
+```{r}
+# Step 2: Align extent and resolution — resample R² to match RPI mean raster in Tsavo.AllZones
+RSQ.Resampled.Tsavo.AllZones <- resample(RSQ.Layer, Tsavo.AllZones.RPI.Mean, method = "bilinear")
+```
+
+```{r}
+# Step 3: Now try checking again
+all.equal(ext(RSQ.Resampled.Tsavo.AllZones), ext(Tsavo.AllZones.RPI.Mean))  # Should now be TRUE
+```
 
 ```{r}
 # Check alignment — they should match in extent/resolution in AET.Conservancies
@@ -2809,6 +2879,59 @@ tm_shape(TsavoWest.RPI.Mean.Filtered.3) +
   tm_borders(col = "white", lwd = 2) +
   tm_layout(legend.outside = TRUE)
 ```
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.Tsavo.Ranches <- RSQ.Resampled.Tsavo.Ranches >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+Tsavo.Ranches.RPI.Mean.Filtered.3 <- mask(Tsavo.Ranches.RPI.Mean, RSQ.Mask.Tsavo.Ranches, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Tsavo.Ranches.RPI.Mean.Filtered.3) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(Tsavo.Ranches) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.Tsavo.SettledAreas <- RSQ.Resampled.Tsavo.SettledAreas >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+Tsavo.SettledAreas.RPI.Mean.Filtered.3 <- mask(Tsavo.SettledAreas.RPI.Mean, RSQ.Mask.Tsavo.SettledAreas, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Tsavo.SettledAreas.RPI.Mean.Filtered.3) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(Tsavo.SettledAreas) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# Creating mask for pixels with R² >= threshold
+RSQ.Mask.Tsavo.AllZones <- RSQ.Resampled.Tsavo.AllZones >= RSQ.Threshold.3
+
+# Applying the mask to the RPI mean raster
+Tsavo.AllZones.RPI.Mean.Filtered.3 <- mask(Tsavo.AllZones.RPI.Mean, RSQ.Mask.Tsavo.AllZones, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.3) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.3)", reverse = TRUE)) +
+  tm_shape(Tsavo.AllZones) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
 
 ```{r}
 # Creating mask for pixels with R² >= threshold
@@ -2871,13 +2994,19 @@ tmap_mode("view")  # Sets plot to interactive mode
 
 tmap_arrange(
   tm_shape(Amboseli.RPI.Mean.Filtered.3) +
-    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI(R² ≥ 0.3)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI (R² ≥ 0.3)")), 
+  
   tm_shape(TsavoEast.RPI.Mean.Filtered.3) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI(R² ≥ 0.3)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI (R² ≥ 0.3)")), 
+  
   tm_shape(TsavoWest.RPI.Mean.Filtered.3) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI(R² ≥ 0.3)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI (R² ≥ 0.3)")), 
+  
   tm_shape(AET.AllZones.RPI.Mean.Filtered.3) +
-    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI(R² ≥ 0.3)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI (R² ≥ 0.3)")), 
+  
+  tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.3) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo All Zones Mean RPI (R² ≥ 0.3)")), 
   ncol = 2
 )
 ```
@@ -2914,6 +3043,36 @@ TsavoWest.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(TsavoWest.RPI.Mean.Fi
 
 # Rename for clarity
 colnames(TsavoWest.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. Tsavo.Ranches
+
+# Extract values from both rasters into a data.frame
+Tsavo.Ranches.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(Tsavo.Ranches.RPI.Mean.Filtered.3, RSQ.Resampled.Tsavo.Ranches), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Tsavo.Ranches.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. Tsavo.SettledAreas
+
+# Extract values from both rasters into a data.frame
+Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(Tsavo.SettledAreas.RPI.Mean.Filtered.3, RSQ.Resampled.Tsavo.SettledAreas), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. Tsavo.AllZones
+
+# Extract values from both rasters into a data.frame
+Tsavo.AllZones.Values.RPI.Rsquare.Filtered.3 <- as.data.frame(c(Tsavo.AllZones.RPI.Mean.Filtered.3, RSQ.Resampled.Tsavo.AllZones), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Tsavo.AllZones.Values.RPI.Rsquare.Filtered.3) <- c("RPI", "RSQ")
 ```
 
 ```{r}
@@ -3002,6 +3161,57 @@ TsavoWest.Values.RPI.Rsquare.Filtered.3.Plot
 ```
 
 ```{r}
+# 3. Tsavo.Ranches
+
+Tsavo.Ranches.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(Tsavo.Ranches.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo Ranches",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Tsavo.Ranches.Values.RPI.Rsquare.Filtered.3.Plot
+```
+
+```{r}
+# 3. Tsavo.SettledAreas
+
+Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo's Settled Areas",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.3.Plot
+```
+
+```{r}
+# 3. Tsavo.AllZones
+
+Tsavo.AllZones.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(Tsavo.AllZones.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Ranches & Settled Lands in Tsavos",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Tsavo.AllZones.Values.RPI.Rsquare.Filtered.3.Plot
+```
+
+```{r}
 # 4. AET.Conservancies
 
 AET.Conservancies.Values.RPI.Rsquare.Filtered.3.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
@@ -3057,7 +3267,8 @@ AET.AllZones.Values.RPI.Rsquare.Filtered.3.Plot
 
 All.RPI.Rsquare.Filtered.3.Plots <- 
   (Amboseli.Values.RPI.Rsquare.Filtered.3.Plot | TsavoEast.Values.RPI.Rsquare.Filtered.3.Plot | TsavoWest.Values.RPI.Rsquare.Filtered.3.Plot) /
-  (AET.Conservancies.Values.RPI.Rsquare.Filtered.3.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.3.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.3.Plot)
+  (AET.Conservancies.Values.RPI.Rsquare.Filtered.3.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.3.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.3.Plot) /
+  (Tsavo.Ranches.Values.RPI.Rsquare.Filtered.3.Plot | Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.3.Plot | Tsavo.AllZones.Values.RPI.Rsquare.Filtered.3.Plot)
 
 # Show the combined plot
 All.RPI.Rsquare.Filtered.3.Plots
