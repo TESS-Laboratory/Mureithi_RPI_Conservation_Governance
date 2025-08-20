@@ -542,11 +542,11 @@ tm_shape(Tsavo.SettledAreas.RPI.Mean) +
 ```{r}
 ## Visualising Tsavo.AllZones
 
-#Tsavo.AllZones.RPI.Mask <- mask(RPI, Tsavo.AllZones)
-#Tsavo.AllZones.RPI.Crop <- crop(Tsavo.AllZones.RPI.Mask, Tsavo.AllZones)
+Tsavo.AllZones.RPI.Mask <- mask(RPI, Tsavo.AllZones)
+Tsavo.AllZones.RPI.Crop <- crop(Tsavo.AllZones.RPI.Mask, Tsavo.AllZones)
 
 # Averaging across years for visualization
-#Tsavo.AllZones.RPI.Mean <- mean(Tsavo.AllZones.RPI.Crop, na.rm = TRUE)
+Tsavo.AllZones.RPI.Mean <- mean(Tsavo.AllZones.RPI.Crop, na.rm = TRUE)
 
 # Visualise
 tmap_mode("plot")
@@ -1895,8 +1895,8 @@ Amboseli.Slope.Raster[Amboseli.Slope.Cells$cell] <- Amboseli.Slope.Cells$Slope
 # 4. Plot the raster
 tm_shape(Amboseli.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Amboseli Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Amboseli") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1920,8 +1920,9 @@ TsavoEast.Slope.Raster[TsavoEast.Slope.Cells$cell] <- TsavoEast.Slope.Cells$Slop
 # 4. Plot the raster
 tm_shape(TsavoEast.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse= TRUE)) +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo East Theil-Sen Slope", reverse = TRUE)
+  ) +
   tm_title("Spatial Distribution of RPI Trends — Tsavo East") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -1945,85 +1946,97 @@ TsavoWest.Slope.Raster[TsavoWest.Slope.Cells$cell] <- TsavoWest.Slope.Cells$Slop
 # 4. Plot the raster
 tm_shape(TsavoWest.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo West Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — Tsavo West") +
   tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
-## ChyuluHills Raster Map of Theil-Sen Slopes
+## Tsavo.Ranches Raster Map of Theil-Sen Slopes
 
 # 1. I shall use the original raster as a template using only 1 layer for structure
-ChyuluHills.Slope.Raster <- terra::rast(ChyuluHills.RPI.Crop[[1]])
-terra::values(ChyuluHills.Slope.Raster) <- NA  # blank it out
+Tsavo.Ranches.Slope.Raster <- terra::rast(Tsavo.Ranches.RPI.Crop[[1]])
+terra::values(Tsavo.Ranches.Slope.Raster) <- NA  # blank it out
 
 # 2. I shall then link slope values to cell numbers
-ChyuluHills.Cell.Map <- data.frame(ID = 1:nrow(ChyuluHills.RPI.Values.Full), cell = ChyuluHills.RPI.Values.Full$cell)
+Tsavo.Ranches.Cell.Map <- data.frame(ID = 1:nrow(Tsavo.Ranches.RPI.Values.Full), cell = Tsavo.Ranches.RPI.Values.Full$cell)
 
   # Merging slopes with cells
-ChyuluHills.Slope.Cells <- dplyr::left_join(ChyuluHills.TheilSen, ChyuluHills.Cell.Map, by = "ID")
+Tsavo.Ranches.Slope.Cells <- dplyr::left_join(Tsavo.Ranches.TheilSen, Tsavo.Ranches.Cell.Map, by = "ID")
 
 # 3. Populate slope values into raster cells
-ChyuluHills.Slope.Raster[ChyuluHills.Slope.Cells$cell] <- ChyuluHills.Slope.Cells$Slope
+Tsavo.Ranches.Slope.Raster[Tsavo.Ranches.Slope.Cells$cell] <- Tsavo.Ranches.Slope.Cells$Slope
 
 # 4. Plot the raster
-tm_shape(ChyuluHills.Slope.Raster) +
+tm_shape(Tsavo.Ranches.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
-  tm_title("Spatial Distribution of RPI Trends — Chyulu Hills") +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo Ranches Theil–Sen Slope", reverse = TRUE)) +
+  tm_title("Spatial Distribution of RPI Trends — Tsavo Ranches") +
   tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
-## NgaiNdethia Raster Map of Theil-Sen Slopes
+## Tsavo.SettledAreas Raster Map of Theil-Sen Slopes
 
 # 1. I shall use the original raster as a template using only 1 layer for structure
-NgaiNdethia.Slope.Raster <- terra::rast(NgaiNdethia.RPI.Crop[[1]])
-terra::values(NgaiNdethia.Slope.Raster) <- NA  # blank it out
+Tsavo.SettledAreas.Slope.Raster <- terra::rast(Tsavo.SettledAreas.RPI.Crop[[1]])
+terra::values(Tsavo.SettledAreas.Slope.Raster) <- NA  # blank it out
 
 # 2. I shall then link slope values to cell numbers
-NgaiNdethia.Cell.Map <- data.frame(ID = 1:nrow(NgaiNdethia.RPI.Values.Full), cell = NgaiNdethia.RPI.Values.Full$cell)
+Tsavo.SettledAreas.Cell.Map <- data.frame(ID = 1:nrow(Tsavo.SettledAreas.RPI.Values.Full), cell = Tsavo.SettledAreas.RPI.Values.Full$cell)
 
   # Merging slopes with cells
-NgaiNdethia.Slope.Cells <- dplyr::left_join(NgaiNdethia.TheilSen, NgaiNdethia.Cell.Map, by = "ID")
+Tsavo.SettledAreas.Slope.Cells <- dplyr::left_join(Tsavo.SettledAreas.TheilSen, Tsavo.SettledAreas.Cell.Map, by = "ID")
 
 # 3. Populate slope values into raster cells
-NgaiNdethia.Slope.Raster[NgaiNdethia.Slope.Cells$cell] <- NgaiNdethia.Slope.Cells$Slope
+Tsavo.SettledAreas.Slope.Raster[Tsavo.SettledAreas.Slope.Cells$cell] <- Tsavo.SettledAreas.Slope.Cells$Slope
 
 # 4. Plot the raster
-tm_shape(NgaiNdethia.Slope.Raster) +
+tm_shape(Tsavo.SettledAreas.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
-  tm_title("Spatial Distribution of RPI Trends — Ngai Ndethia") +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo's Settled Areas Theil–Sen Slope", reverse = TRUE)) +
+  tm_title("Spatial Distribution of RPI Trends — Tsavo Settled Areas") +
   tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
-## SouthKitui Raster Map of Theil-Sen Slopes
+## Tsavo.AllZones Raster Map of Theil-Sen Slopes
 
 # 1. I shall use the original raster as a template using only 1 layer for structure
-SouthKitui.Slope.Raster <- terra::rast(SouthKitui.RPI.Crop[[1]])
-terra::values(SouthKitui.Slope.Raster) <- NA  # blank it out
+Tsavo.AllZones.Slope.Raster <- terra::rast(Tsavo.AllZones.RPI.Crop[[1]])
+terra::values(Tsavo.AllZones.Slope.Raster) <- NA  # blank it out
 
 # 2. I shall then link slope values to cell numbers
-SouthKitui.Cell.Map <- data.frame(ID = 1:nrow(SouthKitui.RPI.Values.Full), cell = SouthKitui.RPI.Values.Full$cell)
+Tsavo.AllZones.Cell.Map <- data.frame(ID = 1:nrow(Tsavo.AllZones.RPI.Values.Full), cell = Tsavo.AllZones.RPI.Values.Full$cell)
 
   # Merging slopes with cells
-SouthKitui.Slope.Cells <- dplyr::left_join(SouthKitui.TheilSen, SouthKitui.Cell.Map, by = "ID")
+Tsavo.AllZones.Slope.Cells <- dplyr::left_join(Tsavo.AllZones.TheilSen, Tsavo.AllZones.Cell.Map, by = "ID")
 
 # 3. Populate slope values into raster cells
-SouthKitui.Slope.Raster[SouthKitui.Slope.Cells$cell] <- SouthKitui.Slope.Cells$Slope
+Tsavo.AllZones.Slope.Raster[Tsavo.AllZones.Slope.Cells$cell] <- Tsavo.AllZones.Slope.Cells$Slope
 
 # 4. Plot the raster
-tm_shape(SouthKitui.Slope.Raster) +
+tmap_mode("plot")
+tm_shape(Tsavo.AllZones.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
-  tm_title("Spatial Distribution of RPI Trends — South Kitui") +
-  tm_layout(legend.outside = TRUE)
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo AllZones Theil–Sen Slope", reverse = TRUE)
+  ) +
+tm_shape(TsavoEast.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo East Theil–Sen Slope", reverse = TRUE)
+  ) +
+tm_shape(TsavoWest.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Tsavo West Theil–Sen Slope", reverse = TRUE)
+  ) +
+tm_title("Spatial Distribution of Theil-Sen Slope — Tsavo AllZones, East & West") +
+tm_layout(legend.outside = TRUE)
 ```
 
 ```{r}
@@ -2043,10 +2056,11 @@ AET.Conservancies.Slope.Cells <- dplyr::left_join(AET.Conservancies.TheilSen, AE
 AET.Conservancies.Slope.Raster[AET.Conservancies.Slope.Cells$cell] <- AET.Conservancies.Slope.Cells$Slope
 
 # 4. Plot the raster
+tmap_mode("view")
 tm_shape(AET.Conservancies.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse = TRUE)) +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "AET.Conservancies Theil–Sen Slope", reverse = TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — AET Conservancies") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -2070,8 +2084,8 @@ AET.Buffers.Slope.Raster[AET.Buffers.Slope.Cells$cell] <- AET.Buffers.Slope.Cell
 # 4. Plot the raster
 tm_shape(AET.Buffers.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse= TRUE)) +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "AET.Buffers Theil–Sen Slope", reverse= TRUE)) +
   tm_title("Spatial Distribution of RPI Trends — AET Buffers") +
   tm_layout(legend.outside = TRUE)
 ```
@@ -2093,11 +2107,17 @@ AET.AllZones.Slope.Cells <- dplyr::left_join(AET.AllZones.TheilSen, AET.AllZones
 AET.AllZones.Slope.Raster[AET.AllZones.Slope.Cells$cell] <- AET.AllZones.Slope.Cells$Slope
 
 # 4. Plot the raster
+tmap_mode("plot")
 tm_shape(AET.AllZones.Slope.Raster) +
   tm_raster(
-    col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Theil–Sen Slope", reverse= TRUE)) +
-  tm_title("Spatial Distribution of RPI Trends in Amboseli's surrounding lands") +
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "AET AllZones Theil–Sen Slope", reverse = TRUE)
+  ) +
+  tm_shape(Amboseli.Slope.Raster) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
+    col.legend = tm_legend(title = "Amboseli Theil–Sen Slope", reverse = TRUE)) +
+  tm_title("Spatial Distribution of Theil-Sen Slope — Amboseli & Surrounding Lands") +
   tm_layout(legend.outside = TRUE)
 ```
 
