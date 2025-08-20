@@ -3347,6 +3347,67 @@ tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
 ```
 
 ```{r}
+# 3. Tsavo.Ranches
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.Tsavo.Ranches <- RSQ.Resampled.Tsavo.Ranches >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+Tsavo.Ranches.RPI.Mean.Filtered.1 <- mask(Tsavo.Ranches.RPI.Mean, RSQ.Mask.Tsavo.Ranches, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Tsavo.Ranches.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(Tsavo.Ranches) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# 3. Tsavo.SettledAreas
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.Tsavo.SettledAreas <- RSQ.Resampled.Tsavo.SettledAreas >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+Tsavo.SettledAreas.RPI.Mean.Filtered.1 <- mask(Tsavo.SettledAreas.RPI.Mean, RSQ.Mask.Tsavo.SettledAreas, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Tsavo.SettledAreas.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(Tsavo.SettledAreas) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+# 3. Tsavo.AllZones
+
+# Step 1: Mask out RPI pixels where R² < 0.1
+RSQ.Mask.Tsavo.AllZones <- RSQ.Resampled.Tsavo.AllZones >= RSQ.Threshold.1
+
+# Applying Mask to RPI Mean Raster
+Tsavo.AllZones.RPI.Mean.Filtered.1 <- mask(Tsavo.AllZones.RPI.Mean, RSQ.Mask.Tsavo.AllZones, maskvalues = FALSE)
+
+# Visualising the filtered result
+tmap_mode("view")
+tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
+  tm_raster(
+    col.scale = tm_scale_continuous(values = "viridis"), 
+    col.legend = tm_legend(title = "Mean RPI (Filtered by R² ≥ 0.1)", reverse = TRUE)) +
+  tm_shape(Tsavo.AllZones) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_layout(legend.outside = TRUE)
+```
+
+
+```{r}
 #4. Amboseli Surrounding Conservancies
 
 # Step 1: Mask out RPI pixels where R² < 0.1
@@ -3413,13 +3474,19 @@ tmap_mode("view")  # Sets plot to interactive mode
 
 tmap_arrange(
   tm_shape(Amboseli.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI(R² ≥ 0.1)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI (R² ≥ 0.1)")), 
+  
   tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI(R² ≥ 0.1)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI (R² ≥ 0.1)")), 
+  
   tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI(R² ≥ 0.1)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI (R² ≥ 0.1)")), 
+  
   tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI(R² ≥ 0.1)")), # Updated title
+    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI (R² ≥ 0.1)")), 
+  
+  tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
+    tm_raster(col.legend = tm_legend(title = "Tsavo All Zones Mean RPI (R² ≥ 0.1)")), 
   ncol = 2
 )
 ```
@@ -3456,6 +3523,36 @@ TsavoWest.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(TsavoWest.RPI.Mean.Fi
 
 # Rename for clarity
 colnames(TsavoWest.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. Tsavo.Ranches
+
+# Extract values from both rasters into a data.frame
+Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(Tsavo.Ranches.RPI.Mean.Filtered.1, RSQ.Resampled.Tsavo.Ranches), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. Tsavo.SettledAreas
+
+# Extract values from both rasters into a data.frame
+Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(Tsavo.SettledAreas.RPI.Mean.Filtered.1, RSQ.Resampled.Tsavo.SettledAreas), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
+```
+
+```{r}
+# 3. Tsavo.AllZones
+
+# Extract values from both rasters into a data.frame
+Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1 <- as.data.frame(c(Tsavo.AllZones.RPI.Mean.Filtered.1, RSQ.Resampled.Tsavo.AllZones), na.rm = TRUE)
+
+# Rename for clarity
+colnames(Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1) <- c("RPI", "RSQ")
 ```
 
 ```{r}
@@ -3544,6 +3641,57 @@ TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot
 ```
 
 ```{r}
+# 3. Tsavo.Ranches
+
+Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo Ranches",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 3. Tsavo.SettledAreas
+
+Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo Settled Areas",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
+# 3. Tsavo.AllZones
+
+Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
+  geom_hex(bins = 40) +  # increase bins for more granularity
+  scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
+  labs(
+    title = "RPI vs R²: Tsavo All Zones",
+    x = expression(R^2 ~ "(Model Performance)"),
+    y = "Mean RPI"
+  ) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+
+Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1.Plot
+```
+
+```{r}
 # 4. AET.Conservancies
 
 AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
@@ -3599,7 +3747,8 @@ AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot
 
 All.RPI.Rsquare.Filtered.1.Plots <- 
   (Amboseli.Values.RPI.Rsquare.Filtered.1.Plot | TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot | TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot) /
-  (AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot)
+  (AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot) /
+  (Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1.Plot | Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1.Plot | Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1.Plot)
 
 # Show the combined plot
 All.RPI.Rsquare.Filtered.1.Plots
@@ -3717,6 +3866,24 @@ Map.TsavoWest.RPI.Mean.Filtered.1 <- tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
   tm_shape(TsavoWest) + tm_borders(col = "white", lwd = 1.5) +
   tm_title("Tsavo West")
 
+Map.Tsavo.AllZones.RPI.Mean.Filtered.1 <- tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.AllZones) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo All Zones")
+
+Map.Tsavo.Ranches.RPI.Mean.Filtered.1 <- tm_shape(Tsavo.Ranches.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.Ranches) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo Ranches")
+
+Map.Tsavo.SettledAreas.RPI.Mean.Filtered.1 <- tm_shape(Tsavo.SettledAreas.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.SettledAreas) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo Settled Areas")
+
 Map.AET.Conservancies.RPI.Mean.Filtered.1 <- tm_shape(AET.Conservancies.RPI.Mean.Filtered.1) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
@@ -3738,7 +3905,10 @@ Map.AET.AllZones.RPI.Mean.Filtered.1 <- tm_shape(AET.AllZones.RPI.Mean.Filtered.
 # Combining into grid
 tmap_arrange(Map.Amboseli.RPI.Mean.Filtered.1, 
              Map.TsavoEast.RPI.Mean.Filtered.1,
-             Map.TsavoWest.RPI.Mean.Filtered.1, 
+             Map.TsavoWest.RPI.Mean.Filtered.1,
+             Map.Tsavo.Ranches.RPI.Mean.Filtered.1,
+             Map.Tsavo.SettledAreas.RPI.Mean.Filtered.1,
+             Map.Tsavo.AllZones.RPI.Mean.Filtered.1,
              Map.AET.Conservancies.RPI.Mean.Filtered.1, 
              Map.AET.Buffers.RPI.Mean.Filtered.1, 
              Map.AET.AllZones.RPI.Mean.Filtered.1, 
