@@ -13,7 +13,31 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats, viridis, scales, hexbin)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats, viridis, scales, hexbin, ggh4x, scico)
+
+# DATA HANDLING#
+# tidyverse -> for data manipulation, cleaning, and visualization in a cohesive framework
+# forcats -> for managing factors (categorical variables)
+# slider -> for rolling or sliding window calculations
+
+# SPATIAL DATA & MAPPING#
+# sf -> for handling vector spatial data (points, lines, polygons)
+# terra -> for handling and processing raster data
+# tidyterra -> for using tidyverse tools on terra objects
+# tmap -> for creating thematic maps
+
+# VISUALISATION#
+# viridis -> for perceptually uniform color palettes
+# scales -> for controlling plot scale formatting (e.g., number and date labels)
+# hexbin -> for visualizing point density with hexagonal bins
+# ggh4x -> for advanced ggplot2 features = facetted_pos_scales
+# scico -> for scientific color maps
+# colorspace -> for a wide variety of perceptually uniform color palettes
+# ggrepel -> for preventing text labels from overlapping
+# patchwork -> for combining multiple plots into one figure
+
+# STATISTICAL ANALYSIS#
+#trend -> for analysing trends in time-series data = Theil-Sen slope
 ```
 
 ```{r}
@@ -2517,10 +2541,25 @@ ggplot() +
 ```
 
 ```{r}
+# Each metric (MAE, RMSE, R²) has different units/scales → so they shouldn’t share the same colour scale.
+
+# My current gradient (blue → green → yellow → red) works for error metrics (MAE, RMSE) but is misleading for R² (bounded between 0–1).
+
+# The “R² map” looks blank because most values are between 0 and 1, and this colour scale was probably tuned for much larger values.
+
 #MAE, the mean absolute error between predicted GPP and actual GPP.
 # R2, the proportion of GPP variance explained by each method.
 # Rppt, the correlation between the resulting values of each index and precipitation, the most important climatic driver of GPP.
 # average root mean squared error (RMSE)
+
+# Problem: ggplot2 only allows one scale per aesthetic.To get different colour scales for each facet, I am using "facetted_pos_scales" from libraries ggplot2 + ggforce & "facet_wrap_scales" from library ggh4x.
+```
+
+```{r}
+## Extracting RSQ values from the raster & linking to each RPI.Mean
+## Extract R² layer
+
+RSQ.Layer <- Temporal.Performance[["rsq"]]
 ```
 
 ```{r}
