@@ -1610,17 +1610,17 @@ TsavoWest.SummaryTrend <- TsavoWest.TheilSen %>%
 ```
 
 ```{r}
-## Theil-Sen across ChyuluHills NP
+## Theil-Sen across Tsavo.Ranches
 
   # Sorting data by "Year" & "ID"
-ChyuluHills.RPI.Visual.Arranged <- ChyuluHills.RPI.Visual %>% arrange(ID, Year)
+Tsavo.Ranches.RPI.Visual.Arranged <- Tsavo.Ranches.RPI.Visual %>% arrange(ID, Year)
 
 # Split data by pixel ID 
     #{"group_split()" - apply a time-series analysis function independently to the time serieS associated with each distinct spatial unit/pixel}
-ChyuluHills.Pixel.List <- ChyuluHills.RPI.Visual.Arranged %>% group_split(ID)
+Tsavo.Ranches.Pixel.List <- Tsavo.Ranches.RPI.Visual.Arranged %>% group_split(ID)
 
 # Apply sens.slope to each pixel group
-ChyuluHills.TheilSen <- map_dfr(ChyuluHills.Pixel.List, function(df) {
+Tsavo.Ranches.TheilSen <- map_dfr(Tsavo.Ranches.Pixel.List, function(df) {
   if (sum(!is.na(df$RPI_value)) >= 3) {
     slope <- tryCatch(
       sens.slope(df$RPI_value)$estimates,
@@ -1633,11 +1633,11 @@ ChyuluHills.TheilSen <- map_dfr(ChyuluHills.Pixel.List, function(df) {
 })
 
   # Joining slope results back with area info
-ChyuluHills.TheilSen <- ChyuluHills.TheilSen %>%
-  mutate(Area = "ChyuluHills")
+Tsavo.Ranches.TheilSen <- Tsavo.Ranches.TheilSen %>%
+  mutate(Area = "Tsavo.Ranches")
 
   # Getting overall summary per area
-ChyuluHills.SummaryTrend <- ChyuluHills.TheilSen %>%
+Tsavo.Ranches.SummaryTrend <- Tsavo.Ranches.TheilSen %>%
   summarise(
     MeanSlope = mean(Slope, na.rm = TRUE),
     MedianSlope = median(Slope, na.rm = TRUE),
@@ -1647,16 +1647,16 @@ ChyuluHills.SummaryTrend <- ChyuluHills.TheilSen %>%
 ```
 
 ```{r}
-## Theil-Sen across NgaiNdethia NR
+## Theil-Sen across Tsavo.SettledAreas
 
   # Sorting data by "Year" & "ID"
-NgaiNdethia.RPI.Visual.Arranged <- NgaiNdethia.RPI.Visual %>% arrange(ID, Year)
+Tsavo.SettledAreas.RPI.Visual.Arranged <- Tsavo.SettledAreas.RPI.Visual %>% arrange(ID, Year)
 
 # Split data by pixel ID
-NgaiNdethia.Pixel.List <- NgaiNdethia.RPI.Visual.Arranged %>% group_split(ID)
+Tsavo.SettledAreas.Pixel.List <- Tsavo.SettledAreas.RPI.Visual.Arranged %>% group_split(ID)
 
 # Apply sens.slope to each pixel group
-NgaiNdethia.TheilSen <- map_dfr(NgaiNdethia.Pixel.List, function(df) {
+Tsavo.SettledAreas.TheilSen <- map_dfr(Tsavo.SettledAreas.Pixel.List, function(df) {
   if (sum(!is.na(df$RPI_value)) >= 3) {
     slope <- tryCatch(
       sens.slope(df$RPI_value)$estimates,
@@ -1669,11 +1669,11 @@ NgaiNdethia.TheilSen <- map_dfr(NgaiNdethia.Pixel.List, function(df) {
 })
 
   # Joining slope results back with area info
-NgaiNdethia.TheilSen <- NgaiNdethia.TheilSen %>%
-  mutate(Area = "NgaiNdethia")
+Tsavo.SettledAreas.TheilSen <- Tsavo.SettledAreas.TheilSen %>%
+  mutate(Area = "Tsavo.SettledAreas")
 
   # Getting overall summary per area
-NgaiNdethia.SummaryTrend <- NgaiNdethia.TheilSen %>%
+Tsavo.SettledAreas.SummaryTrend <- Tsavo.SettledAreas.TheilSen %>%
   summarise(
     MeanSlope = mean(Slope, na.rm = TRUE),
     MedianSlope = median(Slope, na.rm = TRUE),
@@ -1683,16 +1683,16 @@ NgaiNdethia.SummaryTrend <- NgaiNdethia.TheilSen %>%
 ```
 
 ```{r}
-## Theil-Sen across SouthKitui NR
+## Theil-Sen across Tsavo.AllZones
 
   # Sorting data by "Year" & "ID"
-SouthKitui.RPI.Visual.Arranged <- SouthKitui.RPI.Visual %>% arrange(ID, Year)
+Tsavo.AllZones.RPI.Visual.Arranged <- Tsavo.AllZones.RPI.Visual %>% arrange(ID, Year)
 
 # Split data by pixel ID
-SouthKitui.Pixel.List <- SouthKitui.RPI.Visual.Arranged %>% group_split(ID)
+Tsavo.AllZones.Pixel.List <- Tsavo.AllZones.RPI.Visual.Arranged %>% group_split(ID)
 
 # Apply sens.slope to each pixel group
-SouthKitui.TheilSen <- map_dfr(SouthKitui.Pixel.List, function(df) {
+Tsavo.AllZones.TheilSen <- map_dfr(Tsavo.AllZones.Pixel.List, function(df) {
   if (sum(!is.na(df$RPI_value)) >= 3) {
     slope <- tryCatch(
       sens.slope(df$RPI_value)$estimates,
@@ -1705,11 +1705,11 @@ SouthKitui.TheilSen <- map_dfr(SouthKitui.Pixel.List, function(df) {
 })
 
   # Joining slope results back with area info
-SouthKitui.TheilSen <- SouthKitui.TheilSen %>%
-  mutate(Area = "SouthKitui")
+Tsavo.AllZones.TheilSen <- Tsavo.AllZones.TheilSen %>%
+  mutate(Area = "Tsavo.AllZones")
 
   # Getting overall summary per area
-SouthKitui.SummaryTrend <- SouthKitui.TheilSen %>%
+Tsavo.AllZones.SummaryTrend <- Tsavo.AllZones.TheilSen %>%
   summarise(
     MeanSlope = mean(Slope, na.rm = TRUE),
     MedianSlope = median(Slope, na.rm = TRUE),
@@ -1830,8 +1830,11 @@ AET.AllZones.SummaryTrend <- AET.AllZones.TheilSen %>%
 # Visualising MeanSlope across study area
 
 All.Pixel.Slopes <- bind_rows(
-  Amboseli.TheilSen, TsavoEast.TheilSen, TsavoWest.TheilSen, ChyuluHills.TheilSen,
-  NgaiNdethia.TheilSen, SouthKitui.TheilSen, AET.Conservancies.TheilSen, AET.Buffers.TheilSen)
+  Amboseli.TheilSen, TsavoEast.TheilSen, 
+  TsavoWest.TheilSen, Tsavo.Ranches.TheilSen,
+  Tsavo.SettledAreas.TheilSen, Tsavo.AllZones.TheilSen,
+  AET.Conservancies.TheilSen,AET.Buffers.TheilSen, 
+  AET.AllZones.TheilSen)
 
 
 All.Trends.Summary <- All.Pixel.Slopes %>%
