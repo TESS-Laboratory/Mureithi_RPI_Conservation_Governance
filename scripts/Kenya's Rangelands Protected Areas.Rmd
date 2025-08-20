@@ -2129,10 +2129,12 @@ tm_shape(AET.AllZones.Slope.Raster) +
 ## Grouping Study Area Information
 
 Study.Area <- tibble::tibble(
-  Area = c("TsavoEast", "TsavoWest", "Amboseli", "ChyuluHills",
-           "NgaiNdethia", "SouthKitui", "AET.Conservancies", "AET.Buffers"),
-  ProtectionType = c("NationalPark", "NationalPark", "NationalPark", "NationalPark",
-                     "NationalReserve", "NationalReserve", "CommunityLand", "CommunityLand"))
+  Area = c("TsavoEast", "TsavoWest", "Amboseli", 
+           "Tsavo.Ranches","Tsavo.SettledAreas", "Tsavo.AllZones",
+           "AET.Conservancies", "AET.Buffers", "AET.AllZones"),
+  ProtectionType = c("NationalPark", "NationalPark", "NationalPark", 
+                     "Ranches", "CommunityLand", "MixedUse", 
+                     "Conservancies", "CommunityLand", "MixedUse"))
 ```
 
 ```{r}
@@ -2173,15 +2175,57 @@ print(Governance.Summary)
 ```
 
 ```{r}
+## Results explanation
+
+# CommunityLand = On average, RPI is declining in community lands (negative slopes).
+
+# MixedUse = Slight decline, smaller than community lands.
+
+# NationalPark = On average, RPI is increasing inside parks.
+
+# Ranches = Small but positive increase, between mixed use and parks.
+```
+
+```{r}
 ## Stats 1: Kruskal-Wallis Test
 
 kruskal.test(Slope ~ ProtectionType, data = All.Pixel.Slopes)
 ```
 
 ```{r}
+## Results explanation
+
+# This is a nonparametric test (like ANOVA on ranks).
+
+# Null hypothesis (H₀): All governance types have the same distribution of slopes.
+
+# Result: χ² = 13345, df = 3, p < 2.2e-16.
+
+# = This means that the  distributions of slope values differ significantly across governance types. So at least one type is performing differently.
+```
+
+```{r}
 ## Stats 2: Pairwise Wilcoxon Tests
 
 pairwise.wilcox.test(All.Pixel.Slopes$Slope, All.Pixel.Slopes$ProtectionType, p.adjust.method = "bonferroni")
+```
+
+```{r}
+## Results explanation
+
+# CommunityLand vs MixedUse: p < 2e-16 → significantly different.
+
+# CommunityLand vs NationalPark: p < 2e-16 → very different.
+
+# CommunityLand vs Ranches: p < 2e-16 → very different.
+
+# MixedUse vs NationalPark: p < 2e-16 → very different.
+
+# MixedUse vs Ranches: p < 2e-16 → very different.
+
+# NationalPark vs Ranches: p < 2e-16 → very different.
+
+# = This means that every governance type is statistically distinct from every other, even after conservative Bonferroni correction
 ```
 
 ```{r}
