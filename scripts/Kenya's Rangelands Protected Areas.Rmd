@@ -28,6 +28,7 @@ pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, 
 
 # VISUALISATION#
 # viridis -> for perceptually uniform color palettes
+# viridisLite -> same use as above though I shall use this for R^2 (Temporal Performance raster)
 # scales -> for controlling plot scale formatting (e.g., number and date labels)
 # hexbin -> for visualizing point density with hexagonal bins
 # ggh4x -> for advanced ggplot2 features = facetted_pos_scales
@@ -2556,10 +2557,68 @@ ggplot() +
 ```
 
 ```{r}
-## Extracting RSQ values from the raster & linking to each RPI.Mean
-## Extract R² layer
+# Packages
+library(ggplot2)
+library(tidyterra)   # geom_spatraster()
+library(scico)       # scientific colour maps for MAE/RMSE
+library(viridisLite) # viridis for R^2
+library(patchwork)   # combine plots
 
-RSQ.Layer <- Temporal.Performance[["rsq"]]
+# Helper to pull a layer by name pattern (case-insensitive), with a nice error if missing
+get_layer <- function(r, pattern) {
+  i <- grep(pattern, names(r), ignore.case = TRUE)
+  if (length(i) == 0) stop(sprintf("Layer not found for pattern '%s'. Available: %s",
+                                   pattern, paste(names(r), collapse = ", ")))
+  r[[i[1]]]
+}
+
+# Extract layers (adjust patterns if your names differ)
+mae  <- get_layer(Temporal.Performance.Kenya, "^MAE$")
+rmse <- get_layer(Temporal.Performance.Kenya, "^RMSE$")
+r2   <- get_layer(Temporal.Performance.Kenya, "^(R2|rsq|r\\.?squared)$")
+
+# Common map layer
+kenya_border <- geom_sf(
+  data = Kenya.Admin.Boundary, fill = NA, color = "black", linewidth = 0.3
+)
+
+# MAE plot
+p_mae <- ggplot() +
+  geom_spatraster(data = mae) +
+  scale_fill_scico(palette = "rocket", name = "MAE", na.value = "grey90") +
+  kenya_border +
+  labs(title = "MAE") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+
+# RMSE plot
+p_rmse <- ggplot() +
+  geom_spatraster(data = rmse) +
+  scale_fill_scico(palette = "magma", name = "RMSE", na.value = "grey90") +
+  kenya_border +
+  labs(title = "RMSE") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+
+# R² plot (0–1)
+p_r2 <- ggplot() +
+  geom_spatraster(data = r2) +
+  scale_fill_viridis_c(name = expression(R^2), limits = c(0, 1), na.value = "grey90") +
+  kenya_border +
+  labs(title = expression(R^2)) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+
+# Combine side-by-side
+(p_mae | p_rmse | p_r2) +
+  plot_annotation(
+    title = "Temporal Performance over Kenya",
+    subtitle = "MAE (avg error), RMSE (penalises big errors), and R² (variance explained)",
+    theme = theme(
+      plot.title = element_text(face = "bold", hjust = 0.5),
+      plot.subtitle = element_text(hjust = 0.5)
+    )
+  )
 ```
 
 ```{r}
