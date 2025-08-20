@@ -13,7 +13,7 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats, viridis, scales, hexbin, ggh4x, scico)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats, viridis, viridisLite, scales, hexbin, ggh4x, scico)
 
 # DATA HANDLING#
 # tidyverse -> for data manipulation, cleaning, and visualization in a cohesive framework
@@ -2362,7 +2362,7 @@ summary(lm_test)
 # Area (p < 2e-16): Highly significant differences in Mean RPI between areas.
 # Year × Area (p = 0.31): No strong evidence that temporal trends differ across areas.
 # Residuals: Remaining variation not explained by Year or Area.
----
+#---
 
 ### Coefficients (Linear Model)
 
@@ -2376,7 +2376,7 @@ summary(lm_test)
 
 # Generally not significant.
 # Tsavo East shows borderline evidence of an increasing trend (+0.0064, p = 0.067).
----
+#---
 ### Model Fit
 
 # R² = 0.479, Adjusted R² = 0.432: The model explains \~43% of the variation in Mean RPI.
@@ -2557,35 +2557,14 @@ ggplot() +
 ```
 
 ```{r}
-# Packages
-library(ggplot2)
-library(tidyterra)   # geom_spatraster()
-library(scico)       # scientific colour maps for MAE/RMSE
-library(viridisLite) # viridis for R^2
-library(patchwork)   # combine plots
-
-# Helper to pull a layer by name pattern (case-insensitive), with a nice error if missing
-get_layer <- function(r, pattern) {
-  i <- grep(pattern, names(r), ignore.case = TRUE)
-  if (length(i) == 0) stop(sprintf("Layer not found for pattern '%s'. Available: %s",
-                                   pattern, paste(names(r), collapse = ", ")))
-  r[[i[1]]]
-}
-
-# Extract layers (adjust patterns if your names differ)
-mae  <- get_layer(Temporal.Performance.Kenya, "^MAE$")
-rmse <- get_layer(Temporal.Performance.Kenya, "^RMSE$")
-r2   <- get_layer(Temporal.Performance.Kenya, "^(R2|rsq|r\\.?squared)$")
-
-# Common map layer
-kenya_border <- geom_sf(
-  data = Kenya.Admin.Boundary, fill = NA, color = "black", linewidth = 0.3
-)
+# Shared Kenya border layer
+kenya_border <- geom_sf(data = Kenya.Admin.Boundary, 
+                        fill = NA, color = "black", linewidth = 0.3)
 
 # MAE plot
 p_mae <- ggplot() +
   geom_spatraster(data = mae) +
-  scale_fill_scico(palette = "rocket", name = "MAE", na.value = "grey90") +
+  scale_fill_scico(palette = "roma", name = "MAE", na.value = "grey90") +
   kenya_border +
   labs(title = "MAE") +
   theme_minimal(base_size = 13) +
@@ -2594,30 +2573,27 @@ p_mae <- ggplot() +
 # RMSE plot
 p_rmse <- ggplot() +
   geom_spatraster(data = rmse) +
-  scale_fill_scico(palette = "magma", name = "RMSE", na.value = "grey90") +
+  scale_fill_scico(palette = "vik", name = "RMSE", na.value = "grey90") +
   kenya_border +
   labs(title = "RMSE") +
   theme_minimal(base_size = 13) +
   theme(legend.position = "bottom")
 
-# R² plot (0–1)
+# R² plot (bounded 0–1)
 p_r2 <- ggplot() +
   geom_spatraster(data = r2) +
-  scale_fill_viridis_c(name = expression(R^2), limits = c(0, 1), na.value = "grey90") +
+  scale_fill_scico(palette = "bam", name = expression(R^2), 
+                   limits = c(0, 1), na.value = "grey90") +
   kenya_border +
   labs(title = expression(R^2)) +
   theme_minimal(base_size = 13) +
   theme(legend.position = "bottom")
 
-# Combine side-by-side
+# Combine with patchwork
 (p_mae | p_rmse | p_r2) +
   plot_annotation(
     title = "Temporal Performance over Kenya",
-    subtitle = "MAE (avg error), RMSE (penalises big errors), and R² (variance explained)",
-    theme = theme(
-      plot.title = element_text(face = "bold", hjust = 0.5),
-      plot.subtitle = element_text(hjust = 0.5)
-    )
+    subtitle = "Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R²"
   )
 ```
 
