@@ -82,27 +82,6 @@ Africa.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive - University of E
 ```
 
 ```{r}
-# Focusing on Eastern Africa
-
-Eastern.Africa.Country.ISOCodes <- c("BI", "DJ", "ER", "ET", "KE", "RW", "SO", "TZ", "UG")
-Eastern.Africa.Data <- Africa.Country.Boundaries %>% 
-  filter(ISO_Code %in% Eastern.Africa.Country.ISOCodes)
-```
-
-```{r}
-# Plotting with a focus on Eastern Africa
-
-ggplot() +
-  geom_sf(data = Global.Country.Boundaries, fill = "white", colour = "grey") +
-  geom_sf(data = Africa.Country.Boundaries, aes(fill = "Africa"), colour = "grey", alpha = 0.5) +
-  geom_sf(data = Eastern.Africa.Data, aes(fill = "Eastern Africa"), colour = "black") +
-  scale_fill_manual(values = c("Africa" = "lightgreen", "Eastern Africa" = "darkgreen"),
-                    name = "Region",labels = c("Africa", "Eastern Africa")) +
-  labs(title = "Eastern Africa in World Map")+
-  theme_beautiful()
-```
-
-```{r}
 #Focusing on Kenya
 
 Kenya.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
@@ -112,9 +91,8 @@ Kenya.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter
 # Plotting Kenya
 
 ggplot() +
-  geom_sf(data = Eastern.Africa.Data, aes(fill = "Eastern Africa"), alpha = 0.5, colour = NA) +
   geom_sf(data = Kenya.Admin.Boundary, aes(fill = "Kenya"), colour = "black") +
-  scale_fill_manual(name = "Region",values = c("Eastern Africa" = "darkgreen", "Kenya" = "lightgreen"))+
+  scale_fill_manual(name = "Region",values = c("Kenya" = "lightgreen"))+
   labs(title = "Kenya Administrative Boundary") +
   theme_beautiful()
 ```
@@ -276,7 +254,7 @@ tm_shape(GAE.TCA) +
 ```
 
 ```{r}
-# Importing Community Conservancies & Group Ranches
+# Importing Community Conservancies & Group Ranches surrounding Amboseli
 
 AET.Conservancies <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/5. AET-Conservancies/AET_Conservancies.shp")
 
@@ -284,9 +262,10 @@ AET.Buffers <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES 
 ```
 
 ```{r}
-# Visualising the Community Conservancies & Group Ranches within GAE/TCA
+# Visualising the Community Conservancies & Group Ranches within GAE
 
 ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, fill = "grey95", color = "black") +
   geom_sf(data = AET.Conservancies, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   geom_sf(data = AET.Buffers, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Community & Group Ranches in GAE/TCA") +
@@ -294,9 +273,10 @@ ggplot()+
 ```
 
 ```{r}
-# Visualising the Community & Group Lands surrounding Amboseli NP
+# Visualising the Community Conservancy Lands surrounding Amboseli NP
 
 ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, fill = "grey95", color = "black") +
   geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = AET.Conservancies, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Community & Group Lands surrounding Amboseli NP") +
@@ -307,6 +287,7 @@ ggplot()+
 # Visualising the Community & Group Rangelands/Grazelands/Buffers surrounding Amboseli NP
 
 ggplot()+
+  geom_sf(data = Kenya.Admin.Boundary, fill = "grey95", color = "black") +
  geom_sf(data = Amboseli, aes(fill = NAME), color = "black", linewidth = 0.3) +
   geom_sf(data = AET.Buffers, aes(fill = consv_name), color = "black", linewidth = 0.1) +
   labs(title = "Bufferzones, Corridors & Grazelands surrounding Amboseli NP") +
@@ -316,14 +297,14 @@ ggplot()+
 ```{r}
 ## Visualising AET.Conservancies and AET.Buffers in one map to show Connectivity
 
-# Add a category column to both layers
+# Adding a category column to both layers
 AET.Conservancies <- AET.Conservancies %>%
   mutate(ZoneType = "Conservancy")
 
 AET.Buffers <- AET.Buffers %>%
   mutate(ZoneType = "Buffer")
 
-# Combine both layers into one
+# Combining both layers into one
 AET.AllZones <- bind_rows(AET.Conservancies, AET.Buffers)
 
 # Plotting the combined AET zones
@@ -336,6 +317,59 @@ tm_shape(AET.AllZones) +
     col = "black", lwd = 0.4
   ) +
   tm_title ("Connectivity of AET Conservancies and Buffers")
+```
+
+```{r}
+# Importing Community Conservancies & Group Ranches surrounding Tsavos
+
+Tsavo.Ranches <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/6.TCAZones/RanchesTTWCA.shp")
+
+Tsavo.SettledAreas <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/6.TCAZones/SettledAreas.shp")
+```
+
+```{r}
+# Visualising the Community Conservancies & Group Ranches within TCA
+
+ggplot() +
+  geom_sf(data = Kenya.Admin.Boundary, fill = "grey95", color = "black") +
+  geom_sf(data = Tsavo.Ranches, aes(fill = "Tsavo Ranches"), alpha = 0.5) +
+  geom_sf(data = Tsavo.SettledAreas, aes(fill = "Tsavo Settled Areas"), alpha = 0.5) + geom_sf(data = TsavoEast, aes(fill = "Tsavo East"), alpha = 0.5) +
+  geom_sf(data = TsavoWest, aes(fill = "Tsavo West"), alpha = 0.5) +
+  scale_fill_manual(
+    name = "Land Use Types", values = c("Tsavo Ranches" = "orange",
+                                        "Tsavo Settled Areas" = "maroon",
+                                        "Tsavo East" = "darkgreen",
+                                        "Tsavo West" = "forestgreen")) +
+  theme_beautiful() +
+  theme(legend.position = "right")
+```
+
+```{r}
+## Visualising Tsavo.Ranches and Tsavo.SettledAreas in one map to show Connectivity
+
+# Adding a category column to both layers
+Tsavo.Ranches <- Tsavo.Ranches %>%
+  mutate(ZoneType = "Ranches")
+
+Tsavo.SettledAreas <- Tsavo.SettledAreas %>%
+  mutate(ZoneType = "Settled Areas")
+
+# Combine both layers into one
+Tsavo.AllZones <- bind_rows(Tsavo.Ranches, Tsavo.SettledAreas)
+
+# Plotting the combined Tsavo zones
+tmap_mode("view")
+tm_shape(Tsavo.AllZones) +
+  tm_polygons(
+    fill = "ZoneType",
+    fill.scale = tm_scale_categorical(values = c(
+      "Ranches" = "orange",        
+      "Settled Areas" = "maroon"   
+    )),
+    fill.legend = tm_legend(title = "Tsavo Surroundings"),
+    col = "black", lwd = 0.4
+  ) +
+  tm_title("Connectivity of Tsavo Ranches and Settled Areas")
 ```
 
 ```{r}
@@ -3291,3 +3325,6 @@ tmap_arrange(Map.Amboseli.RPI.Mean.Filtered.1,
              ncol = 3, nrow = 3)
 ```
 
+```{r}
+
+```
