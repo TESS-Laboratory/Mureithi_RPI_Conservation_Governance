@@ -486,13 +486,13 @@ AET.AllZones.RPI.Crop <- crop(AET.AllZones.RPI.Mask, AET.AllZones)
 AET.AllZones.RPI.Mean <- mean(AET.AllZones.RPI.Crop, na.rm = TRUE)
 
 # Visualise
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(AET.AllZones.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+            col.legend = tm_legend(title = "AET.AllZones Mean RPI", reverse = TRUE)) +
 tm_shape(Amboseli.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+             col.legend = tm_legend(title = "Amboseli Mean RPI", reverse = TRUE)) +
 tm_shape(AET.AllZones) +
   tm_borders(col = "white", lwd = 2) +
 tm_title("Spatial Distribution of Mean RPI in Amboseli and Surrounding Lands") +
@@ -542,23 +542,23 @@ tm_shape(Tsavo.SettledAreas.RPI.Mean) +
 ```{r}
 ## Visualising Tsavo.AllZones
 
-Tsavo.AllZones.RPI.Mask <- mask(RPI, Tsavo.AllZones)
-Tsavo.AllZones.RPI.Crop <- crop(Tsavo.AllZones.RPI.Mask, Tsavo.AllZones)
+#Tsavo.AllZones.RPI.Mask <- mask(RPI, Tsavo.AllZones)
+#Tsavo.AllZones.RPI.Crop <- crop(Tsavo.AllZones.RPI.Mask, Tsavo.AllZones)
 
 # Averaging across years for visualization
-Tsavo.AllZones.RPI.Mean <- mean(Tsavo.AllZones.RPI.Crop, na.rm = TRUE)
+#Tsavo.AllZones.RPI.Mean <- mean(Tsavo.AllZones.RPI.Crop, na.rm = TRUE)
 
 # Visualise
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(Tsavo.AllZones.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+            col.legend = tm_legend(title = "Tsavo.AllZones Mean RPI", reverse = TRUE)) +
   tm_shape(TsavoEast.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+             col.legend = tm_legend(title = "Tsavo East Mean RPI", reverse = TRUE)) +
   tm_shape(TsavoWest.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+             col.legend = tm_legend(title = "Tsavo West Mean RPI", reverse = TRUE)) +
   tm_shape(Tsavo.AllZones) +
   tm_borders(col = "white", lwd = 2) +
   tm_title("Spatial Distribution of Mean RPI in Ranches & Settled Areas surrounding Tsavos") +
@@ -698,63 +698,63 @@ print(TsavoWest.Summary)
 ```
 
 ```{r}
-## Extracting RPI for ChyuluHills NP
+## Extracting RPI for Tsavo.Ranches
 
-ChyuluHills.RPI.Values.Full <- terra::extract(ChyuluHills.RPI.Crop, ChyuluHills, cells = TRUE)
+Tsavo.Ranches.RPI.Values.Full <- terra::extract(Tsavo.Ranches.RPI.Crop, Tsavo.Ranches, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-ChyuluHills.RPI.Values <- ChyuluHills.RPI.Values.Full[, names(ChyuluHills.RPI.Crop)]
+Tsavo.Ranches.RPI.Values <- Tsavo.Ranches.RPI.Values.Full[, names(Tsavo.Ranches.RPI.Crop)]
 
-ChyuluHills.Summary <- data.frame(
-  Layer = names(ChyuluHills.RPI.Crop),
-  Mean = apply(ChyuluHills.RPI.Values, 2, mean, na.rm = TRUE),
-  SD = apply(ChyuluHills.RPI.Values, 2, sd, na.rm = TRUE),
-  Q25 = apply(ChyuluHills.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
-  Median = apply(ChyuluHills.RPI.Values, 2, median, na.rm = TRUE),
-  Q75 = apply(ChyuluHills.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+Tsavo.Ranches.Summary <- data.frame(
+  Layer = names(Tsavo.Ranches.RPI.Crop),
+  Mean = apply(Tsavo.Ranches.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(Tsavo.Ranches.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(Tsavo.Ranches.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(Tsavo.Ranches.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(Tsavo.Ranches.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
 )
 
-print(ChyuluHills.Summary)
+print(Tsavo.Ranches.Summary)
 ```
 
 ```{r}
-## Extracting RPI for NgaiNdethia NR
+## Extracting RPI for Tsavo.SettledAreas
 
-NgaiNdethia.RPI.Values.Full <- terra::extract(NgaiNdethia.RPI.Crop, NgaiNdethia, cells = TRUE)
+Tsavo.SettledAreas.RPI.Values.Full <- terra::extract(Tsavo.SettledAreas.RPI.Crop, Tsavo.SettledAreas, cells = TRUE)
 
 ### Remove ID column (first column added by extract)
-NgaiNdethia.RPI.Values <- NgaiNdethia.RPI.Values.Full[, names(NgaiNdethia.RPI.Crop)]
+Tsavo.SettledAreas.RPI.Values <- Tsavo.SettledAreas.RPI.Values.Full[, names(Tsavo.SettledAreas.RPI.Crop)]
 
-NgaiNdethia.Summary <- data.frame(
-  Layer = names(NgaiNdethia.RPI.Crop),
-  Mean = apply(NgaiNdethia.RPI.Values, 2, mean, na.rm = TRUE),
-  SD = apply(NgaiNdethia.RPI.Values, 2, sd, na.rm = TRUE),
-  Q25 = apply(NgaiNdethia.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
-  Median = apply(NgaiNdethia.RPI.Values, 2, median, na.rm = TRUE),
-  Q75 = apply(NgaiNdethia.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+Tsavo.SettledAreas.Summary <- data.frame(
+  Layer = names(Tsavo.SettledAreas.RPI.Crop),
+  Mean = apply(Tsavo.SettledAreas.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(Tsavo.SettledAreas.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(Tsavo.SettledAreas.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(Tsavo.SettledAreas.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(Tsavo.SettledAreas.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
 )
 
-print(NgaiNdethia.Summary)
+print(Tsavo.SettledAreas.Summary)
 ```
 
 ```{r}
-## Extracting RPI for SouthKitui NR
+## Extracting RPI for Tsavo.AllZones
 
-SouthKitui.RPI.Values.Full <- terra::extract(SouthKitui.RPI.Crop, SouthKitui, cells= TRUE)
+Tsavo.AllZones.RPI.Values.Full <- terra::extract(Tsavo.AllZones.RPI.Crop, Tsavo.AllZones, cells= TRUE)
 
 ### Remove ID column (first column added by extract)
-SouthKitui.RPI.Values <- SouthKitui.RPI.Values.Full[, names(SouthKitui.RPI.Crop)]
+Tsavo.AllZones.RPI.Values <- Tsavo.AllZones.RPI.Values.Full[, names(Tsavo.AllZones.RPI.Crop)]
 
-SouthKitui.Summary <- data.frame(
-  Layer = names(SouthKitui.RPI.Crop),
-  Mean = apply(SouthKitui.RPI.Values, 2, mean, na.rm = TRUE),
-  SD = apply(SouthKitui.RPI.Values, 2, sd, na.rm = TRUE),
-  Q25 = apply(SouthKitui.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
-  Median = apply(SouthKitui.RPI.Values, 2, median, na.rm = TRUE),
-  Q75 = apply(SouthKitui.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
+Tsavo.AllZones.Summary <- data.frame(
+  Layer = names(Tsavo.AllZones.RPI.Crop),
+  Mean = apply(Tsavo.AllZones.RPI.Values, 2, mean, na.rm = TRUE),
+  SD = apply(Tsavo.AllZones.RPI.Values, 2, sd, na.rm = TRUE),
+  Q25 = apply(Tsavo.AllZones.RPI.Values, 2, quantile, probs = 0.25, na.rm = TRUE),
+  Median = apply(Tsavo.AllZones.RPI.Values, 2, median, na.rm = TRUE),
+  Q75 = apply(Tsavo.AllZones.RPI.Values, 2, quantile, probs = 0.75, na.rm = TRUE)
 )
 
-print(SouthKitui.Summary)
+print(Tsavo.AllZones.Summary)
 ```
 
 ```{r}
@@ -954,9 +954,9 @@ ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising ChyuluHills NP
+## Visualising Tsavo.Ranches
 
-ChyuluHills.RPI.Visual <- ChyuluHills.RPI.Values %>%
+Tsavo.Ranches.RPI.Visual <- Tsavo.Ranches.RPI.Values %>%
   mutate(ID = row_number()) %>%  # optional, to keep track of pixels
   pivot_longer(
     cols = -ID,                 # exclude ID column from pivoting
@@ -967,16 +967,16 @@ ChyuluHills.RPI.Visual <- ChyuluHills.RPI.Values %>%
   filter(grepl("^rpi\\.", Layer)) %>%
   mutate(
     Year = as.integer(sub("rpi\\.", "", Layer)),
-    Area = "ChyuluHills"
+    Area = "Tsavo.Ranches"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
   select(ID, Area, Year, RPI_value)
 
 # Now plot
-ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.Ranches.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_boxplot(fill = "lightblue", outlier.color = "red") +
   labs(
-    title = "RPI Distribution Over Years in ChyuluHills NP",
+    title = "RPI Distribution Over Years in Ranches surrounding Tsavos",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -984,13 +984,13 @@ ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising ChyuluHills NP (using a Violin Plot)
+## Visualising Tsavo Ranches (using a Violin Plot)
 
-ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.Ranches.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
   labs(
-    title = "RPI Distribution Over Years in ChyuluHills NP (Violin Plot)",
+    title = "RPI Distribution Over Years in Ranches surrounding Tsavos (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -998,9 +998,9 @@ ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising NgaiNdethia NR
+## Visualising Tsavo.SettledAreas
 
-NgaiNdethia.RPI.Visual <- NgaiNdethia.RPI.Values %>%
+Tsavo.SettledAreas.RPI.Visual <- Tsavo.SettledAreas.RPI.Values %>%
   mutate(ID = row_number()) %>%  # optional, to keep track of pixels
   pivot_longer(
     cols = -ID,                 # exclude ID column from pivoting
@@ -1011,16 +1011,16 @@ NgaiNdethia.RPI.Visual <- NgaiNdethia.RPI.Values %>%
   filter(grepl("^rpi\\.", Layer)) %>%
   mutate(
     Year = as.integer(sub("rpi\\.", "", Layer)),
-    Area = "NgaiNdethia"
+    Area = "Tsavo.SettledAreas"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
   select(ID, Area, Year, RPI_value)
 
 # Now plot
-ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.SettledAreas.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_boxplot(fill = "lightblue", outlier.color = "red") +
   labs(
-    title = "RPI Distribution Over Years in NgaiNdethia NR",
+    title = "RPI Distribution Over Years in Settled Areas surrounding Tsavos",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1028,13 +1028,13 @@ ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising NgaiNdethia NR (using a Violin Plot)
+## Visualising Tsavo.SettledAreas (using a Violin Plot)
 
-ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.SettledAreas.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
   labs(
-    title = "RPI Distribution Over Years in NgaiNdethia NR (Violin Plot)",
+    title = "RPI Distribution Over Years in Settled Areas surrounding Tsavos (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1042,9 +1042,9 @@ ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising SouthKitui NR
+## Visualising Tsavo.AllZones
 
-SouthKitui.RPI.Visual <- SouthKitui.RPI.Values %>%
+Tsavo.AllZones.RPI.Visual <- Tsavo.AllZones.RPI.Values %>%
   mutate(ID = row_number()) %>%  # optional, to keep track of pixels
   pivot_longer(
     cols = -ID,                 # exclude ID column from pivoting
@@ -1055,16 +1055,16 @@ SouthKitui.RPI.Visual <- SouthKitui.RPI.Values %>%
   filter(grepl("^rpi\\.", Layer)) %>%
   mutate(
     Year = as.integer(sub("rpi\\.", "", Layer)),
-    Area = "SouthKitui"
+    Area = "Tsavo.AllZones"
   ) %>%
   filter(!is.na(Year) & !is.na(RPI_value)) %>%  # remove NA years or RPI values
   select(ID, Area, Year, RPI_value)
 
 # Now plot
-ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_boxplot(fill = "lightblue", outlier.color = "red") +
   labs(
-    title = "RPI Distribution Over Years in SouthKitui NR",
+    title = "RPI Distribution Over Years in Tsavo.AllZones",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1072,13 +1072,13 @@ ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising SouthKitui NR (using a Violin Plot)
+## Visualising Tsavo.AllZones (using a Violin Plot)
 
-ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.color = "red", alpha = 0.5) +  # optional: overlay boxplot for summary stats
   labs(
-    title = "RPI Distribution Over Years in SouthKitui NR (Violin Plot)",
+    title = "RPI Distribution Over Years in Tsavo.AllZones (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1326,15 +1326,15 @@ ggplot(TsavoWest.Mean, aes(x = Year, y = Mean_RPI)) +
 ```
 
 ```{r}
-## Visualising ChyuluHills NP
+## Visualising Tsavo.Ranches
 
-ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.Ranches.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
   stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
-    title = "RPI Distribution Over Years in Chyulu Hills NP (Violin Plot)",
+    title = "RPI Distribution Over Years in Tsavo.Ranches (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1342,17 +1342,17 @@ ggplot(ChyuluHills.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising Mean RPI over ChyuluHills NP as a line 
+## Visualising Mean RPI over Tsavo.Ranches as a line 
 
-ChyuluHills.Mean <- ChyuluHills.RPI.Visual %>%
+Tsavo.Ranches.Mean <- Tsavo.Ranches.RPI.Visual %>%
   group_by(Year) %>%
   summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
 
-ggplot(ChyuluHills.Mean, aes(x = Year, y = Mean_RPI)) +
+ggplot(Tsavo.Ranches.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
   geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
-    title = "Mean RPI Over Time in Chyulu Hills NP",
+    title = "Mean RPI Over Time in Tsavo.Ranches",
     x = "Year",
     y = "Mean RPI"
   ) +
@@ -1360,15 +1360,15 @@ ggplot(ChyuluHills.Mean, aes(x = Year, y = Mean_RPI)) +
 ```
 
 ```{r}
-## Visualising NgaiNdethia NR
+## Visualising Tsavo.SettledAreas
 
-ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.SettledAreas.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
   stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
-    title = "RPI Distribution Over Years in Ngai Ndethia NR (Violin Plot)",
+    title = "RPI Distribution Over Years in Tsavo.SettledAreas (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1376,17 +1376,17 @@ ggplot(NgaiNdethia.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising Mean RPI over NgaiNdethia NR as a line 
+## Visualising Mean RPI over Tsavo.SettledAreas as a line 
 
-NgaiNdethia.Mean <- NgaiNdethia.RPI.Visual %>%
+Tsavo.SettledAreas.Mean <- Tsavo.SettledAreas.RPI.Visual %>%
   group_by(Year) %>%
   summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
 
-ggplot(NgaiNdethia.Mean, aes(x = Year, y = Mean_RPI)) +
+ggplot(Tsavo.SettledAreas.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
   geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
-    title = "Mean RPI Over Time in Ngai Ndethia NR",
+    title = "Mean RPI Over Time in Tsavo.SettledAreas",
     x = "Year",
     y = "Mean RPI"
   ) +
@@ -1394,15 +1394,15 @@ ggplot(NgaiNdethia.Mean, aes(x = Year, y = Mean_RPI)) +
 ```
 
 ```{r}
-## Visualising SouthKitui NR
+## Visualising Tsavo.AllZones
 
-ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+ggplot(Tsavo.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
   stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
   stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
   labs(
-    title = "RPI Distribution Over Years in South Kitui NR (Violin Plot)",
+    title = "RPI Distribution Over Years in Tsavo.AllZones (Violin Plot)",
     x = "Year",
     y = "RPI Value"
   ) +
@@ -1410,17 +1410,17 @@ ggplot(SouthKitui.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
 ```
 
 ```{r}
-## Visualising Mean RPI over SouthKitui NR as a line 
+## Visualising Mean RPI over Tsavo.AllZones as a line 
 
-SouthKitui.Mean <- SouthKitui.RPI.Visual %>%
+Tsavo.AllZones.Mean <- Tsavo.AllZones.RPI.Visual %>%
   group_by(Year) %>%
   summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
 
-ggplot(SouthKitui.Mean, aes(x = Year, y = Mean_RPI)) +
+ggplot(Tsavo.AllZones.Mean, aes(x = Year, y = Mean_RPI)) +
   geom_line(color = "darkgreen", linewidth = 0.8) +
   geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
   labs(
-    title = "Mean RPI Over Time in South Kitui NR",
+    title = "Mean RPI Over Time in Tsavo.AllZones",
     x = "Year",
     y = "Mean RPI"
   ) +
