@@ -437,66 +437,6 @@ tm_shape(TsavoWest.RPI.Mean) +
 ```
 
 ```{r}
-## Visualising Chyulu Hills NP
-
-ChyuluHills.RPI.Mask <- mask(RPI, ChyuluHills)
-ChyuluHills.RPI.Crop <- crop(ChyuluHills.RPI.Mask, ChyuluHills)
-
-# Averaging across years for visualization
-ChyuluHills.RPI.Mean <- mean(ChyuluHills.RPI.Crop, na.rm = TRUE)
-
-# Visualise
-tmap_mode("view")
-tm_shape(ChyuluHills.RPI.Mean) +
-  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
-  tm_shape(ChyuluHills) +
-  tm_borders(col = "white", lwd = 2) +
-  tm_title("Spatial Distribution of Mean RPI in Chyulu Hills NP") +
-  tm_layout(legend.outside = TRUE)
-```
-
-```{r}
-## Visualising Ngai Ndethia NR
-
-NgaiNdethia.RPI.Mask <- mask(RPI, NgaiNdethia)
-NgaiNdethia.RPI.Crop <- crop(NgaiNdethia.RPI.Mask, NgaiNdethia)
-
-# Averaging across years for visualization
-NgaiNdethia.RPI.Mean <- mean(NgaiNdethia.RPI.Crop, na.rm = TRUE)
-
-# Visualise
-tmap_mode("view")
-tm_shape(NgaiNdethia.RPI.Mean) +
-  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
-  tm_shape(NgaiNdethia) +
-  tm_borders(col = "white", lwd = 2) +
-  tm_title("Spatial Distribution of Mean RPI in Ngai Ndethia NR") +
-  tm_layout(legend.outside = TRUE)
-```
-
-```{r}
-## Visualising South Kitui NR
-
-SouthKitui.RPI.Mask <- mask(RPI, SouthKitui)
-SouthKitui.RPI.Crop <- crop(SouthKitui.RPI.Mask, SouthKitui)
-
-# Averaging across years for visualization
-SouthKitui.RPI.Mean <- mean(SouthKitui.RPI.Crop, na.rm = TRUE)
-
-# Visualise
-tmap_mode("view")
-tm_shape(SouthKitui.RPI.Mean) +
-  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
-            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
-  tm_shape(SouthKitui) +
-  tm_borders(col = "white", lwd = 2) +
-  tm_title("Spatial Distribution of Mean RPI in South Kitui NR") +
-  tm_layout(legend.outside = TRUE)
-```
-
-```{r}
 ## Visualising AET.Conservancies
 
 AET.Conservancies.RPI.Mask <- mask(RPI, AET.Conservancies)
@@ -550,9 +490,78 @@ tmap_mode("view")
 tm_shape(AET.AllZones.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
-  tm_shape(AET.Buffers) +
+tm_shape(Amboseli.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+tm_shape(AET.AllZones) +
   tm_borders(col = "white", lwd = 2) +
-  tm_title("Spatial Distribution of Mean RPI in Amboseli's Surrounding Lands") +
+tm_title("Spatial Distribution of Mean RPI in Amboseli and Surrounding Lands") +
+tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## Visualising Tsavo.Ranches
+
+Tsavo.Ranches.RPI.Mask <- mask(RPI, Tsavo.Ranches)
+Tsavo.Ranches.RPI.Crop <- crop(Tsavo.Ranches.RPI.Mask, Tsavo.Ranches)
+
+# Averaging across years for visualization
+Tsavo.Ranches.RPI.Mean <- mean(Tsavo.Ranches.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(Tsavo.Ranches.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.Ranches) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI of Ranches surrounding Tsavo") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## Visualising Tsavo.SettledAreas
+
+Tsavo.SettledAreas.RPI.Mask <- mask(RPI, Tsavo.SettledAreas)
+Tsavo.SettledAreas.RPI.Crop <- crop(Tsavo.SettledAreas.RPI.Mask, Tsavo.SettledAreas)
+
+# Averaging across years for visualization
+Tsavo.SettledAreas.RPI.Mean <- mean(Tsavo.SettledAreas.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(Tsavo.SettledAreas.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.SettledAreas) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI of Settled Areas surrounding Tsavos") +
+  tm_layout(legend.outside = TRUE)
+```
+
+```{r}
+## Visualising Tsavo.AllZones
+
+Tsavo.AllZones.RPI.Mask <- mask(RPI, Tsavo.AllZones)
+Tsavo.AllZones.RPI.Crop <- crop(Tsavo.AllZones.RPI.Mask, Tsavo.AllZones)
+
+# Averaging across years for visualization
+Tsavo.AllZones.RPI.Mean <- mean(Tsavo.AllZones.RPI.Crop, na.rm = TRUE)
+
+# Visualise
+tmap_mode("view")
+tm_shape(Tsavo.AllZones.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(TsavoEast.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(TsavoWest.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"), 
+             col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.AllZones) +
+  tm_borders(col = "white", lwd = 2) +
+  tm_title("Spatial Distribution of Mean RPI in Ranches & Settled Areas surrounding Tsavos") +
   tm_layout(legend.outside = TRUE)
 ```
 
@@ -598,10 +607,30 @@ Map.AET.AllZones.RPI.Mean <- tm_shape(AET.AllZones.RPI.Mean) +
   tm_shape(AET.AllZones) + tm_borders(col = "white", lwd = 1.5) +
   tm_title("AET All Zones")
 
+Map.Tsavo.Ranches.RPI.Mean <- tm_shape(Tsavo.Ranches.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.Ranches) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Ranches surrounding Tsavos")
+
+Map.Tsavo.SettledAreas.RPI.Mean <- tm_shape(Tsavo.SettledAreas.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.SettledAreas) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Settled Areas surrounding Tsavos")
+
+Map.Tsavo.AllZones.RPI.Mean <- tm_shape(Tsavo.AllZones.RPI.Mean) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.AllZones) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo All Zones")
+
 # Combining into grid
 tmap_arrange(Map.Amboseli.RPI.Mean, Map.TsavoEast.RPI.Mean,
              Map.TsavoWest.RPI.Mean, Map.AET.Conservancies.RPI.Mean, 
-             Map.AET.Buffers.RPI.Mean, Map.AET.AllZones.RPI.Mean, ncol = 3, nrow = 3)
+             Map.AET.Buffers.RPI.Mean, Map.AET.AllZones.RPI.Mean,
+             Map.Tsavo.Ranches.RPI.Mean, Map.Tsavo.SettledAreas.RPI.Mean,
+             Map.Tsavo.AllZones.RPI.Mean, ncol = 3, nrow = 3)
 ```
 
 ```{r}
