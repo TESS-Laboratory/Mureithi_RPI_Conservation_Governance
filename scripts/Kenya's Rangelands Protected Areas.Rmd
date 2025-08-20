@@ -325,6 +325,11 @@ tm_shape(AET.AllZones) +
 Tsavo.Ranches <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/6.TCAZones/RanchesTTWCA.shp")
 
 Tsavo.SettledAreas <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/6.TCAZones/SettledAreas.shp")
+
+# Reprojecting Shapefile CRS to match RPI CRS
+
+Tsavo.Ranches <- st_transform(Tsavo.Ranches, crs(RPI))
+Tsavo.SettledAreas <- st_transform(Tsavo.SettledAreas, crs(RPI))
 ```
 
 ```{r}
@@ -2237,8 +2242,9 @@ pairwise.wilcox.test(All.Pixel.Slopes$Slope, All.Pixel.Slopes$ProtectionType, p.
 
 # Combining all pixel values with area info
 All.Pixel.Values <- bind_rows(
-  Amboseli.RPI.Visual, TsavoEast.RPI.Visual, TsavoWest.RPI.Visual, ChyuluHills.RPI.Visual,
-  NgaiNdethia.RPI.Visual, SouthKitui.RPI.Visual, AET.Conservancies.RPI.Visual, 
+  Amboseli.RPI.Visual, TsavoEast.RPI.Visual, 
+  TsavoWest.RPI.Visual, Tsavo.Ranches.RPI.Visual,
+  Tsavo.SettledAreas.RPI.Visual,AET.Conservancies.RPI.Visual, 
   AET.Buffers.RPI.Visual)
 
 # Grouping by Year and Area to compute annual means
@@ -2249,8 +2255,8 @@ Annual.RPI.Trends <- All.Pixel.Values %>%
 # Visualising Annual RPI Trends
 
 ggplot(Annual.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +
+  geom_line(linewidth = 1) +   # use linewidth here
+  geom_point(size = 2) +       # still use size for points
   labs(title = "Annual Mean RPI Trends by Area", x = "Year", y = "Mean RPI") +
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = "bottom") +
@@ -2260,7 +2266,11 @@ ggplot(Annual.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
 ```{r}
 ## Zooming into the Areas of Primary Concern
 
-Primary.Concern.Areas <- bind_rows(Amboseli.RPI.Visual, TsavoEast.RPI.Visual, TsavoWest.RPI.Visual, AET.Conservancies.RPI.Visual, AET.Buffers.RPI.Visual)
+Primary.Concern.Areas <- bind_rows(
+  Amboseli.RPI.Visual, TsavoEast.RPI.Visual, 
+  TsavoWest.RPI.Visual, Tsavo.Ranches.RPI.Visual, 
+  Tsavo.SettledAreas.RPI.Visual, Tsavo.AllZones.RPI.Visual, 
+  AET.Conservancies.RPI.Visual,AET.Buffers.RPI.Visual, AET.AllZones.RPI.Visual)
 
 # Grouping by Year and Area to compute annual means
 Primary.Concern.Areas.RPI.Trends <- Primary.Concern.Areas %>%
@@ -2318,16 +2328,39 @@ summary(lm_test)
 ```
 
 ```{r}
-## Explanation of Results above:
-# The ANOVA results indicate whether there are significant differences in RPI trends across different areas and years.
+## Explanation of Results above:??
+#---
 
-# The summary provides coefficients for the linear model, showing how RPI changes with each year and area.
+### ANOVA Table
 
-  # Area is highly significant (p < 0.001) → Different areas have different mean RPI levels.
+# Year (p = 0.43): No significant overall temporal effect on Mean RPI.
+# Area (p < 2e-16): Highly significant differences in Mean RPI between areas.
+# Year × Area (p = 0.31): No strong evidence that temporal trends differ across areas.
+# Residuals: Remaining variation not explained by Year or Area.
+---
 
-  # Year is not significant → No overall temporal trend across all areas.
+### Coefficients (Linear Model)
 
-  # Year × Area is not significant (but close at p = 0.127) → Trend differences across areas are not statistically strong, but there are hints that Tsavo East is rising faster (Year:AreaTsavoEast is significant).
+# Intercept (5.97): Baseline Mean RPI for the reference area at Year = 0 (not directly interpretable without centering Year).
+#Year (-0.0026, ns): Slight negative overall slope, not significant.
+#Area effects:
+
+# Some areas (e.g., Tsavo East: -12.78, p = 0.067) show notably lower Mean RPI compared to the reference, borderline significant.
+# Most other area coefficients are not significant.
+##Year × Area interactions##
+
+# Generally not significant.
+# Tsavo East shows borderline evidence of an increasing trend (+0.0064, p = 0.067).
+---
+### Model Fit
+
+# R² = 0.479, Adjusted R² = 0.432: The model explains \~43% of the variation in Mean RPI.
+#Main driver: Spatial differences between areas, not temporal change.
+
+#---
+# Mean RPI differs strongly between areas.
+# There is no clear evidence of overall temporal change across years.
+# Tsavo East may be an exception, with lower baseline RPI and a weak indication of recovery over time.
 ```
 
 ```{r}
@@ -2354,6 +2387,12 @@ tmap_arrange(
       col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
       col.legend = tm_legend(title = "Slope", reverse = TRUE))+
     tm_title("Tsavo West"),
+  
+  tm_shape(Tsavo.AllZones.Slope.Raster) +
+    tm_raster(
+      col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
+      col.legend = tm_legend(title = "Slope", reverse = TRUE))+
+    tm_title("Tsavo All Zones"),
 
   tm_shape(AET.AllZones.Slope.Raster) +
     tm_raster(
