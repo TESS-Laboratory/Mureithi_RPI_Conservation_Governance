@@ -333,7 +333,7 @@ AET.Buffers <- AET.Buffers %>%
 AET.AllZones <- bind_rows(AET.Conservancies, AET.Buffers)
 
 # Plotting the combined AET zones
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(AET.AllZones) +
   tm_polygons(
     fill = "ZoneType",
@@ -388,7 +388,7 @@ Tsavo.SettledAreas <- Tsavo.SettledAreas %>%
 Tsavo.AllZones <- bind_rows(Tsavo.Ranches, Tsavo.SettledAreas)
 
 # Plotting the combined Tsavo zones
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(Tsavo.AllZones) +
   tm_polygons(
     fill = "ZoneType",
@@ -400,6 +400,51 @@ tm_shape(Tsavo.AllZones) +
     col = "black", lwd = 0.4
   ) +
   tm_title("Connectivity of Tsavo Ranches and Settled Areas")
+```
+
+```{r}
+tmap_mode("view")
+
+Connectivity.Map <- 
+  tm_shape(Tsavo.AllZones) +
+    tm_polygons(
+      fill = "ZoneType",
+      fill.scale = tm_scale_categorical(values = c(
+        "Ranches" = "orange",
+        "Settled Areas" = "maroon"
+      )),
+      fill.legend = tm_legend(title = "Tsavo Surroundings"),
+      col = "black", lwd = 0.4
+    ) +
+
+  tm_shape(AET.AllZones) +
+    tm_polygons(
+      fill = "ZoneType",
+      fill.scale = tm_scale_categorical(values = c(
+        "Buffer" = "forestgreen",
+        "Conservancy" = "limegreen"
+      )),
+      fill.legend = tm_legend(title = "AET Areas"),
+      col = "black", lwd = 0.4
+    ) +
+
+  tm_shape(GAE.TCA) +
+    tm_polygons(
+      fill = "Area",
+      fill.scale = tm_scale_categorical(values = "brewer.set3"),
+      fill.legend = tm_legend(title = "Protected Area"),
+      col = "black", lwd = 0.5
+    ) +
+
+  tm_layout(
+    title = "Connectivity of GAE and TCA Landscape",
+    title.size = 1.2,
+    legend.outside = TRUE,
+    legend.text.size = 0.9,
+    legend.title.size = 1
+  )
+
+Connectivity.Map
 ```
 
 ```{r}
