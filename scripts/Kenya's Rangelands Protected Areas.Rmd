@@ -2120,42 +2120,81 @@ All.Trends.Summary <- All.Pixel.Slopes %>%
   )
     ## All.Trends.Summary summarises the overall direction and strength of change in RPI for each area over the full time series.
 
-# A better scientific plot showing the mean and standard deviation
-ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
+Mean.Slope.Plot <- ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
   
-  # Add the error bars
   geom_errorbar(aes(ymin = MeanSlope - SD, ymax = MeanSlope + SD),
                 width = 0.2, color = "darkgrey") +
-  
-  # Plot the mean as a point
-  # Map the color aesthetic to a new variable to create a legend
   geom_point(aes(color = "Mean Slope"), size = 3, fill = "steelblue", shape = 21) +
-  
-  # Add the dashed line at zero
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
-  
-  # Add labels and a clean theme
   labs(
     title = "Mean RPI Trend (Theil–Sen) by Area with Standard Deviation",
     x = "Area",
     y = "Mean Slope",
-    color = "Legend"  # Set the title for the legend
+    color = "Legend"
   ) +
   theme_minimal() +
-  
-  # Adjust axis text for readability
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+Mean.Slope.Plot
+# Saving it
+ggsave(
+  filename = "MeanSlopePlot.png",
+  plot = Mean.Slope.Plot,
+  width = 10,
+  height = 8,
+  dpi = 300
+)
+```
+
+```{r}
+# This plot visualizes the overall long-term trend in RPI for eight different areas based on a robust statistical analysis. Each dot represents the mean RPI trend (Theil-Sen slope) for all pixels within a specific area. A positive mean slope (above the red dashed line at zero) indicates an overall increasing RPI trend for that area, while a negative mean slope (below the line) indicates an overall decreasing trend. The error bars extend one standard deviation above and below the mean, representing the variability of trends among the individual pixels within each area. For example, the wide error bars for "TsavoEast" show that while its overall trend is positive, there's a significant amount of variation in RPI trends at the pixel level.
 ```
 
 ```{r}
 ## Visualising Violin Plot to compare across the study area
 
-ggplot(All.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
-  geom_violin(trim = FALSE) +
-  geom_boxplot(width = 0.1, outlier.shape = NA) +
-  labs(title = "Distribution of RPI Trends (Theil–Sen Slopes) by Area", x = "Area", y = "Slope") +
+# Corrected code to resolve the error
+All.Pixel.Slopes.Plot <- ggplot(All.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
+  
+  # Adding a horizontal line at y=0 for trend reference
+  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+  
+  # Plotting the violin and boxplot for distribution
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.5) +
+  
+  # Adding the mean as a black point
+  stat_summary(fun = mean, geom = "point", shape = 21, size = 3, fill = "black") +
+  
+  # Creating a panel for each area using facet_wrap
+  facet_wrap(~ Area, ncol = 3, scales = "free_y") +
+  
+  # Adding labels and a clean theme
+  labs(
+    title = "Distribution of RPI Trends (Theil–Sen Slopes) by Area",
+    x = "Area",
+    y = "Slope"
+  ) +
+  
+  # Applying a clean theme and customize elements
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    strip.text = element_text(face = "bold"),
+    legend.position = "none", # Remove the redundant legend
+    axis.text.x = element_blank()
+  )
+
+All.Pixel.Slopes.Plot
+
+# Saving the plot for publication
+ggsave(
+  filename = "Violin_Plots_Trends_by_Area.png",
+  plot = All.Pixel.Slopes.Plot,
+  width = 12,
+  height = 8,
+  dpi = 300
+)
 ```
 
 ```{r}
