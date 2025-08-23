@@ -2153,7 +2153,6 @@ ggsave(
 ```{r}
 ## Visualising Violin Plot to compare across the study area
 
-# Corrected code to resolve the error
 All.Pixel.Slopes.Plot <- ggplot(All.Pixel.Slopes, aes(x = Area, y = Slope, fill = Area)) +
   
   # Adding a horizontal line at y=0 for trend reference
@@ -2195,6 +2194,14 @@ ggsave(
   height = 8,
   dpi = 300
 )
+```
+
+```{r}
+# This plot, titled **"Distribution of RPI Trends (Theil–Sen Slopes) by Area"**, visually summarizes the long-term trend in RPI for each of your study areas. The plot uses a **Theil–Sen slope** as a robust, non-parametric measure of change, where a positive slope indicates an increasing trend and a negative slope indicates a decreasing trend.
+
+# Each panel represents a different study area, and within each panel, a **violin plot** shows the full distribution of RPI trends for every single pixel in that area. The width of the violin corresponds to the density of the data, so a wider section means more pixels have that particular slope. A **boxplot** is overlaid on each violin, with a central line indicating the median slope, and the box representing the interquartile range (the middle 50% of slopes).  The black dot within each violin shows the **mean slope** for that area.
+
+# The dashed red line at zero serves as a critical reference point. Slopes falling to the right of this line indicate an overall positive (increasing) RPI trend, while slopes to the left indicate a negative (decreasing) trend. This visualization allows for a comprehensive comparison of not just the average trend across areas, but also the spread and variability of those trends, providing a more detailed picture of the RPI changes than a simple bar chart.
 ```
 
 ```{r}
