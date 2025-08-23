@@ -2128,7 +2128,8 @@ ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
                 width = 0.2, color = "darkgrey") +
   
   # Plot the mean as a point
-  geom_point(size = 3, color = "steelblue", fill = "steelblue", shape = 21) +
+  # Map the color aesthetic to a new variable to create a legend
+  geom_point(aes(color = "Mean Slope"), size = 3, fill = "steelblue", shape = 21) +
   
   # Add the dashed line at zero
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
@@ -2137,9 +2138,10 @@ ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
   labs(
     title = "Mean RPI Trend (Theil–Sen) by Area with Standard Deviation",
     x = "Area",
-    y = "Mean Slope"
+    y = "Mean Slope",
+    color = "Legend"  # Set the title for the legend
   ) +
-  theme_beautiful() +
+  theme_minimal() +
   
   # Adjust axis text for readability
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
