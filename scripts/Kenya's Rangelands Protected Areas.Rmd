@@ -4256,27 +4256,37 @@ ggsave(
 # Logical mask: poor fit = TRUE if R² ≤ 0.1
 RSQ.Low.Performance.Mask <- RSQ.Kenya <= 0.1
 
+# Creating the improved plot and assign it to a variable
 Plot.Rsq.Low <- ggplot() +
   geom_spatraster(data = RSQ.Low.Performance.Mask) +
   scale_fill_manual(
     name = "Model Fit",
-    values = c("FALSE" = "grey90", "TRUE" = scico(5, palette = "roma")[5]),
+    # Using a specific color from a scico palette for a professional look
+    values = c("FALSE" = "grey90", "TRUE" = scico(1, palette = "roma")),
     labels = c("Good Fit", expression(R^2 <= 0.1))
   ) +
+  # Using the Kenya border to provide geographical context
   Kenya.Border +
   labs(title = expression("Pixels with Poor Model Fit (" ~ R^2 <= 0.1 ~ ")")) +
-  theme_minimal(base_size = 13) +
+  # Using a clean, classic theme common in academic papers
+  theme_classic(base_size = 14) +
   theme(
+    plot.title = element_text(face = "bold", hjust = 0.5), # Center and bold the title
     legend.position = "bottom",
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 10)
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 11)
   )
 
+# Displaying the improved plot
 Plot.Rsq.Low
+
+# Saving the plot for scientific publication
+ggsave(
+  filename = "Kenya_Rsquare_Low_Performance.png",
+  plot = Plot.Rsq.Low,
+  width = 8,
+  height = 8,
+  dpi = 300)
 ```
 
 
-
-```{r}
-
-```
