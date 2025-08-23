@@ -2574,20 +2574,30 @@ All.Pixel.Values.RPI.Visual <- bind_rows(
   Tsavo.SettledAreas.RPI.Visual,AET.Conservancies.RPI.Visual, 
   AET.Buffers.RPI.Visual)
 
-# Grouping by Year and Area to compute annual means
+# Re-calculating the summary to include standard deviation
 Annual.RPI.Visual.Trends <- All.Pixel.Values.RPI.Visual %>%
   group_by(Area, Year) %>%
-  summarise(MeanRPI = mean(RPI_value, na.rm = TRUE), .groups = "drop")
+  summarise(
+    MeanRPI = mean(RPI_value, na.rm = TRUE),
+    SD = sd(RPI_value, na.rm = TRUE),
+    .groups = "drop"
+  )
 
-# Visualising Annual RPI Trends
-
-ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
-  geom_line(linewidth = 1) +   # use linewidth here
-  geom_point(size = 2) +       # still use size for points
-  labs(title = "Annual Mean RPI Trends by Area", x = "Year", y = "Mean RPI") +
+# Plot with ribbon to show variability
+ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI)) +
+  geom_ribbon(aes(ymin = MeanRPI - SD, ymax = MeanRPI + SD, fill = Area), alpha = 0.2) +
+  geom_line(aes(color = Area), linewidth = 1) +
+  geom_point(aes(color = Area), size = 2) +
+  labs(
+    title = "Annual Mean RPI Trends with Standard Deviation",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  facet_wrap(~ Area, ncol = 3) +
   scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  theme_beautiful()
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 ```{r}
