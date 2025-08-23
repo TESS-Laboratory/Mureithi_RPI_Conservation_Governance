@@ -2723,12 +2723,12 @@ summary(lm_test)
 ```
 
 ```{r}
-# Mapping Per-Pixel Slope for the Primary Concern Areas
+# Mapping Per-Pixel Slope
+# Setting the tmap mode to "plot" for static output
+tmap_mode("plot")
 
-
-tmap_mode("view")  # placed "view" in stead of "plot" for interactiveness
-
-tmap_arrange(
+# Arranging the maps in a grid
+Combined.Slope.Maps <- tmap_arrange(
   tm_shape(Amboseli.Slope.Raster) +
     tm_raster(
       col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
@@ -2744,13 +2744,13 @@ tmap_arrange(
   tm_shape(TsavoWest.Slope.Raster) +
     tm_raster(
       col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-      col.legend = tm_legend(title = "Slope", reverse = TRUE))+
+      col.legend = tm_legend(title = "Slope", reverse = TRUE)) +
     tm_title("Tsavo West"),
   
   tm_shape(Tsavo.AllZones.Slope.Raster) +
     tm_raster(
       col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
-      col.legend = tm_legend(title = "Slope", reverse = TRUE))+
+      col.legend = tm_legend(title = "Slope", reverse = TRUE)) +
     tm_title("Tsavo All Zones"),
 
   tm_shape(AET.AllZones.Slope.Raster) +
@@ -2758,72 +2758,21 @@ tmap_arrange(
       col.scale = tm_scale_continuous(values = "pu_or", midpoint = 0),
       col.legend = tm_legend(title = "Slope", reverse = TRUE)) +
     tm_title("Amboseli Surrounding Lands"),
-
-  ncol = 2, nrow = 2)
-
-
-  # Saving the maps as a PNG file
-    # tmap_save(filename = "RPI_Slope_Maps_ConcernAreas.png", width = 10, height = 8, dpi = 300)
-```
-
-```{r}
-# 5-Year rolling Mean of RPI Trends
-
-  # 1. Calculate the 5-year rolling mean for each 'Area'
-    # This is crucial: group_by(Area) before applying slide_dbl
-
-Primary.Concern.Areas.RPI.Trends.5yr <- Primary.Concern.Areas.RPI.Trends %>%
-  mutate(Year = as.numeric(Year)) %>% # Ensures Year is numeric & Grouping by Area so the rolling mean is calculated independently for each area
-  group_by(Area) %>%
-  # Arranging by year within each group to ensure correct rolling window calculation
-  arrange(Year) %>%
-  mutate(
-    Rolling_Mean_RPI = slide_dbl(
-      .x = MeanRPI,  # Apply rolling mean to the annual mean RPI
-      .f = mean,
-      .before = 4,  # Current year + 4 previous years = 5 years
-      .after = 0,
-      .complete = TRUE # Only calculate for full 5-year windows (eg: Years starts in 2000, its Rolling_Mean_RPI will be NA for 2000, 2001, 2002, and 2003. The first non-NA value will be for 2004 (which averages 2000-2004).)
-    )
-  ) %>%
-  ungroup() # Ungrouping after calculation as I don't need grouping for subsequent steps
-```
-
-```{r}
-# Visualising 5-Year Rolling Mean RPI Trends for Primary Concern Areas
-
-ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Year, y = Rolling_Mean_RPI, color = Area)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-  labs(title = "5-Year Rolling Mean RPI Trends in Primary Concern Areas",
-    x = "Year (End of 5-Year Window)", # Adjust label for clarity
-    y = "5-Year Rolling Mean RPI") +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  theme_beautiful() +
   
-  # This is to adjust x-axis breaks to avoid clutter, especially if years are dense
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) # Adjust n as needed for number of labels
-```
+  ncol = 2 # The plots will be arranged into two columns automatically
+)
 
-```{r}
-# Creating a Violin Plot for 5-Year Rolling Mean RPI Trends
+# Displaying the plot
+Combined.Slope.Maps
 
-# Reorder Area by descending median Rolling_Mean_RPI
-Primary.Concern.Areas.RPI.Trends.5yr <- Primary.Concern.Areas.RPI.Trends.5yr %>%
-  mutate(Area = factor(Area, levels = names(sort(tapply(Rolling_Mean_RPI, Area, median, na.rm = TRUE), decreasing = TRUE))))
-
-# Then to plot the violin plot
-ggplot(Primary.Concern.Areas.RPI.Trends.5yr, aes(x = Area, y = Rolling_Mean_RPI, fill = Area)) +
-  geom_violin(trim = FALSE) +
-  geom_boxplot(width = 0.1, outlier.shape = NA, color = "black") +
-  labs(title = "Distribution of 5-Year Rolling Mean RPI Trends by Area",
-    x = "Area", y = "5-Year Rolling Mean RPI") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme_beautiful() +
-  
-  # Adjusting the fill colors for better visibility
-  scale_fill_brewer(palette = "Set2")
+# Saving the plot to a high-resolution file
+tmap_save(
+  tm = Combined.Slope.Maps,
+  filename = "Theil_Sen_Slope_Maps.png",
+  width = 10,
+  height = 12,
+  dpi = 300
+)
 ```
 
 ```{r}
