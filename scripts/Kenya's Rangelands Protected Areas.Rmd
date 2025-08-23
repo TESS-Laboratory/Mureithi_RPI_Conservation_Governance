@@ -4217,21 +4217,37 @@ colnames(Kenya.Values.RPI.Rsquare) <- c("RPI", "RSQ")
 ```
 
 ```{r}
-# Plotting with red Threshold line
-
+# Creating the improved plot and assign it to a variable
 Kenya.RPI.Rsquare.Plot <- ggplot(Kenya.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 50) +
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +
-  geom_vline(xintercept = 0.1, linetype = "dashed", color = "red", size = 1) +
+  # Using a black dashed line for better visibility
+  geom_vline(xintercept = 0.1, linetype = "dashed", color = "black", linewidth = 1) +
   labs(
     title = "RPI vs R² across Kenya (Before Filtering)",
-    subtitle = "Red dashed line = R² threshold (0.1)",
+    subtitle = "Black dashed line = R² threshold (0.1)",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
-  theme_minimal()
+  theme_classic(base_size = 14) + # Use a clean, classic theme
+  theme(
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(face = "italic"),
+    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold")
+  )
 
+# Displaying the improved plot
 Kenya.RPI.Rsquare.Plot
+
+# Save the plot for scientific publication
+ggsave(
+  filename = "Kenya_RPI_Rsquare_Plot.png",
+  plot = Kenya.RPI.Rsquare.Plot,
+  width = 8,
+  height = 6,
+  dpi = 300 # Standard resolution for scientific papers
+)
 ```
 
 ```{r}
