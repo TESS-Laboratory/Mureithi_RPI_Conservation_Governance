@@ -2844,40 +2844,54 @@ ggplot() +
 Kenya.Border <- geom_sf(data = Kenya.Admin.Boundary, 
                         fill = NA, color = "black", linewidth = 0.3)
 
-# MAE plot
+# MAE plot with a vertical legend
 Plot.MAE <- ggplot() +
   geom_spatraster(data = Temporal.Performance.Kenya$mae) +
   scale_fill_scico(palette = "roma", name = "MAE", na.value = "grey90") +
-  kenya_border +
+  Kenya.Border +
   labs(title = "MAE") +
   theme_minimal(base_size = 13) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "right") + # Move legend to the side
+  guides(fill = guide_colorbar(direction = "vertical"))
 
-# RMSE plot
+# RMSE plot with a vertical legend
 Plot.RMSE <- ggplot() +
   geom_spatraster(data = Temporal.Performance.Kenya$rmse) +
   scale_fill_scico(palette = "vik", name = "RMSE", na.value = "grey90") +
-  kenya_border +
+  Kenya.Border +
   labs(title = "RMSE") +
   theme_minimal(base_size = 13) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "right") +
+  guides(fill = guide_colorbar(direction = "vertical"))
 
-# R² plot (bounded 0–1)
+# R² plot with a vertical legend
 Plot.Rsqd <- ggplot() +
   geom_spatraster(data = Temporal.Performance.Kenya$rsq) +
   scale_fill_scico(palette = "bam", name = expression(R^2), 
                    limits = c(0, 1), na.value = "grey90") +
-  kenya_border +
+  Kenya.Border +
   labs(title = expression(R^2)) +
   theme_minimal(base_size = 13) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "right") +
+  guides(fill = guide_colorbar(direction = "vertical"))
 
-# Combine with patchwork
-(Plot.MAE | Plot.RMSE | Plot.Rsqd) +
+# Combining with patchwork
+Combined.Temporal.Performance.Plot <- (Plot.MAE | Plot.RMSE | Plot.Rsqd) +
   plot_annotation(
     title = "Temporal Performance over Kenya",
     subtitle = "Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R²"
   )
+
+Combined.Temporal.Performance.Plot
+
+# Save the combined plot to a file
+ggsave(
+  filename = "Temporal_Performance_Kenya.png",
+  plot = Combined.Temporal.Performance.Plot,
+  width = 15,
+  height = 6,
+  dpi = 300
+)
 ```
 
 ```{r}
