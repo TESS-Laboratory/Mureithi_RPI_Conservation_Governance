@@ -3956,7 +3956,7 @@ Amboseli.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Amboseli.Values.RPI.Rsquar
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Amboseli",
+    title = "RPI vs R² (R² ≥ 0.1): Amboseli",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -3973,7 +3973,7 @@ TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(TsavoEast.Values.RPI.Rsqu
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Tsavo East",
+    title = "RPI vs R² (R² ≥ 0.1): Tsavo East",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -3990,7 +3990,7 @@ TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(TsavoWest.Values.RPI.Rsqu
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Tsavo West",
+    title = "RPI vs R² (R² ≥ 0.1): Tsavo West",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4007,7 +4007,7 @@ Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Tsavo.Ranches.Values.
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Tsavo Ranches",
+    title = "RPI vs R² (R² ≥ 0.1): Tsavo Ranches",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4024,7 +4024,7 @@ Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Tsavo.SettledAre
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Tsavo Settled Areas",
+    title = "RPI vs R² (R² ≥ 0.1): Tsavo Settled Areas",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4041,7 +4041,7 @@ Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(Tsavo.AllZones.Value
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Tsavo All Zones",
+    title = "RPI vs R² (R² ≥ 0.1): Tsavo All Zones",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4054,11 +4054,11 @@ Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1.Plot
 ```{r}
 # 4. AET.Conservancies
 
-AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare.Filtered.3, aes(x = RSQ, y = RPI)) +
+AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.Conservancies.Values.RPI.Rsquare.Filtered.1, aes(x = RSQ, y = RPI)) +
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Amboseli surrounding Conservancies",
+    title = "RPI vs R² (R² ≥ 0.1): Amboseli surrounding Conservancies",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4075,7 +4075,7 @@ AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.Buffers.Values.RPI.
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Amboseli surrounding Grazelands",
+    title = "RPI vs R² (R² ≥ 0.1): Amboseli surrounding Grazelands",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4092,7 +4092,7 @@ AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot <- ggplot(AET.AllZones.Values.RP
   geom_hex(bins = 40) +  # increase bins for more granularity
   scale_fill_viridis_c(option = "D", trans = "log10", name = "Density") +  # log scale helps distinguish dense areas
   labs(
-    title = "RPI vs R²: Amboseli Surrounding Lands",
+    title = "RPI vs R² (R² ≥ 0.1): Amboseli Surrounding Lands",
     x = expression(R^2 ~ "(Model Performance)"),
     y = "Mean RPI"
   ) +
@@ -4103,15 +4103,21 @@ AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot
 ```
 
 ```{r}
-# # Combining all the plots together
-
-All.RPI.Rsquare.Filtered.1.Plots <- 
-  (Amboseli.Values.RPI.Rsquare.Filtered.1.Plot | TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot | TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot) /
+# Assign the combined plot to a variable
+All.RPI.Rsquare.Filtered.1.Plots <- (Amboseli.Values.RPI.Rsquare.Filtered.1.Plot | TsavoEast.Values.RPI.Rsquare.Filtered.1.Plot | TsavoWest.Values.RPI.Rsquare.Filtered.1.Plot) /
   (AET.Conservancies.Values.RPI.Rsquare.Filtered.1.Plot | AET.Buffers.Values.RPI.Rsquare.Filtered.1.Plot | AET.AllZones.Values.RPI.Rsquare.Filtered.1.Plot) /
   (Tsavo.Ranches.Values.RPI.Rsquare.Filtered.1.Plot | Tsavo.SettledAreas.Values.RPI.Rsquare.Filtered.1.Plot | Tsavo.AllZones.Values.RPI.Rsquare.Filtered.1.Plot)
 
-# Show the combined plot
 All.RPI.Rsquare.Filtered.1.Plots
+
+# Save the combined plot to a file
+ggsave(
+  filename = "All_RPI_Filtered_Plots.png", # Choose a descriptive filename and file type (.png, .pdf, .tiff, etc.)
+  plot = All.RPI.Rsquare.Filtered.1.Plots,  # Specify the plot object to save
+  width = 15, # Set a sufficient width for readability
+  height = 12, # Set a sufficient height
+  dpi = 300 # Set a high resolution (300 dpi is a common standard for print)
+)
 ```
 
 ```{r}
