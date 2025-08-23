@@ -3771,111 +3771,83 @@ tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
 # Switching to static plot mode for publication
 tmap_mode("plot")
 
-# Arranging the individual maps and store the result in a variable
+# Arrange all the maps in a grid
 Combined.RPI.Maps.After.Filtering <- tmap_arrange(
   tm_shape(Amboseli.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        # Use a fixed range for consistent colors
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits", # Truncate outlier values to fit the scale
+        values = "viridis"),
       col.legend = tm_legend(title = "Amboseli Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
 
   tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "Tsavo East Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
 
   tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "Tsavo West Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
 
   tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "AET All Zones Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
 
   tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "Tsavo All Zones Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
-
+  
   tm_shape(Tsavo.Ranches.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "Tsavo Ranches Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
-
+  
   tm_shape(Tsavo.SettledAreas.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "Tsavo Settled Areas Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
-
+  
   tm_shape(AET.Conservancies.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "AET Conservancies Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
-
+  
   tm_shape(AET.Buffers.RPI.Mean.Filtered.1) +
     tm_raster(
       col.scale = tm_scale_continuous(
-        values = "viridis",
-        limits = c(0, 1)
-      ),
-      outliers.trunc = "limits",
+        values = "viridis"),
       col.legend = tm_legend(title = "AET Buffers Mean RPI (R² ≥ 0.1)", reverse = TRUE)
     ),
-
-  ncol = 3 # Arrange into 3 columns
+  
+  ncol = 3, nrow = 3 # Adjusted the layout to accommodate all plots
 )
 
 Combined.RPI.Maps.After.Filtering
 
-# Saving the plot to a high-resolution file
+# Saving the plot
 tmap_save(
   tm = Combined.RPI.Maps.After.Filtering,
   filename = "Mean_RPI_Filtered_Maps.png",
   width = 15,
   height = 10,
-  dpi = 300 
+  dpi = 300
 )
 ```
 
