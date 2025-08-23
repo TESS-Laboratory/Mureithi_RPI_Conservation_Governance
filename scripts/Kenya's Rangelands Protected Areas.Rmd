@@ -94,10 +94,22 @@ Global.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive - University of E
 ```{r}
 # Plot of World Map
 
-ggplot() +
-  geom_sf(data = Global.Country.Boundaries)+
-  labs(title = "World Country Map")+
-  theme_beautiful()
+World.Country.Map <-
+  ggplot() +
+  geom_sf(data = Global.Country.Boundaries) +
+  labs(title = "World Country Map") +
+  theme_minimal() # Replaced theme_beautiful() with a standard theme
+
+World.Country.Map
+
+# Saving plot
+ggsave(
+  filename = "World_Country_Map.png", # Choose a file name and format
+  plot = World.Country.Map,
+  width = 10,
+  height = 6,
+  dpi = 300
+)
 ```
 
 ```{r}
@@ -278,6 +290,8 @@ Kenya.PAs.Map <-
   ) +
   tm_title("National Parks and Reserves - GAE/TCA")
 
+Kenya.PAs.Map
+
 # Saving the map
 #tmap_save(
 #  tm = Kenya.PAs.Map,
@@ -428,7 +442,7 @@ tmap_save(
 tmap_mode("view")
 
 Connectivity.Map <- 
-  tm_shape(TCA.AllZones.Map) +
+  tm_shape(Tsavo.AllZones) +
     tm_polygons(
       fill = "ZoneType",
       fill.scale = tm_scale_categorical(values = c(
@@ -439,7 +453,7 @@ Connectivity.Map <-
       col = "black", lwd = 0.4
     ) +
 
-  tm_shape(AET.AllZones.Map) +
+  tm_shape(AET.AllZones) +
     tm_polygons(
       fill = "ZoneType",
       fill.scale = tm_scale_categorical(values = c(
@@ -467,6 +481,15 @@ Connectivity.Map <-
   )
 
 Connectivity.Map
+
+# Saving the map to a file
+tmap_save(
+  tm = Connectivity.Map,
+  filename = "Connectivity_Map.png", # Change to .png for a static image
+  width = 10,
+  height = 8,
+  dpi = 300
+)
 ```
 
 ```{r}
