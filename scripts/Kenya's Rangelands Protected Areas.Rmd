@@ -1596,8 +1596,6 @@ ggplot(AET.Conservancies.Mean, aes(x = Year, y = Mean_RPI)) +
 ```{r}
 ## Visualising AET.Buffers
 
-## Visualising Amboseli NP
-
 ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
   geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
@@ -1627,6 +1625,44 @@ ggplot(AET.Buffers.Mean, aes(x = Year, y = Mean_RPI)) +
     y = "Mean RPI"
   ) +
   theme_beautiful()
+```
+
+```{r}
+## Visualising AET.AllZones
+
+ggplot(AET.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +  # removes red outlier dots
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) + #Added mean line to get the general pattern
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) + # Combined the mean line with points to make it easier to visualise
+  labs(
+    title = "RPI Distribution Over Years in AET.AllZones (Violin Plot)",
+    x = "Year",
+    y = "RPI Value"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+## Visualising Mean RPI over AET.AllZones as a line 
+
+AET.AllZones.Mean <- AET.AllZones.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE))
+
+ggplot(AET.AllZones.Mean, aes(x = Year, y = Mean_RPI)) +
+  geom_line(color = "darkgreen", linewidth = 0.8) +
+  geom_point(color = "black", fill = "purple", shape = 21, size = 2) +
+  labs(
+    title = "Mean RPI Over Time in AET.AllZones",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_beautiful()
+```
+
+```{r}
+# Estimating Theil-Sen Slope Trends
 ```
 
 ```{r}
