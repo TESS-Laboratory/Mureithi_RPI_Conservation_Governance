@@ -2996,6 +2996,7 @@ RSQ.Resampled.Tsavo.Ranches <- resample(RSQ.Layer, Tsavo.Ranches.RPI.Mean, metho
 # Step 3: Now try checking again
 all.equal(ext(RSQ.Resampled.Tsavo.Ranches), ext(Tsavo.Ranches.RPI.Mean))  # Should now be TRUE
 ```
+
 ```{r}
 # Check alignment — they should match in extent/resolution in Tsavo.SettledAreas
 all.equal(ext(RSQ.Layer), ext(Tsavo.SettledAreas.RPI.Mean))  # should return TRUE
@@ -3767,24 +3768,38 @@ tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
 ```{r}
 ## Comparing the maps side by side
 
-tmap_mode("view")  # Sets plot to interactive mode
+# Switching to static plot mode for publication
+tmap_mode("plot")
 
-tmap_arrange(
+# Arranging the individual maps and store the result in a variable
+Combined.RPI.Maps.After.Filtering <- tmap_arrange(
   tm_shape(Amboseli.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI (R² ≥ 0.1)")), 
+    tm_raster(col.legend = tm_legend(title = "Amboseli Mean RPI (R² ≥ 0.1)")),
   
   tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI (R² ≥ 0.1)")), 
+    tm_raster(col.legend = tm_legend(title = "Tsavo East Mean RPI (R² ≥ 0.1)")),
   
   tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI (R² ≥ 0.1)")), 
+    tm_raster(col.legend = tm_legend(title = "Tsavo West Mean RPI (R² ≥ 0.1)")),
   
   tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI (R² ≥ 0.1)")), 
+    tm_raster(col.legend = tm_legend(title = "AET All Zones Mean RPI (R² ≥ 0.1)")),
   
   tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
-    tm_raster(col.legend = tm_legend(title = "Tsavo All Zones Mean RPI (R² ≥ 0.1)")), 
-  ncol = 2
+    tm_raster(col.legend = tm_legend(title = "Tsavo All Zones Mean RPI (R² ≥ 0.1)")),
+  
+  ncol = 2 # The plots will be arranged into two columns
+)
+
+Combined.RPI.Maps.After.Filtering
+
+# Saving the plot to a high-resolution file
+tmap_save(
+  tm = Combined.RPI.Maps.After.Filtering,
+  filename = "Mean_RPI_Filtered_Maps.png",
+  width = 10,
+  height = 12,
+  dpi = 300 # 300 dpi is the standard for most publications
 )
 ```
 
