@@ -2591,32 +2591,6 @@ ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
 ```
 
 ```{r}
-## Zooming into the Areas of Primary Concern
-
-Primary.Concern.Areas <- bind_rows(
-  Amboseli.RPI.Visual, TsavoEast.RPI.Visual, 
-  TsavoWest.RPI.Visual, Tsavo.Ranches.RPI.Visual, 
-  Tsavo.SettledAreas.RPI.Visual, Tsavo.AllZones.RPI.Visual, 
-  AET.Conservancies.RPI.Visual,AET.Buffers.RPI.Visual, AET.AllZones.RPI.Visual)
-
-# Grouping by Year and Area to compute annual means
-Primary.Concern.Areas.RPI.Trends <- Primary.Concern.Areas %>%
-  group_by(Area, Year) %>%
-  summarise(MeanRPI = mean(RPI_value, na.rm = TRUE), .groups = "drop")
-
-    # "Primary.Concern.Areas.RPI.Trends" calculated the annual average RPI for each Area
-
-# Visualising Annual RPI Trends for Primary Concern Areas
-ggplot(Primary.Concern.Areas.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +
-  labs(title = "Annual Mean RPI Trends in Primary Concern Areas", x = "Year", y = "Mean RPI") +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  theme_beautiful()
-```
-
-```{r}
 # Calculating Theil-Sen Slope for Primary Concern Areas
 
 # Calculate slope & intercept for each area
