@@ -2612,31 +2612,64 @@ ggsave(
 ```
 
 ```{r}
-# Calculating Theil-Sen Slope for Primary Concern Areas
+# Including Theil-Sen Slope in the Plot of Mean RPI trends with Standard Deviation
 
-# Calculate slope & intercept for each area
-Primary.TheilSen.Lines <- Primary.Concern.Areas.RPI.Trends %>%
-  group_by(Area) %>%
+# Re-calculating the summary to include standard deviation
+Annual.RPI.Visual.Trends <- All.Pixel.Values.RPI.Visual %>%
+  group_by(Area, Year) %>%
   summarise(
-    slope = sens.slope(MeanRPI)$estimates,
-    intercept = mean(MeanRPI, na.rm = TRUE) - slope * mean(Year, na.rm = TRUE),
+    MeanRPI = mean(RPI_value, na.rm = TRUE),
+    SD = sd(RPI_value, na.rm = TRUE),
     .groups = "drop"
   )
 
-# Plotting with "geom_line()" for dashed actual means & "geom_abline()" for Theil–Sen trends
-ggplot(Primary.Concern.Areas.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) + # Dashed annual trend lines
-  geom_line(size = 1, linetype = "dashed") +
-  # Points
-  geom_point(size = 2) +
-  # Theil–Sen trend lines manually
-  geom_abline(data = Primary.TheilSen.Lines,
-              aes(slope = slope, intercept = intercept, color = Area),
-              linetype = "solid", linewidth = 1.2, show.legend = FALSE) +
-  labs(title = "Annual Mean RPI Trends (dashed lines) with Theil–Sen Lines (straight lines)",x = "Year", y = "Mean RPI") +
-  scale_color_brewer(palette = "Set1") +
-  theme_beautiful() +
-  theme(legend.position = "right")
+# 1. Joining the Theil-Sen slopes to the yearly data
+Combined.Trends <- Annual.RPI.Visual.Trends %>%
+  left_join(All.Trends.Summary %>% select(Area, MeanSlope), by = "Area")
 
+# 2. Creating the combined plot
+Combined.Trends.Plot <- ggplot(Combined.Trends, aes(x = Year, y = MeanRPI)) +
+  
+  # Adding geom_ribbon to show standard deviation
+  geom_ribbon(aes(ymin = MeanRPI - SD, ymax = MeanRPI + SD, fill = Area), alpha = 0.2) +
+  
+  # Adding geom_line for the yearly mean trend
+  geom_line(aes(color = Area), linewidth = 1) +
+  
+  # Add geom_point for the yearly mean
+  geom_point(aes(color = Area), size = 2) +
+  
+  # Adding geom_smooth to plot the overall Theil-Sen trend line
+  geom_smooth(aes(color = Area), method = "lm", formula = y ~ x, se = FALSE, linewidth = 1.2) +
+  
+  # Using facets to separate areas
+  facet_wrap(~ Area, ncol = 3, scales = "free_y") +
+  
+  # Adding labels and use a professional theme
+  labs(
+    title = "Annual RPI Trends with Theil-Sen Slope Overlaid",
+    x = "Year",
+    y = "Mean RPI"
+  ) +
+  theme_minimal() +
+  
+  # Customising theme elements
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold"),
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+
+Combined.Trends.Plot
+
+# 3. Save the plot
+ggsave(
+  filename = "Combined_Annual_and_TheilSen_Trends.png",
+  plot = Combined.Trends.Plot,
+  width = 12,
+  height = 8,
+  dpi = 300
+)
 ```
 
 ```{r}
