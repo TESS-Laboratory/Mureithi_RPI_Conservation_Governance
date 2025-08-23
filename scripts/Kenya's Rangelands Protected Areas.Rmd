@@ -2120,16 +2120,28 @@ All.Trends.Summary <- All.Pixel.Slopes %>%
   )
     ## All.Trends.Summary summarises the overall direction and strength of change in RPI for each area over the full time series.
 
-
+# A better scientific plot showing the mean and standard deviation
 ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), y = MeanSlope)) +
-  geom_col(fill = "steelblue", color = "black") +
+  
+  # Add the error bars
+  geom_errorbar(aes(ymin = MeanSlope - SD, ymax = MeanSlope + SD),
+                width = 0.2, color = "darkgrey") +
+  
+  # Plot the mean as a point
+  geom_point(size = 3, color = "steelblue", fill = "steelblue", shape = 21) +
+  
+  # Add the dashed line at zero
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkred") +
+  
+  # Add labels and a clean theme
   labs(
-    title = "Mean RPI Trend (Theil–Sen) by Area",
+    title = "Mean RPI Trend (Theil–Sen) by Area with Standard Deviation",
     x = "Area",
     y = "Mean Slope"
   ) +
-  theme_minimal() +
+  theme_beautiful() +
+  
+  # Adjust axis text for readability
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
