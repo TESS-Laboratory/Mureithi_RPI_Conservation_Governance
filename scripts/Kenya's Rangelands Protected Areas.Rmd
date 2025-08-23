@@ -2584,7 +2584,7 @@ Annual.RPI.Visual.Trends <- All.Pixel.Values.RPI.Visual %>%
   )
 
 # Plot with ribbon to show variability
-ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI)) +
+Annual.RPI.Visual.Trends.Faceted.Plot <- ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI)) +
   geom_ribbon(aes(ymin = MeanRPI - SD, ymax = MeanRPI + SD, fill = Area), alpha = 0.2) +
   geom_line(aes(color = Area), linewidth = 1) +
   geom_point(aes(color = Area), size = 2) +
@@ -2598,6 +2598,17 @@ ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI)) +
   scale_fill_brewer(palette = "Set1") +
   theme_minimal() +
   theme(legend.position = "none")
+
+Annual.RPI.Visual.Trends.Faceted.Plot
+
+# 2. Saving the plot to a file
+ggsave(
+  filename = "Annual_RPI_Trends_Faceted.png", 
+  plot = Annual.RPI.Visual.Trends.Faceted.Plot,                     
+  width = 12,                                 
+  height = 8,                                 
+  dpi = 300                                  
+)
 ```
 
 ```{r}
