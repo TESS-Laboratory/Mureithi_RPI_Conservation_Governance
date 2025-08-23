@@ -2388,7 +2388,7 @@ AET.Conservancies.Slope.Cells <- dplyr::left_join(AET.Conservancies.TheilSen, AE
 AET.Conservancies.Slope.Raster[AET.Conservancies.Slope.Cells$cell] <- AET.Conservancies.Slope.Cells$Slope
 
 # 4. Plot the raster
-tmap_mode("view")
+tmap_mode("plot")
 tm_shape(AET.Conservancies.Slope.Raster) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
@@ -2568,20 +2568,20 @@ pairwise.wilcox.test(All.Pixel.Slopes$Slope, All.Pixel.Slopes$ProtectionType, p.
 ## Yearly summary data
 
 # Combining all pixel values with area info
-All.Pixel.Values <- bind_rows(
+All.Pixel.Values.RPI.Visual <- bind_rows(
   Amboseli.RPI.Visual, TsavoEast.RPI.Visual, 
   TsavoWest.RPI.Visual, Tsavo.Ranches.RPI.Visual,
   Tsavo.SettledAreas.RPI.Visual,AET.Conservancies.RPI.Visual, 
   AET.Buffers.RPI.Visual)
 
 # Grouping by Year and Area to compute annual means
-Annual.RPI.Trends <- All.Pixel.Values %>%
+Annual.RPI.Visual.Trends <- All.Pixel.Values.RPI.Visual %>%
   group_by(Area, Year) %>%
   summarise(MeanRPI = mean(RPI_value, na.rm = TRUE), .groups = "drop")
 
 # Visualising Annual RPI Trends
 
-ggplot(Annual.RPI.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
+ggplot(Annual.RPI.Visual.Trends, aes(x = Year, y = MeanRPI, color = Area)) +
   geom_line(linewidth = 1) +   # use linewidth here
   geom_point(size = 2) +       # still use size for points
   labs(title = "Annual Mean RPI Trends by Area", x = "Year", y = "Mean RPI") +
