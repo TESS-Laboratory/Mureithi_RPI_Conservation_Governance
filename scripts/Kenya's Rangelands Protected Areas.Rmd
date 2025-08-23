@@ -173,13 +173,13 @@ Kenya.Terrestrial.PAs.Map <-
 
 Kenya.Terrestrial.PAs.Map
 
-#tmap_save(
-#  tm = Kenya.Terrestrial.PAs.Map,
-#  filename = "Kenya_Terrestrial_Protected_Areas_Map.png", # Choose a file name
-#  width = 8,  # width in inches
-#  height = 6, # height in inches
-#  dpi = 300   # resolution
-#)
+tmap_save(
+  tm = Kenya.Terrestrial.PAs.Map,
+  filename = "Kenya_Terrestrial_Protected_Areas_Map.png", # Choose a file name
+  width = 8,  # width in inches
+  height = 6, # height in inches
+  dpi = 300   # resolution
+)
 ```
 
 ```{r}
@@ -223,13 +223,13 @@ Kenya.Rangeland.Map <-
 
 Kenya.Rangeland.Map
 
-#tmap_save(
-#  tm = Kenya.Rangeland.Map,
-#  filename = "Kenya_Rangeland_Counties_Map.png", # Choose a file name
-#  width = 8,  # width in inches
-#  height = 6, # height in inches
-#  dpi = 300   # resolution
-#)
+tmap_save(
+  tm = Kenya.Rangeland.Map,
+  filename = "Kenya_Rangeland_Counties_Map.png", # Choose a file name
+  width = 8,  # width in inches
+  height = 6, # height in inches
+  dpi = 300   # resolution
+)
 ```
 
 ```{r}
@@ -292,14 +292,14 @@ Kenya.PAs.Map <-
 
 Kenya.PAs.Map
 
-# Saving the map
-#tmap_save(
-#  tm = Kenya.PAs.Map,
-#  filename = "Kenya_PAs_Map.png", # Choose a file name
-#  width = 8,
-#  height = 6,
-#  dpi = 300
-#)
+ Saving the map
+tmap_save(
+  tm = Kenya.PAs.Map,
+  filename = "Kenya_PAs_Map.png", # Choose a file name
+  width = 8,
+  height = 6,
+  dpi = 300
+)
 ```
 
 ```{r}
@@ -1662,7 +1662,111 @@ ggplot(AET.AllZones.Mean, aes(x = Year, y = Mean_RPI)) +
 ```
 
 ```{r}
-# Estimating Theil-Sen Slope Trends
+# Creating each of the 9 individual plots and storing them in a variable
+
+Amboseli.Violin.Plot <- ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("Amboseli NP") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+TsavoEast.Violin.Plot <- ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("Tsavo East NP") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+TsavoWest.Violin.Plot <- ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("Tsavo West NP") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+Tsavo.Ranches.Violin.Plot <- ggplot(Tsavo.Ranches.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("Tsavo Ranches") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+Tsavo.SettledAreas.Violin.Plot <- ggplot(Tsavo.SettledAreas.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("Tsavo Settled Areas") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+Tsavo.AllZones.Violin.Plot <- ggplot(Tsavo.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("Tsavo All Zones") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+AET.Conservancies.Violin.Plot <- ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("AET Conservancies") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+AET.Buffers.Violin.Plot <- ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("AET Buffers") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+AET.AllZones.Violin.Plot <- ggplot(AET.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "line", aes(group = 1), color = "darkblue", linewidth = 0.6) +
+  stat_summary(fun = mean, geom = "point", shape = 21, fill = "purple", size = 2) +
+  labs(x = "Year", y = "RPI Value") +
+  ggtitle("AET All Zones") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Combine plots into a 3x3 grid
+Combined.RPI.Violin.Plots <- (Amboseli.Violin.Plot + TsavoEast.Violin.Plot + TsavoWest.Violin.Plot) / (Tsavo.Ranches.Violin.Plot + Tsavo.SettledAreas.Violin.Plot + Tsavo.AllZones.Violin.Plot) / (AET.Conservancies.Violin.Plot + AET.Buffers.Violin.Plot + AET.AllZones.Violin.Plot)
+
+# Add a single main title
+Combined.RPI.Violin.Plots <- Combined.RPI.Violin.Plots +
+  plot_annotation(
+    title = "RPI Distribution Over Years by Zone (Violin Plots)",
+    subtitle = "Showing median, interquartile range, and mean trend line"
+  ) &
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+
+
+Combined.RPI.Violin.Plots
+
+# Save the final combined plot
+ggsave(
+  filename = "Combined_RPI_Violin_Plots.png",
+  plot = Combined.RPI.Violin.Plots,
+  width = 15,
+  height = 12,
+  dpi = 300
+)
 ```
 
 ```{r}
