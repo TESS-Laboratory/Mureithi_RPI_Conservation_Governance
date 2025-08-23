@@ -2673,6 +2673,10 @@ ggsave(
 ```
 
 ```{r}
+# This plot provides a detailed view of the annual mean RPI trends across different study areas by combining two key analyses. Each panel represents a distinct area, with the blue line showing the **annual mean RPI** over time, allowing for the visualization of year-to-year fluctuations. The **shaded blue ribbon** around this line indicates the standard deviation, representing the variability in RPI values for each year. Overlaying these yearly trends is a **straight black line**, which shows the overall **Theil–Sen slope**. This line represents the robust, long-term trend for each area, visually summarizing whether the RPI has been increasing, decreasing, or remaining stable over the entire period. This combined visualization allows viewers to see not only short-term RPI changes but also the broader, statistically significant direction of change.
+```
+
+```{r}
 # Stastistical Analysis of Temporal Trends
 
 # Fitting a linear model
