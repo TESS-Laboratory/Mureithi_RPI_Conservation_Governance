@@ -687,9 +687,6 @@ tm_shape(Tsavo.AllZones.RPI.Mean) +
 
 ```{r}
 ## Viewing Mean.RPI Maps for Primary Concern Areas
-
-tmap_mode("view")
-
 # Creating individual map panels
 Map.Amboseli.RPI.Mean <- tm_shape(Amboseli.RPI.Mean) +
   tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
@@ -746,11 +743,26 @@ Map.Tsavo.AllZones.RPI.Mean <- tm_shape(Tsavo.AllZones.RPI.Mean) +
   tm_title("Tsavo All Zones")
 
 # Combining into grid
-tmap_arrange(Map.Amboseli.RPI.Mean, Map.TsavoEast.RPI.Mean,
-             Map.TsavoWest.RPI.Mean, Map.AET.Conservancies.RPI.Mean, 
-             Map.AET.Buffers.RPI.Mean, Map.AET.AllZones.RPI.Mean,
-             Map.Tsavo.Ranches.RPI.Mean, Map.Tsavo.SettledAreas.RPI.Mean,
-             Map.Tsavo.AllZones.RPI.Mean, ncol = 3, nrow = 3)
+Combined.RPI.Maps.Before.Filtering <- tmap_arrange(
+  Map.Amboseli.RPI.Mean, 
+  Map.TsavoEast.RPI.Mean,
+  Map.TsavoWest.RPI.Mean, 
+  Map.AET.Conservancies.RPI.Mean, 
+  Map.AET.Buffers.RPI.Mean, 
+  Map.AET.AllZones.RPI.Mean,
+  Map.Tsavo.Ranches.RPI.Mean, 
+  Map.Tsavo.SettledAreas.RPI.Mean,
+  Map.Tsavo.AllZones.RPI.Mean, 
+  ncol = 3, nrow = 3
+)
+
+Combined.RPI.Maps.Before.Filtering
+
+# Saving the combined map as an interactive HTML file
+tmap_save(
+  tm = Combined.RPI.Maps.Before.Filtering,
+  filename = "Mean_RPI_Maps_Static.png" # Using .png or .pdf for a static image
+)
 ```
 
 ```{r}
