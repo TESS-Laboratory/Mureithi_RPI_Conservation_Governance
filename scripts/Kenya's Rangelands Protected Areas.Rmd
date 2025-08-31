@@ -1745,9 +1745,6 @@ AET.AllZones.Violin.Plot <- ggplot(AET.AllZones.RPI.Visual, aes(x = factor(Year)
   ggtitle("AET All Zones") +
   theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-library(ggplot2)
-library(patchwork)
-
 # Arrange plots in a 3x3 grid
 Combined.RPI.Violin.Plots <- (
   Amboseli.Violin.Plot + TsavoEast.Violin.Plot + TsavoWest.Violin.Plot
@@ -1795,10 +1792,10 @@ Combined.RPI.Violin.Plots
 ggsave(
   filename = "Combined_RPI_Violin_Plots_FullPage.png",
   plot = Combined.RPI.Violin.Plots,
-  width = 21,   # A4 width in cm (~8.3 inches)
-  height = 29.7, # A4 height in cm (~11.7 inches)
+  width = 26,
+  height = 30,
   units = "cm",
-  dpi = 300
+  dpi = 310
 )
 ```
 
