@@ -4335,8 +4335,8 @@ RPI.All.Simulation <- bind_rows(
   AET.AllZones.Simulation
 )
 
-# --- Plot ridgelines ---
-ggplot(RPI.All.Simulation, aes(x = RPI, y = Area, fill = Area)) +
+# Assign the plot to an object first
+RPI.Ridgeline.Simulation.Plot <- ggplot(RPI.All.Simulation, aes(x = RPI, y = Area, fill = Area)) +
   geom_density_ridges(
     quantile_lines = TRUE,
     quantiles = c(0.25, 0.5, 0.75),
@@ -4356,4 +4356,15 @@ ggplot(RPI.All.Simulation, aes(x = RPI, y = Area, fill = Area)) +
     axis.text.x = element_text(size = 11),
     plot.title = element_text(size = 14, face = "bold")
   )
+
+RPI.Ridgeline.Simulation.Plot
+
+# Save the plot as a high-res PNG (A4 size)
+ggsave(
+  filename = "RPI_Distribution_Ridgeline.png",  
+  plot = RPI.Ridgeline.Simulation.Plot,
+  width = 8.27, 
+  height = 11.69, 
+  dpi = 300 
+)
 ```
