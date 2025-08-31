@@ -3744,93 +3744,92 @@ tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
 ```
 
 ```{r}
-## Comparing the maps side by side
-
-# Switching to static plot mode for publication
+# Creating individual map panels
 tmap_mode("plot")
 
-# Arrange all the maps in a grid
+Map.Amboseli.RPI.Mean.Filtered.1 <- tm_shape(Amboseli.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Amboseli) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Amboseli")
+
+Map.TsavoEast.RPI.Mean.Filtered.1 <- tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(TsavoEast) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo East")
+
+Map.TsavoWest.RPI.Mean.Filtered.1 <- tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(TsavoWest) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo West")
+
+Map.Tsavo.AllZones.RPI.Mean.Filtered.1 <- tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.AllZones) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo All Zones")
+
+Map.Tsavo.Ranches.RPI.Mean.Filtered.1 <- tm_shape(Tsavo.Ranches.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.Ranches) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo Ranches")
+
+Map.Tsavo.SettledAreas.RPI.Mean.Filtered.1 <- tm_shape(Tsavo.SettledAreas.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(Tsavo.SettledAreas) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("Tsavo Settled Areas")
+
+Map.AET.Conservancies.RPI.Mean.Filtered.1 <- tm_shape(AET.Conservancies.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.Conservancies) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("AET Conservancies")
+
+Map.AET.Buffers.RPI.Mean.Filtered.1 <- tm_shape(AET.Buffers.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.Buffers) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("AET Buffers")
+
+Map.AET.AllZones.RPI.Mean.Filtered.1 <- tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
+  tm_raster(col.scale = tm_scale_continuous(values = "viridis"),
+            col.legend = tm_legend(title = "Mean RPI", reverse = TRUE)) +
+  tm_shape(AET.AllZones) + tm_borders(col = "white", lwd = 1.5) +
+  tm_title("AET All Zones")
+
+# Combining into grid
+# Ensure plotting mode
+tmap_mode("plot")
+
+# Combine maps in a grid (no shared legend)
 Combined.RPI.Maps.After.Filtering <- tmap_arrange(
-  tm_shape(Amboseli.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "Amboseli Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-
-  tm_shape(TsavoEast.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "Tsavo East Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-
-  tm_shape(TsavoWest.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "Tsavo West Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-
-  tm_shape(AET.AllZones.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "AET All Zones Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-
-  tm_shape(Tsavo.AllZones.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "Tsavo All Zones Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-  
-  tm_shape(Tsavo.Ranches.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "Tsavo Ranches Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-  
-  tm_shape(Tsavo.SettledAreas.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "Tsavo Settled Areas Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-  
-  tm_shape(AET.Conservancies.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "AET Conservancies Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-  
-  tm_shape(AET.Buffers.RPI.Mean.Filtered.1) +
-    tm_raster(
-      col.scale = tm_scale_continuous(
-        values = "viridis"),
-      col.legend = tm_legend(title = "AET Buffers Mean RPI (R² ≥ 0.1)", reverse = TRUE)
-    ),
-  
-  ncol = 3, nrow = 3 # Adjusted the layout to accommodate all plots
+  Map.Amboseli.RPI.Mean.Filtered.1, 
+  Map.TsavoEast.RPI.Mean.Filtered.1,
+  Map.TsavoWest.RPI.Mean.Filtered.1,
+  Map.Tsavo.Ranches.RPI.Mean.Filtered.1,
+  Map.Tsavo.SettledAreas.RPI.Mean.Filtered.1,
+  Map.Tsavo.AllZones.RPI.Mean.Filtered.1,
+  Map.AET.Conservancies.RPI.Mean.Filtered.1, 
+  Map.AET.Buffers.RPI.Mean.Filtered.1, 
+  Map.AET.AllZones.RPI.Mean.Filtered.1, 
+  ncol = 3, nrow = 3
 )
 
-Combined.RPI.Maps.After.Filtering
-
-# Saving the plot
-#tmap_save(
-#  tm = Combined.RPI.Maps.After.Filtering,
-#  filename = "Mean_RPI_Filtered_Maps.png",
-#  width = 15,
-#  height = 10,
-#  dpi = 300
-#)
+# Save as high-resolution A4 landscape PNG
+tmap_save(
+  tm = Combined.RPI.Maps.After.Filtering,
+  filename = "Mean_RPI_Filtered_Maps.png",
+  width = 29.7, height = 21, units = "cm", dpi = 300
+)
 ```
 
-```{r}
 
+```{r}
+# Viewing differently from leaflets
 tmap_mode("view")
 
 # Creating individual map panels
@@ -4288,3 +4287,6 @@ ggsave(
 )
 ```
 
+```{r}
+
+```
