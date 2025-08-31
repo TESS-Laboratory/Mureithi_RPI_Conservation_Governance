@@ -13,10 +13,10 @@ output:
 
 if (!require("pacman")) install.packages("pacman")
 
-pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats, viridis, viridisLite, scales, hexbin, ggh4x, scico)
+pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, tmap, trend, slider, forcats, viridis, viridisLite, scales, hexbin, ggh4x, scico, ggridges, truncnorm)
 
 # DATA HANDLING#
-# tidyverse -> for data manipulation, cleaning, and visualization in a cohesive framework
+# tidyverse -> for data manipulation, cleaning, and visualisation in a cohesive framework
 # forcats -> for managing factors (categorical variables)
 # slider -> for rolling or sliding window calculations
 
@@ -3827,7 +3827,6 @@ tmap_save(
 )
 ```
 
-
 ```{r}
 # Viewing differently from leaflets
 tmap_mode("view")
@@ -4288,5 +4287,61 @@ ggsave(
 ```
 
 ```{r}
+# Function to simulate data based on your summary stats
+simulate_rpi <- function(summary_df, area_name, n_pixels = 1000) {
+  summary_df %>%
+    rowwise() %>%
+    mutate(
+      # Simulate pixel-level RPI values from mean & SD
+      SimValues = list(rtruncnorm(
+        n = n_pixels, 
+        a = 0, b = 2,  # RPI is bounded between 0 and 2
+        mean = Mean, sd = SD
+      ))
+    ) %>%
+    unnest(cols = c(SimValues)) %>%
+    mutate(
+      Area = area_name,
+      Year = as.numeric(gsub("rpi\\.", "", Layer))
+    ) %>%
+    select(Area, Year, RPI = SimValues)
+}
 
+# --- Simulate data for each area ---
+amboseli_data <- simulate_rpi(Amboseli.Summary, "Amboseli Park")
+tsavo_e_data  <- simulate_rpi(TsavoEast.Summary, "Tsavo East")
+tsavo_w_data  <- simulate_rpi(TsavoWest.Summary, "Tsavo West")
+ranches_data  <- simulate_rpi(Tsavo.Ranches.Summary, "Tsavo Ranches")
+settled_data  <- simulate_rpi(Tsavo.SettledAreas.Summary, "Tsavo Settled Areas")
+allzones_data <- simulate_rpi(Tsavo.AllZones.Summary, "Tsavo All Zones")
+conserv_data  <- simulate_rpi(AET.Conservancies.Summary, "AET Conservancies")
+buffers_data  <- simulate_rpi(AET.Buffers.Summary, "AET Buffers")
+
+# --- Combine all datasets ---
+rpi_all <- bind_rows(
+  amboseli_data, tsavo_e_data, tsavo_w_data, ranches_data, 
+  settled_data, allzones_data, conserv_data, buffers_data
+)
+
+# --- Plot ridgelines ---
+ggplot(rpi_all, aes(x = RPI, y = Area, fill = Area)) +
+  geom_density_ridges(
+    quantile_lines = TRUE,
+    quantiles = c(0.25, 0.5, 0.75),
+    alpha = 0.7, scale = 1.2
+  ) +
+  scale_fill_viridis_d(option = "C") +
+  labs(
+    title = "Distribution of Mean Relative Productivity Index (RPI) by Area",
+    subtitle = "Based on 23-year pixel-level estimates (simulated from summary stats)",
+    x = "Mean Relative Productivity Index (RPI)",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.text.y = element_text(size = 10),
+    axis.text.x = element_text(size = 11),
+    plot.title = element_text(size = 14, face = "bold")
+  )
 ```
