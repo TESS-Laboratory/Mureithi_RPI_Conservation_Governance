@@ -1745,28 +1745,61 @@ AET.AllZones.Violin.Plot <- ggplot(AET.AllZones.RPI.Visual, aes(x = factor(Year)
   ggtitle("AET All Zones") +
   theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Combine plots into a 3x3 grid
-Combined.RPI.Violin.Plots <- (Amboseli.Violin.Plot + TsavoEast.Violin.Plot + TsavoWest.Violin.Plot) / (Tsavo.Ranches.Violin.Plot + Tsavo.SettledAreas.Violin.Plot + Tsavo.AllZones.Violin.Plot) / (AET.Conservancies.Violin.Plot + AET.Buffers.Violin.Plot + AET.AllZones.Violin.Plot)
+library(ggplot2)
+library(patchwork)
 
-# Add a single main title
+# Arrange plots in a 3x3 grid
+Combined.RPI.Violin.Plots <- (
+  Amboseli.Violin.Plot + TsavoEast.Violin.Plot + TsavoWest.Violin.Plot
+) / (
+  Tsavo.Ranches.Violin.Plot + Tsavo.SettledAreas.Violin.Plot + Tsavo.AllZones.Violin.Plot
+) / (
+  AET.Conservancies.Violin.Plot + AET.Buffers.Violin.Plot + AET.AllZones.Violin.Plot
+)
+
+# Rotate x-axis labels & control subplot theme
+Combined.RPI.Violin.Plots <- Combined.RPI.Violin.Plots &
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
+    axis.text.y = element_text(size = 9),
+    axis.title = element_text(size = 11),
+    strip.text = element_text(size = 11)
+  )
+
+# Add title/subtitle/caption with smaller sizes
 Combined.RPI.Violin.Plots <- Combined.RPI.Violin.Plots +
   plot_annotation(
     title = "RPI Distribution Over Years by Zone (Violin Plots)",
-    subtitle = "Showing median, interquartile range, and mean trend line"
-  ) &
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+    subtitle = "Showing median, interquartile range, and mean trend line",
+    caption = "Each panel shows RPI values by year. Violin width represents distribution density.\nBoxplot overlay shows IQR, whiskers, and median; purple dots and lines show means.",
+    theme = theme(
+      plot.title = element_text(size = 16, hjust = 0.5, face = "bold"),
+      plot.subtitle = element_text(size = 12, hjust = 0.5),
+      plot.caption = element_text(size = 9, hjust = 0.5)
+    )
+  )
 
+# Adjust geoms globally (example if you use consistent geoms across plots)
+scale_geom_defaults <- function() {
+  update_geom_defaults("violin", list(size = 0.4))
+  update_geom_defaults("boxplot", list(size = 0.3))
+  update_geom_defaults("point", list(size = 1.5, colour = "purple"))
+  update_geom_defaults("line", list(size = 0.4, colour = "purple"))
+}
+scale_geom_defaults()
 
+# Print
 Combined.RPI.Violin.Plots
 
-# Save the final combined plot
-#ggsave(
-#  filename = "Combined_RPI_Violin_Plots.png",
-#  plot = Combined.RPI.Violin.Plots,
-#  width = 15,
-#  height = 12,
-#  dpi = 300
-#)
+# Save LARGE, full-page
+ggsave(
+  filename = "Combined_RPI_Violin_Plots_FullPage.png",
+  plot = Combined.RPI.Violin.Plots,
+  width = 21,   # A4 width in cm (~8.3 inches)
+  height = 29.7, # A4 height in cm (~11.7 inches)
+  units = "cm",
+  dpi = 300
+)
 ```
 
 ```{r}
