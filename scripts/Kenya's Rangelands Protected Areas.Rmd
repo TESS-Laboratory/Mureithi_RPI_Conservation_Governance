@@ -4212,7 +4212,8 @@ Kenya.RPI.Rsquare.Plot <- ggplot(Kenya.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)
     plot.title = element_text(face = "bold"),
     plot.subtitle = element_text(face = "italic"),
     axis.title = element_text(face = "bold"),
-    legend.title = element_text(face = "bold")
+    legend.title = element_text(face = "bold"),
+    legend.position = "bottom"
   )
 
 # Displaying the improved plot
@@ -4252,19 +4253,37 @@ Plot.Rsq.Low <- ggplot() +
     plot.title = element_text(face = "bold", hjust = 0.5), # Center and bold the title
     legend.position = "bottom",
     legend.title = element_text(size = 12, face = "bold"),
-    legend.text = element_text(size = 11)
+    legend.text = element_text(face = "bold")
   )
 
 # Displaying the improved plot
 Plot.Rsq.Low
 
 # Saving the plot for scientific publication
-#ggsave(
-#  filename = "Kenya_Rsquare_Low_Performance.png",
-#  plot = Plot.Rsq.Low,
-#  width = 8,
-#  height = 8,
-#  dpi = 300)
+ggsave(
+  filename = "Kenya_Rsquare_Low_Performance.png",
+  plot = Plot.Rsq.Low,
+  width = 10,
+  height = 10,
+  dpi = 300)
 ```
 
+```{r}
+# Combining the 2 above plots into 1
+
+# Combine the plots into a single vertical figure
+Combined.Figure.Kenya.RPI.Fit <- Kenya.RPI.Rsquare.Plot / Plot.Rsq.Low
+
+Combined.Figure.Kenya.RPI.Fit
+
+# Saving the combined figure
+
+ggsave(
+  filename = "Combined_Figure_Kenya_RPI_Fit.png",
+  plot = Combined.Figure.Kenya.RPI.Fit,
+  width = 12,  
+  height = 12, 
+  dpi = 300
+)
+```
 
