@@ -4281,8 +4281,9 @@ Combined.Figure.Kenya.RPI.Fit
 ggsave(
   filename = "Combined_Figure_Kenya_RPI_Fit.png",
   plot = Combined.Figure.Kenya.RPI.Fit,
-  width = 12,  
-  height = 12, 
+  width = 12, 
+  height = 14, 
+  units = "in",
   dpi = 300
 )
 ```
