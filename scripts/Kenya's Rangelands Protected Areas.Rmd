@@ -2653,53 +2653,64 @@ Annual.RPI.Visual.Trends <- All.Pixel.Values.RPI.Visual %>%
     .groups = "drop"
   )
 
-# 1. Joining the Theil-Sen slopes to the yearly data
+# 1. Join Theil-Sen slopes to yearly data 
 Combined.Trends <- Annual.RPI.Visual.Trends %>%
   left_join(All.Trends.Summary %>% select(Area, MeanSlope), by = "Area")
 
-# 2. Creating the combined plot
+# 2. Create the plot
 Combined.Trends.Plot <- ggplot(Combined.Trends, aes(x = Year, y = MeanRPI)) +
   
-  # Adding geom_ribbon to show standard deviation
+  # SD ribbon
   geom_ribbon(aes(ymin = MeanRPI - SD, ymax = MeanRPI + SD, fill = Area), alpha = 0.2) +
   
-  # Adding geom_line for the yearly mean trend
-  geom_line(aes(color = Area), linewidth = 1) +
+  # Dashed annual line
+  geom_line(aes(color = Area), linewidth = 1, linetype = "dashed") +
   
-  # Add geom_point for the yearly mean
+  # Annual points
   geom_point(aes(color = Area), size = 2) +
   
-  # Adding geom_smooth to plot the overall Theil-Sen trend line
+  # Theil-Sen slope line
   geom_smooth(aes(color = Area), method = "lm", formula = y ~ x, se = FALSE, linewidth = 1.2) +
   
-  # Using facets to separate areas
-  facet_wrap(~ Area, ncol = 3, scales = "free_y") +
+  # Facets with fixed y-scale
+  facet_wrap(~ Area, ncol = 3, scales = "fixed") +
   
-  # Adding labels and use a professional theme
+  # Viridis colour palette (matches ridgeline figure)
+  scale_color_viridis_d(option = "E") +
+scale_fill_viridis_d(option = "E") +
+  
+  # Labels
   labs(
     title = "Annual RPI Trends with Theil-Sen Slope Overlaid",
     x = "Year",
     y = "Mean RPI"
   ) +
-  theme_minimal() +
   
-  # Customising theme elements
+  # Clean theme
+  theme_minimal() +
   theme(
     legend.position = "none",
     strip.text = element_text(face = "bold"),
-    plot.title = element_text(hjust = 0.5, face = "bold")
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+    axis.text = element_text(size = 9),
+    axis.title = element_text(size = 11)
   )
 
+# 3. Add panel tags (A, B, C...)
+Combined.Trends.Plot <- Combined.Trends.Plot + 
+  plot_annotation(tag_levels = "A")
+
+# 4. Show the plot 
 Combined.Trends.Plot
 
-# 3. Save the plot
-#ggsave(
-#  filename = "Combined_Annual_and_TheilSen_Trends.png",
-#  plot = Combined.Trends.Plot,
-#  width = 12,
-#  height = 8,
-#  dpi = 300
-#)
+# Save the plot
+ ggsave(
+   filename = "Combined_Annual_and_TheilSen_Trends_Improved.png",
+   plot = Combined.Trends.Plot,
+   width = 12,
+   height = 8,
+   dpi = 300
+   )
 ```
 
 ```{r}
