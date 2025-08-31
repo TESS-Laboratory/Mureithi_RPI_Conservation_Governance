@@ -2677,52 +2677,6 @@ Combined.Trends.Plot
 ```
 
 ```{r}
-# Stastistical Analysis of Temporal Trends
-
-# Fitting a linear model
-
-lm_test <- lm(MeanRPI ~ Year * Area, data = Primary.Concern.Areas.RPI.Trends)
-anova(lm_test)
-summary(lm_test)
-```
-
-```{r}
-## Explanation of Results above:??
-#---
-
-### ANOVA Table
-
-# Year (p = 0.43): No significant overall temporal effect on Mean RPI.
-# Area (p < 2e-16): Highly significant differences in Mean RPI between areas.
-# Year × Area (p = 0.31): No strong evidence that temporal trends differ across areas.
-# Residuals: Remaining variation not explained by Year or Area.
-#---
-
-### Coefficients (Linear Model)
-
-# Intercept (5.97): Baseline Mean RPI for the reference area at Year = 0 (not directly interpretable without centering Year).
-#Year (-0.0026, ns): Slight negative overall slope, not significant.
-#Area effects:
-
-# Some areas (e.g., Tsavo East: -12.78, p = 0.067) show notably lower Mean RPI compared to the reference, borderline significant.
-# Most other area coefficients are not significant.
-##Year × Area interactions##
-
-# Generally not significant.
-# Tsavo East shows borderline evidence of an increasing trend (+0.0064, p = 0.067).
-#---
-### Model Fit
-
-# R² = 0.479, Adjusted R² = 0.432: The model explains \~43% of the variation in Mean RPI.
-#Main driver: Spatial differences between areas, not temporal change.
-
-#---
-# Mean RPI differs strongly between areas.
-# There is no clear evidence of overall temporal change across years.
-# Tsavo East may be an exception, with lower baseline RPI and a weak indication of recovery over time.
-```
-
-```{r}
 # Mapping Per-Pixel Slope
 # Setting the tmap mode to "plot" for static output
 tmap_mode("plot")
@@ -2875,7 +2829,7 @@ Plot.MAE <- ggplot() +
   Kenya.Border +
   labs(title = "MAE") +
   theme_minimal(base_size = 13) +
-  theme(legend.position = "right") + # Move legend to the side
+  theme(legend.position = "bottom") + # Move legend to the side
   guides(fill = guide_colorbar(direction = "vertical"))
 
 # RMSE plot with a vertical legend
@@ -2885,7 +2839,7 @@ Plot.RMSE <- ggplot() +
   Kenya.Border +
   labs(title = "RMSE") +
   theme_minimal(base_size = 13) +
-  theme(legend.position = "right") +
+  theme(legend.position = "bottom") +
   guides(fill = guide_colorbar(direction = "vertical"))
 
 # R² plot with a vertical legend
@@ -2896,26 +2850,26 @@ Plot.Rsqd <- ggplot() +
   Kenya.Border +
   labs(title = expression(R^2)) +
   theme_minimal(base_size = 13) +
-  theme(legend.position = "right") +
+  theme(legend.position = "bottom") +
   guides(fill = guide_colorbar(direction = "vertical"))
 
 # Combining with patchwork
-Combined.Temporal.Performance.Plot <- (Plot.MAE | Plot.RMSE | Plot.Rsqd) +
-  plot_annotation(
-    title = "Temporal Performance over Kenya",
-    subtitle = "Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R²"
-  )
+Combined.Temporal.Performance.Plot <- (Plot.MAE | Plot.RMSE | Plot.Rsqd) #+
+#  plot_annotation(
+#    title = "Temporal Performance over Kenya",
+#    subtitle = "Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R²"
+#  )
 
 Combined.Temporal.Performance.Plot
 
 # Save the combined plot to a file
-#ggsave(
-#  filename = "Temporal_Performance_Kenya.png",
-#  plot = Combined.Temporal.Performance.Plot,
-#  width = 15,
-#  height = 6,
-#  dpi = 300
-#)
+ggsave(
+  filename = "Temporal_Performance_Kenya.png",
+  plot = Combined.Temporal.Performance.Plot,
+  width = 8.27,
+  height = 11.69,
+  dpi = 300
+)
 ```
 
 ```{r}
