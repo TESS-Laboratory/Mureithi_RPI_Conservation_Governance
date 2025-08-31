@@ -4288,7 +4288,7 @@ ggsave(
 
 ```{r}
 # Function to simulate data based on your summary stats
-simulate_rpi <- function(summary_df, area_name, n_pixels = 1000) {
+Simulate.RPI <- function(summary_df, area_name, n_pixels = 1000) {
   summary_df %>%
     rowwise() %>%
     mutate(
@@ -4308,23 +4308,35 @@ simulate_rpi <- function(summary_df, area_name, n_pixels = 1000) {
 }
 
 # --- Simulate data for each area ---
-amboseli_data <- simulate_rpi(Amboseli.Summary, "Amboseli Park")
-tsavo_e_data  <- simulate_rpi(TsavoEast.Summary, "Tsavo East")
-tsavo_w_data  <- simulate_rpi(TsavoWest.Summary, "Tsavo West")
-ranches_data  <- simulate_rpi(Tsavo.Ranches.Summary, "Tsavo Ranches")
-settled_data  <- simulate_rpi(Tsavo.SettledAreas.Summary, "Tsavo Settled Areas")
-allzones_data <- simulate_rpi(Tsavo.AllZones.Summary, "Tsavo All Zones")
-conserv_data  <- simulate_rpi(AET.Conservancies.Summary, "AET Conservancies")
-buffers_data  <- simulate_rpi(AET.Buffers.Summary, "AET Buffers")
+Amboseli.Simulation <- Simulate.RPI(Amboseli.Summary, "Amboseli Park")
+
+TsavoEast.Simulation  <- Simulate.RPI(TsavoEast.Summary, "Tsavo East")
+
+TsavoWest.Simulation  <- Simulate.RPI(TsavoWest.Summary, "Tsavo West")
+
+Tsavo.Ranches.Simulation  <- Simulate.RPI(Tsavo.Ranches.Summary, "Tsavo Ranches")
+
+Tsavo.SettledAreas.Simulation  <- Simulate.RPI(Tsavo.SettledAreas.Summary, "Tsavo Settled Areas")
+
+Tsavo.AllZones.Simulation <- Simulate.RPI(Tsavo.AllZones.Summary, "Tsavo All Zones")
+
+AET.Conservancies.Simulation  <- Simulate.RPI(AET.Conservancies.Summary, "AET Conservancies")
+
+AET.Buffers.Simulation  <- Simulate.RPI(AET.Buffers.Summary, "AET Buffers")
+
+AET.AllZones.Simulation <- Simulate.RPI(AET.AllZones.Summary, "AET All Zones")
 
 # --- Combine all datasets ---
-rpi_all <- bind_rows(
-  amboseli_data, tsavo_e_data, tsavo_w_data, ranches_data, 
-  settled_data, allzones_data, conserv_data, buffers_data
+RPI.All.Simulation <- bind_rows(
+  Amboseli.Simulation, TsavoEast.Simulation, 
+  TsavoWest.Simulation, Tsavo.Ranches.Simulation,
+  Tsavo.SettledAreas.Simulation, Tsavo.AllZones.Simulation,
+  AET.Conservancies.Simulation, AET.Buffers.Simulation, 
+  AET.AllZones.Simulation
 )
 
 # --- Plot ridgelines ---
-ggplot(rpi_all, aes(x = RPI, y = Area, fill = Area)) +
+ggplot(RPI.All.Simulation, aes(x = RPI, y = Area, fill = Area)) +
   geom_density_ridges(
     quantile_lines = TRUE,
     quantiles = c(0.25, 0.5, 0.75),
