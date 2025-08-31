@@ -2386,19 +2386,7 @@ tm_shape(Tsavo.AllZones.Slope.Raster) +
   tm_raster(
     col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
     col.legend = tm_legend(title = "Tsavo AllZones Theil–Sen Slope", reverse = TRUE)
-  ) +
-tm_shape(TsavoEast.Slope.Raster) +
-  tm_raster(
-    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Tsavo East Theil–Sen Slope", reverse = TRUE)
-  ) +
-tm_shape(TsavoWest.Slope.Raster) +
-  tm_raster(
-    col.scale = tm_scale_continuous(values = "brewer.pu_or", midpoint = 0),
-    col.legend = tm_legend(title = "Tsavo West Theil–Sen Slope", reverse = TRUE)
-  ) +
-tm_title("Spatial Distribution of Theil-Sen Slope — Tsavo AllZones, East & West") +
-tm_layout(legend.outside = TRUE)
+  )
 ```
 
 ```{r}
@@ -2792,7 +2780,72 @@ Combined.Slope.Maps
 ```
 
 ```{r}
+# Increasing IMAGE size above 
+library(tmap)
 
+# 1. Global slope range
+slope_range <- range(
+  c(
+    raster::values(Amboseli.Slope.Raster),
+    raster::values(TsavoEast.Slope.Raster),
+    raster::values(TsavoWest.Slope.Raster),
+    raster::values(AET.Conservancies.Slope.Raster),
+    raster::values(AET.Buffers.Slope.Raster),
+    raster::values(AET.AllZones.Slope.Raster),
+    raster::values(Tsavo.Ranches.Slope.Raster),
+    raster::values(Tsavo.SettledAreas.Slope.Raster),
+    raster::values(Tsavo.AllZones.Slope.Raster)
+  ),
+  na.rm = TRUE
+)
+
+# 2. Helper function (v4: use col.legend = tm_legend_hide())
+make_map <- function(rast, title) {
+  tm_shape(rast) +
+    tm_raster(
+      col.scale = tm_scale_continuous(
+        values = "pu_or",
+        midpoint = 0,
+        limits = slope_range
+      ),
+      col.legend = tm_legend_hide()  # hides legend per map
+    ) +
+    tm_title(title)
+}
+
+# 3. Create all maps
+p1 <- make_map(Amboseli.Slope.Raster, "Amboseli")
+p2 <- make_map(TsavoEast.Slope.Raster, "Tsavo East")
+p3 <- make_map(TsavoWest.Slope.Raster, "Tsavo West")
+p4 <- make_map(AET.Conservancies.Slope.Raster, "AET Conservancies")
+p5 <- make_map(AET.Buffers.Slope.Raster, "AET Buffers")
+p6 <- make_map(AET.AllZones.Slope.Raster, "Amboseli All Zones")
+p7 <- make_map(Tsavo.Ranches.Slope.Raster, "Tsavo Ranches")
+p8 <- make_map(Tsavo.SettledAreas.Slope.Raster, "Tsavo Settled Areas")
+p9 <- make_map(Tsavo.AllZones.Slope.Raster, "Tsavo All Zones")
+
+# 4. Create a single horizontal legend
+legend_comp <- tm_legend(
+  title = "Slope",
+  orientation = "horizontal"
+)
+
+# 5. Arrange plots and add the legend
+Combined.Slope.Maps <- tmap_arrange(
+  p1, p2, p3, p4, p5, p6, p7, p8, p9,
+  ncol = 2,
+  nrow = 5,
+  legend = legend_comp
+)
+
+Combined.Slope.Maps
+
+# Save output with large dimensions in pixels
+tmap_save(
+  Combined.Slope.Maps,
+  filename = "Combined_Slope_Maps.png",
+  width = 3000, height = 5000, units = "px"
+)
 ```
 
 ```{r}
