@@ -103,13 +103,13 @@ World.Country.Map <-
 World.Country.Map
 
 # Saving plot
-ggsave(
-  filename = "World_Country_Map.png", # Choose a file name and format
-  plot = World.Country.Map,
-  width = 10,
-  height = 6,
-  dpi = 300
-)
+#ggsave(
+#  filename = "World_Country_Map.png", # Choose a file name and format
+#  plot = World.Country.Map,
+#  width = 10,
+#  height = 6,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -173,13 +173,13 @@ Kenya.Terrestrial.PAs.Map <-
 
 Kenya.Terrestrial.PAs.Map
 
-tmap_save(
-  tm = Kenya.Terrestrial.PAs.Map,
-  filename = "Kenya_Terrestrial_Protected_Areas_Map.png", # Choose a file name
-  width = 8,  # width in inches
-  height = 6, # height in inches
-  dpi = 300   # resolution
-)
+#tmap_save(
+#  tm = Kenya.Terrestrial.PAs.Map,
+#  filename = "Kenya_Terrestrial_Protected_Areas_Map.png", # Choose a file name
+#  width = 8,  # width in inches
+#  height = 6, # height in inches
+#  dpi = 300   # resolution
+#)
 ```
 
 ```{r}
@@ -223,13 +223,13 @@ Kenya.Rangeland.Map <-
 
 Kenya.Rangeland.Map
 
-tmap_save(
-  tm = Kenya.Rangeland.Map,
-  filename = "Kenya_Rangeland_Counties_Map.png", # Choose a file name
-  width = 8,  # width in inches
-  height = 6, # height in inches
-  dpi = 300   # resolution
-)
+#tmap_save(
+#  tm = Kenya.Rangeland.Map,
+#  filename = "Kenya_Rangeland_Counties_Map.png", # Choose a file name
+#  width = 8,  # width in inches
+#  height = 6, # height in inches
+#  dpi = 300   # resolution
+#)
 ```
 
 ```{r}
@@ -292,14 +292,14 @@ Kenya.PAs.Map <-
 
 Kenya.PAs.Map
 
- Saving the map
-tmap_save(
-  tm = Kenya.PAs.Map,
-  filename = "Kenya_PAs_Map.png", # Choose a file name
-  width = 8,
-  height = 6,
-  dpi = 300
-)
+# Saving the map
+#tmap_save(
+#  tm = Kenya.PAs.Map,
+#  filename = "Kenya_PAs_Map.png", # Choose a file name
+#  width = 8,
+#  height = 6,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -359,13 +359,13 @@ AET.AllZones.Map <-
 AET.AllZones.Map
 
 # Saving the Map
-tmap_save(
-  tm = AET.AllZones.Map,
-  filename = "AET_Conservancies_and_Buffers_Map.png", # Choose a file name
-  width = 8,
-  height = 6,
-  dpi = 300
-)
+#tmap_save(
+#  tm = AET.AllZones.Map,
+#  filename = "AET_Conservancies_and_Buffers_Map.png", # Choose a file name
+#  width = 8,
+#  height = 6,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -428,13 +428,13 @@ TCA.AllZones.Map <-
 TCA.AllZones.Map
 
 # Saving the map
-tmap_save(
-  tm = TCA.AllZones.Map,
-  filename = "Tsavo_Ranches_and_Settled_Areas_Map.png", # Choose a file name
-  width = 8,
-  height = 6,
-  dpi = 300
-)
+#tmap_save(
+#  tm = TCA.AllZones.Map,
+#  filename = "Tsavo_Ranches_and_Settled_Areas_Map.png", # Choose a file name
+#  width = 8,
+#  height = 6,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -483,13 +483,13 @@ Connectivity.Map <-
 Connectivity.Map
 
 # Saving the map to a file
-tmap_save(
-  tm = Connectivity.Map,
-  filename = "Connectivity_Map.png", # Change to .png for a static image
-  width = 10,
-  height = 8,
-  dpi = 300
-)
+#tmap_save(
+#  tm = Connectivity.Map,
+#  filename = "Connectivity_Map.png", # Change to .png for a static image
+#  width = 10,
+#  height = 8,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -759,10 +759,10 @@ Combined.RPI.Maps.Before.Filtering <- tmap_arrange(
 Combined.RPI.Maps.Before.Filtering
 
 # Saving the combined map as an interactive HTML file
-tmap_save(
-  tm = Combined.RPI.Maps.Before.Filtering,
-  filename = "Mean_RPI_Maps_Static.png" # Using .png or .pdf for a static image
-)
+#tmap_save(
+#  tm = Combined.RPI.Maps.Before.Filtering,
+#  filename = "Mean_RPI_Maps_Static.png" # Using .png or .pdf for a static image
+#)
 ```
 
 ```{r}
@@ -1760,13 +1760,13 @@ Combined.RPI.Violin.Plots <- Combined.RPI.Violin.Plots +
 Combined.RPI.Violin.Plots
 
 # Save the final combined plot
-ggsave(
-  filename = "Combined_RPI_Violin_Plots.png",
-  plot = Combined.RPI.Violin.Plots,
-  width = 15,
-  height = 12,
-  dpi = 300
-)
+#ggsave(
+#  filename = "Combined_RPI_Violin_Plots.png",
+#  plot = Combined.RPI.Violin.Plots,
+#  width = 15,
+#  height = 12,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -2137,13 +2137,13 @@ Mean.Slope.Plot <- ggplot(All.Trends.Summary, aes(x = reorder(Area, MeanSlope), 
 
 Mean.Slope.Plot
 # Saving it
-ggsave(
-  filename = "MeanSlopePlot.png",
-  plot = Mean.Slope.Plot,
-  width = 10,
-  height = 8,
-  dpi = 300
-)
+#ggsave(
+#  filename = "MeanSlopePlot.png",
+#  plot = Mean.Slope.Plot,
+#  width = 10,
+#  height = 8,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -2187,13 +2187,13 @@ All.Pixel.Slopes.Plot <- ggplot(All.Pixel.Slopes, aes(x = Area, y = Slope, fill 
 All.Pixel.Slopes.Plot
 
 # Saving the plot for publication
-ggsave(
-  filename = "Violin_Plots_Trends_by_Area.png",
-  plot = All.Pixel.Slopes.Plot,
-  width = 12,
-  height = 8,
-  dpi = 300
-)
+#ggsave(
+#  filename = "Violin_Plots_Trends_by_Area.png",
+#  plot = All.Pixel.Slopes.Plot,
+#  width = 12,
+#  height = 8,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -2602,13 +2602,13 @@ Annual.RPI.Visual.Trends.Faceted.Plot <- ggplot(Annual.RPI.Visual.Trends, aes(x 
 Annual.RPI.Visual.Trends.Faceted.Plot
 
 # 2. Saving the plot to a file
-ggsave(
-  filename = "Annual_RPI_Trends_Faceted.png", 
-  plot = Annual.RPI.Visual.Trends.Faceted.Plot,                     
-  width = 12,                                 
-  height = 8,                                 
-  dpi = 300                                  
-)
+#ggsave(
+#  filename = "Annual_RPI_Trends_Faceted.png", 
+#  plot = Annual.RPI.Visual.Trends.Faceted.Plot,                     
+#  width = 12,                                 
+#  height = 8,                                 
+#  dpi = 300                                  
+#)
 ```
 
 ```{r}
@@ -2663,13 +2663,13 @@ Combined.Trends.Plot <- ggplot(Combined.Trends, aes(x = Year, y = MeanRPI)) +
 Combined.Trends.Plot
 
 # 3. Save the plot
-ggsave(
-  filename = "Combined_Annual_and_TheilSen_Trends.png",
-  plot = Combined.Trends.Plot,
-  width = 12,
-  height = 8,
-  dpi = 300
-)
+#ggsave(
+#  filename = "Combined_Annual_and_TheilSen_Trends.png",
+#  plot = Combined.Trends.Plot,
+#  width = 12,
+#  height = 8,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -2790,13 +2790,13 @@ Combined.Slope.Maps <- tmap_arrange(
 Combined.Slope.Maps
 
 # Saving the plot to a high-resolution file
-tmap_save(
-  tm = Combined.Slope.Maps,
-  filename = "Theil_Sen_Slope_Maps.png",
-  width = 12, # Adjusted width for a 3x3 grid
-  height = 12, # Adjusted height for a 3x3 grid
-  dpi = 300
-)
+#tmap_save(
+#  tm = Combined.Slope.Maps,
+#  filename = "Theil_Sen_Slope_Maps.png",
+#  width = 12, # Adjusted width for a 3x3 grid
+#  height = 12, # Adjusted height for a 3x3 grid
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -2909,13 +2909,13 @@ Combined.Temporal.Performance.Plot <- (Plot.MAE | Plot.RMSE | Plot.Rsqd) +
 Combined.Temporal.Performance.Plot
 
 # Save the combined plot to a file
-ggsave(
-  filename = "Temporal_Performance_Kenya.png",
-  plot = Combined.Temporal.Performance.Plot,
-  width = 15,
-  height = 6,
-  dpi = 300
-)
+#ggsave(
+#  filename = "Temporal_Performance_Kenya.png",
+#  plot = Combined.Temporal.Performance.Plot,
+#  width = 15,
+#  height = 6,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -3866,13 +3866,13 @@ Combined.RPI.Maps.After.Filtering <- tmap_arrange(
 Combined.RPI.Maps.After.Filtering
 
 # Saving the plot
-tmap_save(
-  tm = Combined.RPI.Maps.After.Filtering,
-  filename = "Mean_RPI_Filtered_Maps.png",
-  width = 15,
-  height = 10,
-  dpi = 300
-)
+#tmap_save(
+#  tm = Combined.RPI.Maps.After.Filtering,
+#  filename = "Mean_RPI_Filtered_Maps.png",
+#  width = 15,
+#  height = 10,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -4207,13 +4207,13 @@ All.RPI.Rsquare.Filtered.1.Plots <- (Amboseli.Values.RPI.Rsquare.Filtered.1.Plot
 All.RPI.Rsquare.Filtered.1.Plots
 
 # Save the combined plot to a file
-ggsave(
-  filename = "All_RPI_Filtered_Plots.png", # Choose a descriptive filename and file type (.png, .pdf, .tiff, etc.)
-  plot = All.RPI.Rsquare.Filtered.1.Plots,  # Specify the plot object to save
-  width = 15, # Set a sufficient width for readability
-  height = 12, # Set a sufficient height
-  dpi = 300 # Set a high resolution (300 dpi is a common standard for print)
-)
+#ggsave(
+#  filename = "All_RPI_Filtered_Plots.png", # Choose a descriptive filename and file type (.png, .pdf, .tiff, etc.)
+#  plot = All.RPI.Rsquare.Filtered.1.Plots,  # Specify the plot object to save
+#  width = 15, # Set a sufficient width for readability
+#  height = 12, # Set a sufficient height
+#  dpi = 300 # Set a high resolution (300 dpi is a common standard for print)
+#)
 ```
 
 ```{r}
@@ -4265,13 +4265,13 @@ Kenya.RPI.Rsquare.Plot <- ggplot(Kenya.Values.RPI.Rsquare, aes(x = RSQ, y = RPI)
 Kenya.RPI.Rsquare.Plot
 
 # Save the plot for scientific publication
-ggsave(
-  filename = "Kenya_RPI_Rsquare_Plot.png",
-  plot = Kenya.RPI.Rsquare.Plot,
-  width = 8,
-  height = 6,
-  dpi = 300 # Standard resolution for scientific papers
-)
+#ggsave(
+#  filename = "Kenya_RPI_Rsquare_Plot.png",
+#  plot = Kenya.RPI.Rsquare.Plot,
+#  width = 8,
+#  height = 6,
+#  dpi = 300 # Standard resolution for scientific papers
+#)
 ```
 
 ```{r}
@@ -4305,12 +4305,12 @@ Plot.Rsq.Low <- ggplot() +
 Plot.Rsq.Low
 
 # Saving the plot for scientific publication
-ggsave(
-  filename = "Kenya_Rsquare_Low_Performance.png",
-  plot = Plot.Rsq.Low,
-  width = 8,
-  height = 8,
-  dpi = 300)
+#ggsave(
+#  filename = "Kenya_Rsquare_Low_Performance.png",
+#  plot = Plot.Rsq.Low,
+#  width = 8,
+#  height = 8,
+#  dpi = 300)
 ```
 
 
