@@ -2515,7 +2515,7 @@ AET.Conservancies.TheilSen <- map_dfr(AET.Conservancies.Pixel.List, function(df)
 
   # Joining slope results back with area info
 AET.Conservancies.TheilSen <- AET.Conservancies.TheilSen %>%
-  mutate(Area = "Amboseli")
+  mutate(Area = "AET.Conservancies")
 
   # Getting overall summary per area
 AET.Conservancies.SummaryTrend <- AET.Conservancies.TheilSen %>%
@@ -2648,30 +2648,62 @@ Mean.Slope.Plot
 ```
 
 ```{r}
-# Make sure Area is a factor ordered by mean slope for consistent plotting
-All.Pixel.Slopes <- All.Pixel.Slopes %>%
-  group_by(Area) %>%
-  mutate(MeanSlopeArea = mean(Slope, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(Area = factor(Area, levels = unique(All.Pixel.Slopes$Area[order(All.Pixel.Slopes$Slope)])))
+# Defining the custom color palette
+areas_colours_names <- c(
+  "Amboseli" = "#440154FF",
+  "AET.Buffers" = "#AADC32FF",
+  "AET.Conservancies" = "#5DC863FF",
+  "AET.AllZones" = "#FDE725FF",
+  "TsavoEast" = "#472D7BFF",
+  "TsavoWest" = "#3B528BFF",
+  "Tsavo.Ranches" = "#2C728EFF",
+  "Tsavo.SettledAreas" = "#21908CFF",
+  "Tsavo.AllZones" = "#27AD81FF"
+)
 
-# Ridgeline plot of pixel-level slopes per area
-Ridgeline.Plot <- ggplot(All.Pixel.Slopes, aes(x = Slope, y = Area, fill = ..x..)) +
-  geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01, color = "black") +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "red", size = 1) +  # zero reference
-  scale_fill_viridis_c(name = "Slope", option = "C") +
+# Combining all correctly labeled data frames
+All.Pixel.Slopes <- bind_rows(
+  Amboseli.TheilSen, TsavoEast.TheilSen,  
+  TsavoWest.TheilSen, Tsavo.Ranches.TheilSen,
+  Tsavo.SettledAreas.TheilSen, Tsavo.AllZones.TheilSen,
+  AET.Conservancies.TheilSen, AET.Buffers.TheilSen,  
+  AET.AllZones.TheilSen
+)
+
+# Reorder areas by mean slope for a logical plot order
+Mean.Slope.Order <- All.Pixel.Slopes %>%
+  group_by(Area) %>%
+  summarise(MeanSlopeArea = mean(Slope, na.rm = TRUE)) %>%
+  arrange(desc(MeanSlopeArea)) %>%
+  pull(Area)
+
+# Apply the ordered factor levels to the data frame 
+All.Pixel.Slopes$Area <- factor(All.Pixel.Slopes$Area, levels = Mean.Slope.Order)
+
+# Ridgeline plot using assigned colors 
+Ridgeline.Plot <- ggplot(All.Pixel.Slopes, aes(x = Slope, y = Area, fill = Area)) +
+  geom_density_ridges(
+    scale = 3,  
+    rel_min_height = 0.01,
+    color = "black"
+  ) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "red", size = 1) +
+  scale_fill_manual(values = areas_colours_names, name = "Study Area") +
   labs(
     title = "Distribution of Theil–Sen Slopes per Area",
     x = "Slope",
     y = "Area"
   ) +
   theme_ridges(font_size = 14, grid = TRUE) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
 
 Ridgeline.Plot
 
 # Save
-#ggsave("Ridgeline_Slopes.png", Ridgeline.Plot, width = 12, height = 8, dpi = 300)
+ggsave("Ridgeline_Slopes.png", Ridgeline.Plot, width = 12, height = 8, dpi = 300)
 ```
 
 ```{r}
