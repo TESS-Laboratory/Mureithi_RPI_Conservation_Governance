@@ -3162,48 +3162,56 @@ Annual.RPI.Visual.Trends.Faceted.Plot
 ```{r}
 # Including Theil-Sen Slope in the Plot of Mean RPI trends with Standard Deviation
 
-# Re-calculating the summary to include standard deviation
-Annual.RPI.Visual.Trends <- All.Pixel.Values.RPI.Visual %>%
-  group_by(Area, Year) %>%
-  summarise(
-    MeanRPI = mean(RPI_value, na.rm = TRUE),
-    SD = sd(RPI_value, na.rm = TRUE),
-    .groups = "drop"
-  )
+# Define the custom color palette with names that match your data
+areas_colours_names <- c(
+  "Amboseli" = "#440154FF",
+  "AET.Buffers" = "#AADC32FF",
+  "AET.Conservancies" = "#5DC863FF",
+  "AET.AllZones" = "#FDE725FF",
+  "TsavoEast" = "#472D7BFF",
+  "TsavoWest" = "#3B528BFF",
+  "Tsavo.Ranches" = "#2C728EFF",
+  "Tsavo.SettledAreas" = "#21908CFF",
+  "Tsavo.AllZones" = "#27AD81FF"
+)
 
-# 1. Join Theil-Sen slopes to yearly data 
+# 1. Join Theil-Sen slopes to yearly data
+# Assuming this data frame is already created and available
 Combined.Trends <- Annual.RPI.Visual.Trends %>%
   left_join(All.Trends.Summary %>% select(Area, MeanSlope), by = "Area")
 
-# 2. Create the plot
+# 2. Create the plot with manual color and fill scales
 Combined.Trends.Plot <- ggplot(Combined.Trends, aes(x = Year, y = MeanRPI)) +
-  
   # SD ribbon
   geom_ribbon(aes(ymin = MeanRPI - SD, ymax = MeanRPI + SD, fill = Area), alpha = 0.2) +
-  
   # Dashed annual line
   geom_line(aes(color = Area), linewidth = 1, linetype = "dashed") +
-  
   # Annual points
   geom_point(aes(color = Area), size = 2) +
-  
   # Theil-Sen slope line
   geom_smooth(aes(color = Area), method = "lm", formula = y ~ x, se = FALSE, linewidth = 1.2) +
-  
-  # Facets with fixed y-scale
-  facet_wrap(~ Area, ncol = 3, scales = "fixed") +
-  
-  # Viridis colour palette (matches ridgeline figure)
-  scale_color_viridis_d(option = "E") +
-scale_fill_viridis_d(option = "E") +
-  
+  # Facets with fixed y-scale and custom labels
+  facet_wrap(~ Area, ncol = 3, scales = "fixed", labeller = as_labeller(c(
+    "Amboseli" = "Amboseli",
+    "AET.Buffers" = "AET Buffers",
+    "AET.Conservancies" = "AET Conservancies",
+    "AET.AllZones" = "AET All Zones",
+    "TsavoEast" = "Tsavo East",
+    "TsavoWest" = "Tsavo West",
+    "Tsavo.Ranches" = "Tsavo Ranches",
+    "Tsavo.SettledAreas" = "Tsavo Settled Areas",
+    "Tsavo.AllZones" = "Tsavo All Zones"
+  ))) +
+  # Use your custom palette for colors
+  scale_color_manual(values = areas_colours_names) +
+  # Use your custom palette for fill (for the ribbon)
+  scale_fill_manual(values = areas_colours_names) +
   # Labels
   labs(
     title = "Annual RPI Trends with Theil-Sen Slope Overlaid",
     x = "Year",
     y = "Mean RPI"
   ) +
-  
   # Clean theme
   theme_minimal() +
   theme(
@@ -3215,20 +3223,22 @@ scale_fill_viridis_d(option = "E") +
   )
 
 # 3. Add panel tags (A, B, C...)
-Combined.Trends.Plot <- Combined.Trends.Plot + 
+# This part requires the 'patchwork' package or a similar tool for plot annotations.
+# If you are using patchwork, make sure you have it loaded.
+Combined.Trends.Plot <- Combined.Trends.Plot +
   plot_annotation(tag_levels = "A")
 
-# 4. Show the plot 
+# 4. Show the plot
 Combined.Trends.Plot
 
 # Save the plot
-# ggsave(
-#   filename = "Combined_Annual_and_TheilSen_Trends_Improved.png",
-#   plot = Combined.Trends.Plot,
-#   width = 12,
-#   height = 8,
-#   dpi = 300
-#   )
+ ggsave(
+   filename = "Combined_Annual_and_TheilSen_Trends_Improved.png",
+   plot = Combined.Trends.Plot,
+   width = 12,
+   height = 8,
+   dpi = 300
+   )
 ```
 
 ```{r}
