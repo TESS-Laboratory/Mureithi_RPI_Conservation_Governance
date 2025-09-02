@@ -2190,6 +2190,83 @@ ggplot() +
 ```
 
 ```{r}
+# Combine all data into one dataframe for plotting
+
+All.RPI.Visual.Areas <- bind_rows(
+  Amboseli.RPI.Visual %>% mutate(Area = "Amboseli"),
+  TsavoEast.RPI.Visual %>% mutate(Area = "Tsavo East"),
+  TsavoWest.RPI.Visual %>% mutate(Area = "Tsavo West"),
+  Tsavo.Ranches.RPI.Visual %>% mutate(Area = "Tsavo Ranches"),
+  Tsavo.SettledAreas.RPI.Visual %>% mutate(Area = "Tsavo Settled Areas"),
+  Tsavo.AllZones.RPI.Visual %>% mutate(Area = "Tsavo All Zones"),
+  AET.Conservancies.RPI.Visual %>% mutate(Area = "AET Conservancies"),
+  AET.Buffers.RPI.Visual %>% mutate(Area = "AET Buffers"),
+  AET.AllZones.RPI.Visual %>% mutate(Area = "AET All Zones")
+)
+
+All.Means <- bind_rows(
+  Amboseli.Mean %>% mutate(Area = "Amboseli"),
+  TsavoEast.Mean %>% mutate(Area = "Tsavo East"),
+  TsavoWest.Mean %>% mutate(Area = "Tsavo West"),
+  Tsavo.Ranches.Mean %>% mutate(Area = "Tsavo Ranches"),
+  Tsavo.SettledAreas.Mean %>% mutate(Area = "Tsavo Settled Areas"),
+  Tsavo.AllZones.Mean %>% mutate(Area = "Tsavo All Zones"),
+  AET.Conservancies.Mean %>% mutate(Area = "AET Conservancies"),
+  AET.Buffers.Mean %>% mutate(Area = "AET Buffers"),
+  AET.AllZones.Mean %>% mutate(Area = "AET All Zones")
+)
+
+# Determine a fixed y-axis range
+y_limits <- c(0, max(All.RPI.Visual.Areas$RPI_value, na.rm = TRUE))
+
+# Plot
+RPI.Distribution.Areas.Plot <- ggplot() +
+  geom_violin(
+    data = All.RPI.Visual.Areas,
+    aes(x = Year, y = RPI_value, group = Year),
+    fill = "grey85", color = "grey50", alpha = 0.5, width = 0.8
+  ) +
+  geom_line(
+    data = All.Means,
+    aes(x = Year, y = RollingMean5, color = Area),
+    linewidth = 1.1
+  ) +
+  geom_point(
+    data = All.Means,
+    aes(x = Year, y = RollingMean5, color = Area),
+    size = 2
+  ) +
+  scale_color_manual(values = area_colors) +
+  labs(
+    title = "RPI Distribution and 5-Year Rolling Means Across Study Areas",
+    x = "Year",
+    y = "RPI Value",
+    color = "Study Area"
+  ) +
+  scale_y_continuous(limits = y_limits) +
+  scale_x_continuous(breaks = seq(min(All.RPI.Visual.Areas$Year), max(All.RPI.Visual.Areas$Year), by = 5)) +
+  facet_wrap(~Area, ncol = 3, scales = "fixed") +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+
+RPI.Distribution.Areas.Plot
+
+# Saving the plot as a high-res A4 page
+ggsave(
+  filename = "RPI_Distribution_Areas.png", 
+  plot = RPI.Distribution.Areas.Plot,                               
+  width = 8.27,                               
+  height = 11.69,                            
+  units = "in",
+  dpi = 300                                
+)
+```
+
+```{r}
 ## Theil-Sen across Amboseli NP
 
   # Sorting data by "Year" & "ID"
