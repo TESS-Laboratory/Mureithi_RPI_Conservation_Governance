@@ -19,6 +19,7 @@ pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, 
 # tidyverse -> for data manipulation, cleaning, and visualisation in a cohesive framework
 # forcats -> for managing factors (categorical variables)
 # slider -> for rolling or sliding window calculations
+# zoo -> for working with ordered observations, especially time-series data, with irregular time steps
 
 # SPATIAL DATA & MAPPING#
 # sf -> for handling vector spatial data (points, lines, polygons)
@@ -94,13 +95,13 @@ Global.Country.Boundaries <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Gov
 ```{r}
 # Plot of World Map
 
-World.Country.Map <-
+Global.Country.Boundaries.Map <-
   ggplot() +
   geom_sf(data = Global.Country.Boundaries) +
   labs(title = "World Country Map") +
   theme_minimal() # Replaced theme_beautiful() with a standard theme
 
-World.Country.Map
+Global.Country.Boundaries.Map
 
 # Saving plot
 #ggsave(
@@ -766,7 +767,27 @@ Combined.RPI.Maps.Before.Filtering
 ```
 
 ```{r}
-# Extracting RPI Values for each Area
+# Generate a palette colours for the study areas
+
+viridis_palette <- viridis(9) 
+viridis_palette
+
+```
+
+```{r}
+# Assigning specific colours to each of the study areas
+
+area_colors <- c(
+  "Amboseli" = "#440154FF",
+  "Tsavo East" = "#472D7BFF",
+  "Tsavo West" = "#3B528BFF",
+  "Tsavo Ranches" = "#2C728EFF",
+  "Tsavo Settled Areas" = "#21908CFF",
+  "Tsavo All Zones" = "#27AD81FF",
+  "AET Conservancies" = "#5DC863FF",
+  "AET Buffers" = "#AADC32FF",
+  "AET All Zones" = "#FDE725FF"
+)
 ```
 
 ```{r}
@@ -1797,6 +1818,22 @@ ggsave(
   units = "cm",
   dpi = 310
 )
+```
+
+```{r}
+# Extracting RPI Values for each Area
+```
+
+```{r}
+# Extracting RPI Values for each Area
+```
+
+```{r}
+# Extracting RPI Values for each Area
+```
+
+```{r}
+# Extracting RPI Values for each Area
 ```
 
 ```{r}
