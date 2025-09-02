@@ -4943,22 +4943,22 @@ Plot.Rsq.Low
 
 ```{r}
 # Combining the 2 above plots into 1
+# Combine the two plots side-by-side using the `|` operator
+Combined.Figure.Kenya.RPI.Fit <- Kenya.RPI.Rsquare.Plot | Plot.Rsq.Low
 
-# Combine the plots into a single vertical figure
-Combined.Figure.Kenya.RPI.Fit <- Kenya.RPI.Rsquare.Plot / Plot.Rsq.Low
-
+# Display the new plot
 Combined.Figure.Kenya.RPI.Fit
 
 # Saving the combined figure
 
-#ggsave(
-#  filename = "Combined_Figure_Kenya_RPI_Fit.png",
-#  plot = Combined.Figure.Kenya.RPI.Fit,
-#  width = 12, 
-#  height = 14, 
-#  units = "in",
-#  dpi = 300
-#)
+ggsave(
+  filename = "Combined_Figure_Kenya_RPI_Fit.png",
+  plot = Combined.Figure.Kenya.RPI.Fit,
+  width = 12, 
+  height = 14, 
+  units = "in",
+  dpi = 300
+)
 ```
 
 ```{r}
