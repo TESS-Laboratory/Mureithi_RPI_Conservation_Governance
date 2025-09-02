@@ -88,9 +88,7 @@ if (Sys.info()[["sysname"]] == "Windows") {
 
 ```{r}
 # World Map Import
-
-Global.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/global_country_boundaries_simplified_wgs84.shp")
-
+Global.Country.Boundaries <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Country_Borders/global_country_boundaries_simplified_wgs84.shp")
 ```
 
 ```{r}
@@ -117,13 +115,13 @@ World.Country.Map
 ```{r}
 # Africa Country Boundary import
 
-Africa.Country.Boundaries <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/africa_country_boundaries_simplified_wgs84.shp")
+Africa.Country.Boundaries <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Country_Borders/africa_country_boundaries_simplified_wgs84.shp")
 ```
 
 ```{r}
 #Focusing on Kenya
 
-Kenya.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_admin_boundary_wgs84.shp")
+Kenya.Admin.Boundary <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Country_Borders/kenya_admin_boundary_wgs84.shp")
 ```
 
 ```{r}
@@ -139,15 +137,13 @@ ggplot() +
 ```{r}
 #Focusing on Boundaries within Kenya
 
-Kenya.Regional.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_regional_admin1_boundary_wgs84.shp")
+Kenya.Regional.Admin.Boundary <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Country_Borders/kenya_regional_admin1_boundary_wgs84.shp")
 ```
 
 ```{r}
 # Focusing on Kenya's Terrestrial Protected Areas
 
-Kenya.Terrestrial.PAs <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/
-                                 
-                                 DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
+Kenya.Terrestrial.PAs <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Country_Borders/kenya_terrestrial_protected_areas_wgs84.shp")
 ```
 
 ```{r}
@@ -255,17 +251,17 @@ RPI <- rast("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4
 ```{r}
 # Importing National Parks & National Reserves (GAE/TCA)
 
-Amboseli <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/Amboseli-WDPA_WDOECM_Apr2025_Public_758_shp/WDPA_WDOECM_Apr2025_Public_758_shp_0/WDPA_WDOECM_Apr2025_Public_758_shp-polygons.shp")
+Amboseli <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/WDPA_Amboseli_Tsavo/National Parks&Reserves/Amboseli-WDPA_WDOECM_Apr2025_Public_758_shp/WDPA_WDOECM_Apr2025_Public_758_shp_0/WDPA_WDOECM_Apr2025_Public_758_shp-polygons.shp")
 
-ChyuluHills <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/ChyuluHills-WDPA_WDOECM_Apr2025_Public_19563_shp/WDPA_WDOECM_Apr2025_Public_19563_shp_0/WDPA_WDOECM_Apr2025_Public_19563_shp-polygons.shp")
+ChyuluHills <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/WDPA_Amboseli_Tsavo/National Parks&Reserves/ChyuluHills-WDPA_WDOECM_Apr2025_Public_19563_shp/WDPA_WDOECM_Apr2025_Public_19563_shp_0/WDPA_WDOECM_Apr2025_Public_19563_shp-polygons.shp")
 
-TsavoWest <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/TsavoWest-WDPA_WDOECM_Apr2025_Public_19564_shp/WDPA_WDOECM_Apr2025_Public_19564_shp_0/WDPA_WDOECM_Apr2025_Public_19564_shp-polygons.shp")
+TsavoWest <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/WDPA_Amboseli_Tsavo/National Parks&Reserves/TsavoWest-WDPA_WDOECM_Apr2025_Public_19564_shp/WDPA_WDOECM_Apr2025_Public_19564_shp_0/WDPA_WDOECM_Apr2025_Public_19564_shp-polygons.shp")
 
-TsavoEast <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/TsavoEast-WDPA_WDOECM_Apr2025_Public_752_shp/WDPA_WDOECM_Apr2025_Public_752_shp_0/WDPA_WDOECM_Apr2025_Public_752_shp-polygons.shp")
+TsavoEast <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/WDPA_Amboseli_Tsavo/National Parks&Reserves/TsavoEast-WDPA_WDOECM_Apr2025_Public_752_shp/WDPA_WDOECM_Apr2025_Public_752_shp_0/WDPA_WDOECM_Apr2025_Public_752_shp-polygons.shp")
 
-NgaiNdethia <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/NgaiNdethia-WDPA_WDOECM_Apr2025_Public_2595_shp/WDPA_WDOECM_Apr2025_Public_2595_shp_0/WDPA_WDOECM_Apr2025_Public_2595_shp-polygons.shp")
+NgaiNdethia <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/WDPA_Amboseli_Tsavo/National Parks&Reserves/NgaiNdethia-WDPA_WDOECM_Apr2025_Public_2595_shp/WDPA_WDOECM_Apr2025_Public_2595_shp_0/WDPA_WDOECM_Apr2025_Public_2595_shp-polygons.shp")
 
-SouthKitui <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/4.WDPA-GAE&TSAVOs/National Parks&Reserves/SouthKitui-WDPA_WDOECM_Apr2025_Public_2590_shp/WDPA_WDOECM_Apr2025_Public_2590_shp_0/WDPA_WDOECM_Apr2025_Public_2590_shp-polygons.shp")
+SouthKitui <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/WDPA_Amboseli_Tsavo/National Parks&Reserves/SouthKitui-WDPA_WDOECM_Apr2025_Public_2590_shp/WDPA_WDOECM_Apr2025_Public_2590_shp_0/WDPA_WDOECM_Apr2025_Public_2590_shp-polygons.shp")
 ```
 
 ```{r}
@@ -309,9 +305,9 @@ Kenya.PAs.Map
 ```{r}
 # Importing Community Conservancies & Group Ranches surrounding Amboseli
 
-AET.Conservancies <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/5. AET-Conservancies/AET_Conservancies.shp")
+AET.Conservancies <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Amboseli_Conservation_Areas/AET_Conservancies.shp")
 
-AET.Buffers <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/5. AET-Conservancies/AET_Other_Conserved_Areas.shp")
+AET.Buffers <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Amboseli_Conservation_Areas/AET_Other_Conserved_Areas.shp")
 ```
 
 ```{r}
@@ -375,9 +371,9 @@ AET.AllZones.Map
 ```{r}
 # Importing Community Conservancies & Group Ranches surrounding Tsavos
 
-Tsavo.Ranches <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/6.TCAZones/RanchesTTWCA.shp")
+Tsavo.Ranches <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Tsavo_Conservation_Areas/RanchesTTWCA.shp")
 
-Tsavo.SettledAreas <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/6.TCAZones/SettledAreas.shp")
+Tsavo.SettledAreas <- st_read("C:/Workspace/Mureithi_RPI_Conservation_Governance/data/Tsavo_Conservation_Areas/SettledAreas.shp")
 
 # Reprojecting Shapefile CRS to match RPI CRS
 
