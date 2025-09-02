@@ -1810,18 +1810,34 @@ scale_geom_defaults()
 Combined.RPI.Violin.Plots
 
 # Save LARGE, full-page
-ggsave(
-  filename = "Combined_RPI_Violin_Plots_FullPage.png",
-  plot = Combined.RPI.Violin.Plots,
-  width = 26,
-  height = 30,
-  units = "cm",
-  dpi = 310
-)
+#ggsave(
+#  filename = "Combined_RPI_Violin_Plots_FullPage.png",
+#  plot = Combined.RPI.Violin.Plots,
+#  width = 26,
+#  height = 30,
+#  units = "cm",
+#  dpi = 310
+#)
 ```
 
 ```{r}
-# Extracting RPI Values for each Area
+# 5 year rolling mean
+Amboseli.Rolling <- Amboseli.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = Amboseli.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = Amboseli.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in Amboseli",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
+
 ```
 
 ```{r}
@@ -2237,7 +2253,7 @@ Ridgeline.Plot <- ggplot(All.Pixel.Slopes, aes(x = Slope, y = Area, fill = ..x..
 Ridgeline.Plot
 
 # Save
-ggsave("Ridgeline_Slopes.png", Ridgeline.Plot, width = 12, height = 8, dpi = 300)
+#ggsave("Ridgeline_Slopes.png", Ridgeline.Plot, width = 12, height = 8, dpi = 300)
 ```
 
 ```{r}
@@ -2756,13 +2772,13 @@ Combined.Trends.Plot <- Combined.Trends.Plot +
 Combined.Trends.Plot
 
 # Save the plot
- ggsave(
-   filename = "Combined_Annual_and_TheilSen_Trends_Improved.png",
-   plot = Combined.Trends.Plot,
-   width = 12,
-   height = 8,
-   dpi = 300
-   )
+# ggsave(
+#   filename = "Combined_Annual_and_TheilSen_Trends_Improved.png",
+#   plot = Combined.Trends.Plot,
+#   width = 12,
+#   height = 8,
+#   dpi = 300
+#   )
 ```
 
 ```{r}
@@ -2943,13 +2959,13 @@ Combined.Slope.Maps <- tmap_arrange(
 Combined.Slope.Maps
 
 # Save
-tmap_save(
-  tm = Combined.Slope.Maps,
-  filename = "Theil_Sen_Slope_Maps_BoldTitles.png",
-  width = 8.27,   # portrait A4 width in inches
-  height = 11.7,  # portrait A4 height in inches
-  dpi = 300
-)
+#tmap_save(
+#  tm = Combined.Slope.Maps,
+#  filename = "Theil_Sen_Slope_Maps_BoldTitles.png",
+#  width = 8.27,   # portrait A4 width in inches
+#  height = 11.7,  # portrait A4 height in inches
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -3062,13 +3078,13 @@ Combined.Temporal.Performance.Plot <- (Plot.MAE | Plot.RMSE | Plot.Rsqd) #+
 Combined.Temporal.Performance.Plot
 
 # Save the combined plot to a file
-ggsave(
-  filename = "Temporal_Performance_Kenya.png",
-  plot = Combined.Temporal.Performance.Plot,
-  width = 8.27,
-  height = 11.69,
-  dpi = 300
-)
+#ggsave(
+#  filename = "Temporal_Performance_Kenya.png",
+#  plot = Combined.Temporal.Performance.Plot,
+#  width = 8.27,
+#  height = 11.69,
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -4019,11 +4035,11 @@ Combined.RPI.Maps.After.Filtering <- tmap_arrange(
 )
 
 # Save as high-resolution A4 landscape PNG
-tmap_save(
-  tm = Combined.RPI.Maps.After.Filtering,
-  filename = "Mean_RPI_Filtered_Maps.png",
-  width = 29.7, height = 21, units = "cm", dpi = 300
-)
+#tmap_save(
+#  tm = Combined.RPI.Maps.After.Filtering,
+#  filename = "Mean_RPI_Filtered_Maps.png",
+#  width = 29.7, height = 21, units = "cm", dpi = 300
+#)
 ```
 
 ```{r}
@@ -4457,12 +4473,12 @@ Plot.Rsq.Low <- ggplot() +
 Plot.Rsq.Low
 
 # Saving the plot for scientific publication
-ggsave(
-  filename = "Kenya_Rsquare_Low_Performance.png",
-  plot = Plot.Rsq.Low,
-  width = 10,
-  height = 10,
-  dpi = 300)
+#ggsave(
+#  filename = "Kenya_Rsquare_Low_Performance.png",
+#  plot = Plot.Rsq.Low,
+#  width = 10,
+#  height = 10,
+#  dpi = 300)
 ```
 
 ```{r}
@@ -4475,14 +4491,14 @@ Combined.Figure.Kenya.RPI.Fit
 
 # Saving the combined figure
 
-ggsave(
-  filename = "Combined_Figure_Kenya_RPI_Fit.png",
-  plot = Combined.Figure.Kenya.RPI.Fit,
-  width = 12, 
-  height = 14, 
-  units = "in",
-  dpi = 300
-)
+#ggsave(
+#  filename = "Combined_Figure_Kenya_RPI_Fit.png",
+#  plot = Combined.Figure.Kenya.RPI.Fit,
+#  width = 12, 
+#  height = 14, 
+#  units = "in",
+#  dpi = 300
+#)
 ```
 
 ```{r}
@@ -4559,11 +4575,11 @@ RPI.Ridgeline.Simulation.Plot <- ggplot(RPI.All.Simulation, aes(x = RPI, y = Are
 RPI.Ridgeline.Simulation.Plot
 
 # Save the plot as a high-res PNG (A4 size)
-ggsave(
-  filename = "RPI_Distribution_Ridgeline.png",  
-  plot = RPI.Ridgeline.Simulation.Plot,
-  width = 8.27, 
-  height = 11.69, 
-  dpi = 300 
-)
+#ggsave(
+#  filename = "RPI_Distribution_Ridgeline.png",  
+#  plot = RPI.Ridgeline.Simulation.Plot,
+#  width = 8.27, 
+#  height = 11.69, 
+#  dpi = 300 
+#)
 ```
