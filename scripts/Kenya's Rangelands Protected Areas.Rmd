@@ -1821,7 +1821,7 @@ Combined.RPI.Violin.Plots
 ```
 
 ```{r}
-# 5 year rolling mean
+# 5 year rolling mean Amboseli
 Amboseli.Rolling <- Amboseli.RPI.Visual %>%
   group_by(Year) %>%
   summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
@@ -1837,23 +1837,158 @@ ggplot(Amboseli.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
   labs(title = "RPI Distribution in Amboseli",
        x = "Year", y = "RPI Value") +
   theme_beautiful()
-
 ```
 
 ```{r}
-# Extracting RPI Values for each Area
+# 5 year rolling mean TsavoEast
+TsavoEast.Rolling <- TsavoEast.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(TsavoEast.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = TsavoEast.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = TsavoEast.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in TsavoEast",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
 ```
 
 ```{r}
-# Extracting RPI Values for each Area
+# 5 year rolling mean TsavoWest
+TsavoWest.Rolling <- TsavoWest.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(TsavoWest.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = TsavoWest.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = TsavoWest.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in TsavoWest",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
 ```
 
 ```{r}
-# Extracting RPI Values for each Area
+# 5 year rolling mean TsavoRanches
+Tsavo.Ranches.Rolling <- Tsavo.Ranches.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(Tsavo.Ranches.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = Tsavo.Ranches.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = Tsavo.Ranches.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in Tsavo.Ranches",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
 ```
 
 ```{r}
-# Estimating Theil-Sen Slope Trends
+# 5 year rolling mean TsavoSettledAreas
+Tsavo.SettledAreas.Rolling <- Tsavo.SettledAreas.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(Tsavo.SettledAreas.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = Tsavo.SettledAreas.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = Tsavo.SettledAreas.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in Tsavo.SettledAreas",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
+```
+
+```{r}
+# 5 year rolling mean TsavoAllZones
+Tsavo.AllZones.Rolling <- Tsavo.AllZones.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(Tsavo.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = Tsavo.AllZones.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = Tsavo.AllZones.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in Tsavo.AllZones",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
+```
+
+```{r}
+# 5 year rolling mean AETConservancies
+AET.Conservancies.Rolling <- AET.Conservancies.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(AET.Conservancies.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = AET.Conservancies.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = AET.Conservancies.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in AET.Conservancies",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
+```
+
+```{r}
+# 5 year rolling mean AETBuffers
+AET.Buffers.Rolling <- AET.Buffers.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(AET.Buffers.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = AET.Buffers.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = AET.Buffers.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in AET.Buffers",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
+```
+
+```{r}
+# 5 year rolling mean AETAllZones
+AET.AllZones.Rolling <- AET.AllZones.RPI.Visual %>%
+  group_by(Year) %>%
+  summarise(Mean_RPI = mean(RPI_value, na.rm = TRUE)) %>%
+  arrange(Year) %>%
+  mutate(RollingMean5 = rollmean(Mean_RPI, k = 5, fill = NA, align = "center"))
+
+ggplot(AET.AllZones.RPI.Visual, aes(x = factor(Year), y = RPI_value)) +
+  geom_violin(fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_line(data = AET.AllZones.Rolling, aes(x = Year, y = RollingMean5, group = 1),
+            color = "red", linewidth = 1) +
+  geom_point(data = AET.AllZones.Rolling, aes(x = Year, y = RollingMean5),
+             color = "red", size = 2) +
+  labs(title = "RPI Distribution in AET.AllZones",
+       x = "Year", y = "RPI Value") +
+  theme_beautiful()
 ```
 
 ```{r}
