@@ -36,6 +36,8 @@ pacman::p_load(sf, terra, tidyverse, tidyterra, colorspace, ggrepel, patchwork, 
 # colorspace -> for a wide variety of perceptually uniform color palettes
 # ggrepel -> for preventing text labels from overlapping
 # patchwork -> for combining multiple plots into one figure
+# ggridges -> for creating ridge plots (joy plots)
+# truncnorm -> for generating random numbers from a truncated normal distribution
 
 # STATISTICAL ANALYSIS#
 #trend -> for analysing trends in time-series data = Theil-Sen slope
@@ -143,7 +145,9 @@ Kenya.Regional.Admin.Boundary <- st_read("C:/Users/IsaacM/OneDrive - University 
 ```{r}
 # Focusing on Kenya's Terrestrial Protected Areas
 
-Kenya.Terrestrial.PAs <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
+Kenya.Terrestrial.PAs <- st_read("C:/Users/IsaacM/OneDrive - University of Exeter/CLASSES - MSc/BIOM4009 ResearchProject/
+                                 
+                                 DATA/Geospatial Data/R Use/2.Kenya-s-Rangelands-Protected-Areas_files/additional_data_layers_wgs84/kenya_terrestrial_protected_areas_wgs84.shp")
 ```
 
 ```{r}
