@@ -1883,22 +1883,22 @@ ggplot() +
   geom_violin(data = TsavoEast.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = TsavoEast.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = TsavoEast.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "Tsavo East RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -1920,25 +1920,25 @@ ggplot(TsavoWest.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = TsavoWest.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = TsavoWest.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = TsavoWest.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "Tsavo West RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -1960,25 +1960,25 @@ ggplot(Tsavo.Ranches.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = Tsavo.Ranches.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = Tsavo.Ranches.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = Tsavo.Ranches.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "Tsavo Ranches RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -2000,25 +2000,25 @@ ggplot(Tsavo.SettledAreas.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = Tsavo.SettledAreas.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = Tsavo.SettledAreas.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = Tsavo.SettledAreas.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "Tsavo Settled Areas RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -2040,25 +2040,25 @@ ggplot(Tsavo.AllZones.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = Tsavo.AllZones.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = Tsavo.AllZones.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = Tsavo.AllZones.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "Tsavo All Zones RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -2080,25 +2080,25 @@ ggplot(AET.Conservancies.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = AET.Conservancies.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = AET.Conservancies.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = AET.Conservancies.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "AET Conservancies RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -2120,25 +2120,25 @@ ggplot(AET.Buffers.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = AET.Buffers.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = AET.Buffers.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = AET.Buffers.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "AET Buffers RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
@@ -2168,25 +2168,25 @@ ggplot(AET.AllZones.Mean, aes(x = Year)) +
 
 ```{r}
 ggplot() +
-  geom_violin(data = TsavoEast.RPI.Visual,
+  geom_violin(data = AET.AllZones.RPI.Visual,
               aes(x = Year, y = RPI_value, group = Year, fill = "Distribution"),
               color = "black", alpha = 0.5, width = 0.8) +
-  geom_line(data = Amboseli.Mean,
+  geom_line(data = AET.AllZones.Mean,
             aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
             linewidth = 1.2) +
-  geom_point(data = Amboseli.Mean,
+  geom_point(data = AET.AllZones.Mean,
              aes(x = Year, y = RollingMean5, color = "5-Year Rolling Mean"),
              size = 2) +
   labs(
-    title = "Amboseli RPI Distribution with 5-Year Rolling Mean",
+    title = "AET All Zones RPI Distribution with 5-Year Rolling Mean",
     x = "Year",
     y = "RPI Value",
     fill = "Legend",
     color = "Legend"
   ) +
   scale_fill_manual(values = c("Distribution" = "lightblue")) +
-  scale_color_manual(values = c("5-Year Rolling Mean" = "red")) +
-  theme_minimal()
+  scale_color_manual(values = c("5-Year Rolling Mean" = "darkblue")) +
+  theme_beautiful()
 ```
 
 ```{r}
