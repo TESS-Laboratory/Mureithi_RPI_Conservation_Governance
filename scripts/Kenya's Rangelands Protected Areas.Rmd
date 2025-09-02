@@ -2244,25 +2244,33 @@ RPI.Distribution.Areas.Plot <- ggplot() +
     color = "Study Area"
   ) +
   scale_y_continuous(limits = y_limits) +
-  scale_x_continuous(breaks = seq(min(All.RPI.Visual.Areas$Year), max(All.RPI.Visual.Areas$Year), by = 5)) +
+  scale_x_continuous(
+    breaks = seq(min(All.RPI.Visual.Areas$Year),
+                 max(All.RPI.Visual.Areas$Year), by = 5)
+  ) +
   facet_wrap(~Area, ncol = 3, scales = "fixed") +
   theme_minimal(base_size = 14) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom",
+    legend.box = "vertical",
+    legend.background = element_rect(fill = "white", color = "black"),
+    legend.key = element_rect(fill = "white", color = NA),
     panel.grid.minor = element_blank()
-  )
+  ) +
+  guides(color = guide_legend(ncol = 3))  # 3-column legend
 
+# Display the plot
 RPI.Distribution.Areas.Plot
 
-# Saving the plot as a high-res A4 page
+# Saving the plot as a high-res A4 image
 ggsave(
   filename = "RPI_Distribution_Areas.png", 
-  plot = RPI.Distribution.Areas.Plot,                               
-  width = 8.27,                               
-  height = 11.69,                            
+  plot = RPI.Distribution.Areas.Plot,
+  width = 8.27,   # A4 width in inches
+  height = 11.69, # A4 height in inches
   units = "in",
-  dpi = 300                                
+  dpi = 300
 )
 ```
 
