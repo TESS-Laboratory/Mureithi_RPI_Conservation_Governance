@@ -5143,20 +5143,20 @@ ggsave("Ridgeline_Slopes.png", Ridgeline.Plot, width = 12, height = 8, dpi = 300
 ```
 
 ```{r}
-# Rectifying the "Temporal_Performance_Kenya" map to remove the white break
+# Rectifying the "Temporal_Performance_Kenya" map to remove the white break using 'romaO' and 'vikO' - the continuous versions without white breaks. These maintain the same color schemes as the originals but remove the white center
 
-# I shall start by determining the shared range for MAE and RMSE
+# Determining the shared range for MAE and RMSE
 mae_range <- range(values(Temporal.Performance.Kenya$mae), na.rm = TRUE)
 rmse_range <- range(values(Temporal.Performance.Kenya$rmse), na.rm = TRUE)
 
 # Using the maximum of both ranges for consistency
 shared_range <- c(0, max(mae_range[2], rmse_range[2]))
 
-# MAE plot with consistent color scale (using 'lajolla' - no white break)
+# MAE plot with 'romaO' (roma without white break)
 Plot.MAE <- ggplot() +
   geom_spatraster(data = Temporal.Performance.Kenya$mae) +
   scale_fill_scico(
-    palette = "lajolla",  # Yellow to red, no white break
+    palette = "romaO", 
     name = "MAE", 
     limits = shared_range,
     na.value = "grey90"
@@ -5167,13 +5167,13 @@ Plot.MAE <- ggplot() +
   theme(legend.position = "bottom") +
   guides(fill = guide_colorbar(direction = "vertical"))
 
-# RMSE plot with same color scale as MAE
+# RMSE plot with 'vikO' (vik without white break)
 Plot.RMSE <- ggplot() +
   geom_spatraster(data = Temporal.Performance.Kenya$rmse) +
   scale_fill_scico(
-    palette = "lajolla",  # Same palette as MAE
+    palette = "vikO", 
     name = "RMSE", 
-    limits = shared_range,  # Same limits as MAE
+    limits = shared_range,  # Same limits as MAE for consistency
     na.value = "grey90"
   ) +
   Kenya.Border +
@@ -5182,11 +5182,11 @@ Plot.RMSE <- ggplot() +
   theme(legend.position = "bottom") +
   guides(fill = guide_colorbar(direction = "vertical"))
 
-# R² plot with appropriate scale (0 to 1, using 'batlow' - no white break)
+# R² plot with appropriate scale (keeping 'bam' - it's colorful and no white break)
 Plot.Rsqd <- ggplot() +
   geom_spatraster(data = Temporal.Performance.Kenya$rsq) +
   scale_fill_scico(
-    palette = "batlow",  # Dark to light, no white break
+    palette = "bam",  
     name = expression(R^2), 
     limits = c(0, 1), 
     na.value = "grey90"
